@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <ThingDef ParentName="BuildingBase">
+    <defName>ME_ChemicalDispersal</defName>
+    <label>chemical dispersal unit</label>
+    <description>An automated security device. When an enemy comes near, it vents a cloud of a selected toxic compound. The chemicals do not discriminate, so place it away from where your own people fight.</description>
+    <thingClass>MedicalExperimentation.Building_ChemicalDispersal</thingClass>
+    <graphicData>
+      <texPath>Things/Building/ChemicalDispersal</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1,1)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <tickerType>Rare</tickerType>
+    <fillPercent>0.4</fillPercent>
+    <useHitPoints>true</useHitPoints>
+    <rotatable>false</rotatable>
+    <statBases>
+      <MaxHitPoints>120</MaxHitPoints>
+      <WorkToBuild>3500</WorkToBuild>
+      <Mass>15</Mass>
+      <Flammability>0.5</Flammability>
+    </statBases>
+    <size>(1,1)</size>
+    <costList>
+      <Steel>80</Steel>
+      <ComponentIndustrial>2</ComponentIndustrial>
+    </costList>
+    <designationCategory>Security</designationCategory>
+    <passability>PassThroughOnly</passability>
+    <pathCost>30</pathCost>
+    <constructionSkillPrerequisite>5</constructionSkillPrerequisite>
+    <researchPrerequisites>
+      <li>ME_ExperimentalPharmacology</li>
+    </researchPrerequisites>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>100</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <li Class="CompProperties_Breakdownable"/>
+    </comps>
+  </ThingDef>
+
+</Defs>

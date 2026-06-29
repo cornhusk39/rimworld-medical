@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <ResearchProjectDef>
+    <defName>ME_ExperimentalPharmacology</defName>
+    <label>experimental pharmacology</label>
+    <description>Repurpose the colony's medical and chemical stocks into something the glitterworld pharmacopeia never sanctioned. Unlocks the experimentation bench, where doctors combine reagents into compounds of unknown effect.</description>
+    <baseCost>5000</baseCost>
+    <techLevel>Spacer</techLevel>
+    <prerequisites>
+      <li>MedicineProduction</li>
+      <li>AdvancedFabrication</li>
+    </prerequisites>
+    <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+    <requiredResearchFacilities>
+      <li>MultiAnalyzer</li>
+    </requiredResearchFacilities>
+    <researchViewX>14</researchViewX>
+    <researchViewY>2.6</researchViewY>
+  </ResearchProjectDef>
+
+  <!-- Surgery-unlock projects. Auto-completed by code when the matching compound is discovered
+       (see GameComponent_PharmaLedger). Manual research is left as a costly fallback because vanilla
+       1.6 has no hidden-research flag; see BUILD-LOG. They branch off experimental pharmacology. -->
+  <ResearchProjectDef>
+    <defName>ME_Surgery_ScarTissue</defName>
+    <label>regenerative grafting</label>
+    <description>Reconstruct scarred tissue surgically. Discovered by testing Tissue Regenerant, or researched the long way.</description>
+    <baseCost>2000</baseCost>
+    <techLevel>Spacer</techLevel>
+    <prerequisites>
+      <li>ME_ExperimentalPharmacology</li>
+    </prerequisites>
+    <researchViewX>15.2</researchViewX>
+    <researchViewY>1.6</researchViewY>
+  </ResearchProjectDef>
+
+  <ResearchProjectDef>
+    <defName>ME_Surgery_NerveRepair</defName>
+    <label>nerve reconduction</label>
+    <description>Repair damaged nerves surgically. Discovered by testing Nerve Conduction Gel, or researched the long way.</description>
+    <baseCost>2000</baseCost>
+    <techLevel>Spacer</techLevel>
+    <prerequisites>
+      <li>ME_ExperimentalPharmacology</li>
+    </prerequisites>
+    <researchViewX>15.2</researchViewX>
+    <researchViewY>2.6</researchViewY>
+  </ResearchProjectDef>
+
+  <ResearchProjectDef>
+    <defName>ME_CraftPrecipice</defName>
+    <label>precipice synthesis</label>
+    <description>How to synthesize Precipice reliably. Discovered by testing Precipice, or researched the long way.</description>
+    <baseCost>3000</baseCost>
+    <techLevel>Spacer</techLevel>
+    <prerequisites>
+      <li>ME_ExperimentalPharmacology</li>
+    </prerequisites>
+    <researchViewX>15.2</researchViewX>
+    <researchViewY>4.6</researchViewY>
+  </ResearchProjectDef>
+
+  <ResearchProjectDef>
+    <defName>ME_Surgery_CorticalTuneup</defName>
+    <label>cortical tuning</label>
+    <description>Fine-tune the cortex for faster learning. Discovered by testing Synaptic Accelerant, or researched the long way.</description>
+    <baseCost>2000</baseCost>
+    <techLevel>Spacer</techLevel>
+    <prerequisites>
+      <li>ME_ExperimentalPharmacology</li>
+    </prerequisites>
+    <researchViewX>15.2</researchViewX>
+    <researchViewY>3.6</researchViewY>
+  </ResearchProjectDef>
+
+</Defs>

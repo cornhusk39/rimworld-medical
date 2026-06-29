@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <ThingDef ParentName="BenchBase">
+    <defName>ME_ExperimentationBench</defName>
+    <label>experimentation bench</label>
+    <description>A reinforced workbench rigged for improvised pharmacology. Doctors combine three reagents at a time into experimental compounds, refine the colony's drugs into stable, unstable, and perfect grades, and synthesize compounds they have already identified.</description>
+    <thingClass>MedicalExperimentation.Building_ExperimentationBench</thingClass>
+    <graphicData>
+      <texPath>Things/Building/ExperimentationBench</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(3,1.5)</drawSize>
+    </graphicData>
+    <altitudeLayer>Building</altitudeLayer>
+    <fillPercent>0.5</fillPercent>
+    <useHitPoints>true</useHitPoints>
+    <statBases>
+      <MaxHitPoints>200</MaxHitPoints>
+      <WorkToBuild>4000</WorkToBuild>
+      <Mass>25</Mass>
+      <Flammability>0.6</Flammability>
+    </statBases>
+    <size>(3,1)</size>
+    <costList>
+      <Steel>120</Steel>
+      <ComponentIndustrial>4</ComponentIndustrial>
+    </costList>
+    <designationCategory>Production</designationCategory>
+    <passability>PassThroughOnly</passability>
+    <pathCost>50</pathCost>
+    <hasInteractionCell>true</hasInteractionCell>
+    <interactionCellOffset>(0,0,-1)</interactionCellOffset>
+    <surfaceType>Item</surfaceType>
+    <constructionSkillPrerequisite>6</constructionSkillPrerequisite>
+    <researchPrerequisites>
+      <li>ME_ExperimentalPharmacology</li>
+    </researchPrerequisites>
+    <inspectorTabs>
+      <li>ITab_Bills</li>
+      <li>MedicalExperimentation.ITab_ExperimentLedger</li>
+    </inspectorTabs>
+    <building>
+      <buildingTags>
+        <li>Production</li>
+      </buildingTags>
+    </building>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>200</basePowerConsumption>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+      <li Class="CompProperties_Breakdownable"/>
+      <li Class="CompProperties_AffectedByFacilities">
+        <linkableFacilities>
+          <li>MultiAnalyzer</li>
+          <li>ToolCabinet</li>
+        </linkableFacilities>
+      </li>
+    </comps>
+  </ThingDef>
+
+</Defs>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <JobDef>
+    <defName>ME_RunExperiment</defName>
+    <driverClass>MedicalExperimentation.JobDriver_Experiment</driverClass>
+    <reportString>running an experiment.</reportString>
+    <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+    <casualInterruptible>true</casualInterruptible>
+  </JobDef>
+
+</Defs>

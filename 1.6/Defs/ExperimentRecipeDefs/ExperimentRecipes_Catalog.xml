@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_ImmunoPrimer</defName>
+    <product>ME_Compound_ImmunoPrimer</product>
+    <productCount>4</productCount>
+    <effectSummary>an immune booster</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineUltratech</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>1</count></li>
+      <li><thingDef>Neutroamine</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_NeuralDefragmenter</defName>
+    <product>ME_Compound_NeuralDefragmenter</product>
+    <productCount>4</productCount>
+    <effectSummary>a memory cleanser</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineUltratech</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>Neutroamine</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_SomnolentDraught</defName>
+    <product>ME_Compound_SomnolentDraught</product>
+    <productCount>4</productCount>
+    <effectSummary>a restorative sedative</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Beer</thingDef><count>1</count></li>
+      <li><thingDef>Neutroamine</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_BattleStimX</defName>
+    <product>ME_Compound_BattleStimX</product>
+    <productCount>4</productCount>
+    <effectSummary>a combat stimulant</effectSummary>
+    <reagents>
+      <li><thingDef>GoJuice</thingDef><count>1</count></li>
+      <li><thingDef>WakeUp</thingDef><count>1</count></li>
+      <li><thingDef>Yayo</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_BerserkerDraught</defName>
+    <product>ME_Compound_BerserkerDraught</product>
+    <productCount>4</productCount>
+    <effectSummary>a rage compound</effectSummary>
+    <reagents>
+      <li><thingDef>Flake</thingDef><count>1</count></li>
+      <li><thingDef>Chemfuel</thingDef><count>1</count></li>
+      <li><thingDef>Beer</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Stoneskin</defName>
+    <product>ME_Compound_Stoneskin</product>
+    <productCount>4</productCount>
+    <effectSummary>a defensive compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineIndustrial</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>Chemfuel</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_HepatotoxinB</defName>
+    <product>ME_Compound_HepatotoxinB</product>
+    <productCount>4</productCount>
+    <toxic>true</toxic>
+    <effectSummary>a toxic poison</effectSummary>
+    <reagents>
+      <li><thingDef>Beer</thingDef><count>1</count></li>
+      <li><thingDef>Yayo</thingDef><count>1</count></li>
+      <li><thingDef>Chemfuel</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_SoporificMist</defName>
+    <product>ME_Compound_SoporificMist</product>
+    <productCount>4</productCount>
+    <toxic>true</toxic>
+    <effectSummary>a knockout agent</effectSummary>
+    <reagents>
+      <li><thingDef>PsychoidLeaves</thingDef><count>1</count></li>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Neutroamine</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_TissueRegenerant</defName>
+    <product>ME_Compound_TissueRegenerant</product>
+    <productCount>3</productCount>
+    <effectSummary>a healing agent</effectSummary>
+    <unlocksResearch>ME_Surgery_ScarTissue</unlocksResearch>
+    <reagents>
+      <li><thingDef>MedicineUltratech</thingDef><count>2</count></li>
+      <li><thingDef>Neutroamine</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_NerveConductionGel</defName>
+    <product>ME_Compound_NerveConductionGel</product>
+    <productCount>3</productCount>
+    <effectSummary>a nerve treatment</effectSummary>
+    <unlocksResearch>ME_Surgery_NerveRepair</unlocksResearch>
+    <reagents>
+      <li><thingDef>MedicineUltratech</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_SynapticAccelerant</defName>
+    <product>ME_Compound_SynapticAccelerant</product>
+    <productCount>3</productCount>
+    <effectSummary>a cognitive enhancer</effectSummary>
+    <unlocksResearch>ME_Surgery_CorticalTuneup</unlocksResearch>
+    <reagents>
+      <li><thingDef>WakeUp</thingDef><count>2</count></li>
+      <li><thingDef>MedicineUltratech</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Precipice</defName>
+    <product>ME_Compound_Precipice</product>
+    <productCount>2</productCount>
+    <effectSummary>a full-body regenerator</effectSummary>
+    <unlocksResearch>ME_CraftPrecipice</unlocksResearch>
+    <reagents>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>MedicineUltratech</thingDef><count>1</count></li>
+      <li><thingDef>Ambrosia</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+</Defs>

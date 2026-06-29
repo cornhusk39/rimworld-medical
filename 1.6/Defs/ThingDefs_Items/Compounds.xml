@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <ThingDef Name="ME_CompoundBase" ParentName="DrugBase" Abstract="True">
+    <techLevel>Spacer</techLevel>
+    <statBases>
+      <MarketValue>28</MarketValue>
+      <Mass>0.1</Mass>
+      <Flammability>0.7</Flammability>
+      <DeteriorationRate>2</DeteriorationRate>
+    </statBases>
+    <ingestible>
+      <foodType>Processed</foodType>
+      <drugCategory>Medical</drugCategory>
+      <baseIngestTicks>240</baseIngestTicks>
+      <ingestCommandString>Administer {0}</ingestCommandString>
+      <ingestReportString>Administering {0}.</ingestReportString>
+      <chairSearchRadius>0</chairSearchRadius>
+    </ingestible>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <comps>
+      <!-- Makes compounds proper, administrable drugs. No chemical = non-addictive, no overdose.
+           Required: a Medical-category ingestible without CompProperties_Drug crashes the drug-policy sort. -->
+      <li Class="CompProperties_Drug">
+        <listOrder>2000</listOrder>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="ME_CompoundBase">
+    <defName>ME_Compound_AdrenalCatalyst</defName>
+    <label>adrenal catalyst</label>
+    <description>A refined stimulant compound. Sharpens focus and quickens the body for about a day. Identified by testing.</description>
+    <graphicData>
+      <texPath>Things/Item/Compound</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <color>(0.85,0.72,0.40)</color>
+    </graphicData>
+    <ingestible>
+      <outcomeDoers>
+        <li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental">
+          <hediffDef>ME_Hediff_AdrenalCatalyst</hediffDef>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="MedicalExperimentation.CompProperties_MysteryDrug">
+        <codePrefix>RX</codePrefix>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="ME_CompoundBase">
+    <defName>ME_Compound_CoagulantSerum</defName>
+    <label>coagulant serum</label>
+    <description>A clotting and immune-priming serum. Helps the body hold blood and fight infection for a while. Identified by testing.</description>
+    <graphicData>
+      <texPath>Things/Item/Compound</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <color>(0.78,0.45,0.45)</color>
+    </graphicData>
+    <ingestible>
+      <outcomeDoers>
+        <li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental">
+          <hediffDef>ME_Hediff_CoagulantSerum</hediffDef>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="MedicalExperimentation.CompProperties_MysteryDrug">
+        <codePrefix>RX</codePrefix>
+      </li>
+    </comps>
+  </ThingDef>
+
+</Defs>

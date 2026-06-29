@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <PrisonerInteractionModeDef>
+    <defName>ME_AutoExperiment</defName>
+    <label>experiment on</label>
+    <description>Wardens will administer undiscovered experimental compounds to this prisoner to learn what they do.</description>
+    <listOrder>55</listOrder>
+    <isNonExclusiveInteraction>true</isNonExclusiveInteraction>
+    <allowOnWildMan>false</allowOnWildMan>
+  </PrisonerInteractionModeDef>
+
+  <JobDef>
+    <defName>ME_AdministerExperimental</defName>
+    <driverClass>MedicalExperimentation.JobDriver_AdministerExperimental</driverClass>
+    <reportString>administering an experimental compound to TargetA.</reportString>
+  </JobDef>
+
+  <WorkGiverDef>
+    <defName>ME_AdministerExperimental</defName>
+    <label>administer experimental compounds</label>
+    <giverClass>MedicalExperimentation.WorkGiver_Warden_AdministerExperimental</giverClass>
+    <workType>Warden</workType>
+    <verb>administer experimental compounds</verb>
+    <gerund>administering experimental compounds</gerund>
+    <priorityInType>20</priorityInType>
+    <prioritizeSustains>true</prioritizeSustains>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+  </WorkGiverDef>
+
+</Defs>

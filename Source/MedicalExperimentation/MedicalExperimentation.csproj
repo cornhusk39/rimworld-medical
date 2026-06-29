@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>MedicalExperimentation</RootNamespace>
+    <AssemblyName>MedicalExperimentation</AssemblyName>
+    <OutputPath>..\..\1.6\Assemblies\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DebugType>none</DebugType>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Game reference assemblies. Never ship game DLLs. -->
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4633" />
+    <!-- Compile-time access to private/internal game members without reflection. -->
+    <PackageReference Include="Krafs.Publicizer" Version="2.*" PrivateAssets="all" />
+    <!-- Lets dotnet build target net472 without Visual Studio targeting packs installed. -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.*" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Publicize Include="Assembly-CSharp" />
+  </ItemGroup>
+
+</Project>

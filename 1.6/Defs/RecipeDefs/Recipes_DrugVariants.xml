@@ -1,0 +1,803 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- ============================================================ -->
+  <!-- DRUG VARIANT RECIPES                                          -->
+  <!-- All produced at the Experimentation Bench, gated behind      -->
+  <!-- Experimental Pharmacology research. Each makes 4.            -->
+  <!--   Stable   : 1 base + 1 MedicineIndustrial + 1 Neutroamine   -->
+  <!--   Unstable : 1 base + 20 Chemfuel       + 1 Neutroamine      -->
+  <!--   Perfect  : 1 base + 1 MedicineUltratech + 10 Neutroamine   -->
+  <!-- ============================================================ -->
+
+  <!-- ===================== GO-JUICE ===================== -->
+
+  <RecipeDef>
+    <defName>ME_Make_GoJuice_Stable</defName>
+    <label>make stable go-juice</label>
+    <description>Buffer go-juice into a milder, completely safe formula.</description>
+    <jobString>Making stable go-juice.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>GoJuice</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineIndustrial</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>GoJuice</li>
+        <li>MedicineIndustrial</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_GoJuice_Stable>4</ME_GoJuice_Stable>
+    </products>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>ME_Make_GoJuice_Unstable</defName>
+    <label>make unstable go-juice</label>
+    <description>Overcharge go-juice with raw chemfuel for a stronger but riskier hit.</description>
+    <jobString>Making unstable go-juice.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>GoJuice</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Chemfuel</li>
+          </thingDefs>
+        </filter>
+        <count>20</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>GoJuice</li>
+        <li>Chemfuel</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_GoJuice_Unstable>4</ME_GoJuice_Unstable>
+    </products>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>ME_Make_GoJuice_Perfect</defName>
+    <label>make perfect go-juice</label>
+    <description>Synthesize a flawless, fully safe batch of go-juice using ultratech medicine.</description>
+    <jobString>Making perfect go-juice.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>GoJuice</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineUltratech</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>10</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>GoJuice</li>
+        <li>MedicineUltratech</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_GoJuice_Perfect>4</ME_GoJuice_Perfect>
+    </products>
+  </RecipeDef>
+
+  <!-- ===================== WAKE-UP ===================== -->
+
+  <RecipeDef>
+    <defName>ME_Make_WakeUp_Stable</defName>
+    <label>make stable wake-up</label>
+    <description>Buffer wake-up into a milder, completely safe formula.</description>
+    <jobString>Making stable wake-up.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>WakeUp</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineIndustrial</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>WakeUp</li>
+        <li>MedicineIndustrial</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_WakeUp_Stable>4</ME_WakeUp_Stable>
+    </products>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>ME_Make_WakeUp_Unstable</defName>
+    <label>make unstable wake-up</label>
+    <description>Overcharge wake-up with raw chemfuel for a stronger but riskier hit.</description>
+    <jobString>Making unstable wake-up.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>WakeUp</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Chemfuel</li>
+          </thingDefs>
+        </filter>
+        <count>20</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>WakeUp</li>
+        <li>Chemfuel</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_WakeUp_Unstable>4</ME_WakeUp_Unstable>
+    </products>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>ME_Make_WakeUp_Perfect</defName>
+    <label>make perfect wake-up</label>
+    <description>Synthesize a flawless, fully safe batch of wake-up using ultratech medicine.</description>
+    <jobString>Making perfect wake-up.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>WakeUp</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineUltratech</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>10</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>WakeUp</li>
+        <li>MedicineUltratech</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_WakeUp_Perfect>4</ME_WakeUp_Perfect>
+    </products>
+  </RecipeDef>
+
+  <!-- ===================== YAYO ===================== -->
+
+  <RecipeDef>
+    <defName>ME_Make_Yayo_Stable</defName>
+    <label>make stable yayo</label>
+    <description>Buffer yayo into a milder, completely safe formula.</description>
+    <jobString>Making stable yayo.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Yayo</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineIndustrial</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>Yayo</li>
+        <li>MedicineIndustrial</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_Yayo_Stable>4</ME_Yayo_Stable>
+    </products>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>ME_Make_Yayo_Unstable</defName>
+    <label>make unstable yayo</label>
+    <description>Overcharge yayo with raw chemfuel for a stronger but riskier hit.</description>
+    <jobString>Making unstable yayo.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Yayo</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Chemfuel</li>
+          </thingDefs>
+        </filter>
+        <count>20</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>Yayo</li>
+        <li>Chemfuel</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_Yayo_Unstable>4</ME_Yayo_Unstable>
+    </products>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>ME_Make_Yayo_Perfect</defName>
+    <label>make perfect yayo</label>
+    <description>Synthesize a flawless, fully safe batch of yayo using ultratech medicine.</description>
+    <jobString>Making perfect yayo.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Yayo</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineUltratech</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>10</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>Yayo</li>
+        <li>MedicineUltratech</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_Yayo_Perfect>4</ME_Yayo_Perfect>
+    </products>
+  </RecipeDef>
+
+  <!-- ===================== FLAKE ===================== -->
+
+  <RecipeDef>
+    <defName>ME_Make_Flake_Stable</defName>
+    <label>make stable flake</label>
+    <description>Buffer flake into a milder, completely safe formula.</description>
+    <jobString>Making stable flake.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Flake</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineIndustrial</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>Flake</li>
+        <li>MedicineIndustrial</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_Flake_Stable>4</ME_Flake_Stable>
+    </products>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>ME_Make_Flake_Unstable</defName>
+    <label>make unstable flake</label>
+    <description>Overcharge flake with raw chemfuel for a stronger but riskier hit.</description>
+    <jobString>Making unstable flake.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Flake</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Chemfuel</li>
+          </thingDefs>
+        </filter>
+        <count>20</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>Flake</li>
+        <li>Chemfuel</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_Flake_Unstable>4</ME_Flake_Unstable>
+    </products>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>ME_Make_Flake_Perfect</defName>
+    <label>make perfect flake</label>
+    <description>Synthesize a flawless, fully safe batch of flake using ultratech medicine.</description>
+    <jobString>Making perfect flake.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Flake</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineUltratech</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>10</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>Flake</li>
+        <li>MedicineUltratech</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_Flake_Perfect>4</ME_Flake_Perfect>
+    </products>
+  </RecipeDef>
+
+  <!-- ===================== SMOKELEAF JOINT ===================== -->
+
+  <RecipeDef>
+    <defName>ME_Make_SmokeleafJoint_Stable</defName>
+    <label>make stable smokeleaf joint</label>
+    <description>Buffer a smokeleaf joint into a milder, completely safe formula.</description>
+    <jobString>Making stable smokeleaf joints.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>SmokeleafJoint</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineIndustrial</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>SmokeleafJoint</li>
+        <li>MedicineIndustrial</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_SmokeleafJoint_Stable>4</ME_SmokeleafJoint_Stable>
+    </products>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>ME_Make_SmokeleafJoint_Unstable</defName>
+    <label>make unstable smokeleaf joint</label>
+    <description>Overcharge a smokeleaf joint with raw chemfuel for a stronger but riskier high.</description>
+    <jobString>Making unstable smokeleaf joints.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>SmokeleafJoint</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Chemfuel</li>
+          </thingDefs>
+        </filter>
+        <count>20</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>SmokeleafJoint</li>
+        <li>Chemfuel</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_SmokeleafJoint_Unstable>4</ME_SmokeleafJoint_Unstable>
+    </products>
+  </RecipeDef>
+
+  <RecipeDef>
+    <defName>ME_Make_SmokeleafJoint_Perfect</defName>
+    <label>make perfect smokeleaf joint</label>
+    <description>Synthesize flawless, fully safe smokeleaf joints using ultratech medicine.</description>
+    <jobString>Making perfect smokeleaf joints.</jobString>
+    <workAmount>1600</workAmount>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugCookingSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <recipeUsers>
+      <li>ME_ExperimentationBench</li>
+    </recipeUsers>
+    <ingredients>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>SmokeleafJoint</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>MedicineUltratech</li>
+          </thingDefs>
+        </filter>
+        <count>1</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Neutroamine</li>
+          </thingDefs>
+        </filter>
+        <count>10</count>
+      </li>
+    </ingredients>
+    <fixedIngredientFilter>
+      <thingDefs>
+        <li>SmokeleafJoint</li>
+        <li>MedicineUltratech</li>
+        <li>Neutroamine</li>
+      </thingDefs>
+    </fixedIngredientFilter>
+    <products>
+      <ME_SmokeleafJoint_Perfect>4</ME_SmokeleafJoint_Perfect>
+    </products>
+  </RecipeDef>
+
+</Defs>

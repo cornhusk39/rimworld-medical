@@ -1,0 +1,7 @@
+# Build artifacts
+Source/**/obj/
+Source/**/bin/
+*.user
+*.suo
+
+# Keep the compiled mod assembly (shipped), ignore intermediates only

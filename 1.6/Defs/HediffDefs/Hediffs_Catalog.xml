@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Shared transient-buff base -->
+  <HediffDef Name="ME_BuffBase" Abstract="True">
+    <hediffClass>HediffWithComps</hediffClass>
+    <isBad>false</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <initialSeverity>1.0</initialSeverity>
+  </HediffDef>
+
+  <HediffDef ParentName="ME_BuffBase">
+    <defName>ME_Hediff_ImmunoPrimer</defName>
+    <label>immuno-primer</label>
+    <description>Primed immune response.</description>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>60000</disappearsAfterTicks><showRemainingTime>true</showRemainingTime></li>
+    </comps>
+    <stages>
+      <li>
+        <statOffsets><ImmunityGainSpeed>0.30</ImmunityGainSpeed></statOffsets>
+        <capMods><li><capacity>Consciousness</capacity><offset>-0.10</offset></li></capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ME_BuffBase">
+    <defName>ME_Hediff_NeuralDefrag</defName>
+    <label>neural defragmentation</label>
+    <description>The mind is being rewritten.</description>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>2500</disappearsAfterTicks></li>
+      <li Class="MedicalExperimentation.HediffCompProperties_OnAddEffects">
+        <removeWorstMemory>true</removeWorstMemory>
+        <permanentHediff>ME_Hediff_NeuralScar</permanentHediff>
+      </li>
+    </comps>
+    <stages>
+      <li><capMods><li><capacity>Consciousness</capacity><offset>-0.2</offset></li></capMods></li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>ME_Hediff_NeuralScar</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>neural scarring</label>
+    <description>Permanent minor damage from neural defragmentation.</description>
+    <isBad>true</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <initialSeverity>1.0</initialSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <stages>
+      <li><capMods><li><capacity>Consciousness</capacity><offset>-0.05</offset></li></capMods></li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ME_BuffBase">
+    <defName>ME_Hediff_Somnolent</defName>
+    <label>somnolent draught</label>
+    <description>Deep restorative calm.</description>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>10000</disappearsAfterTicks><showRemainingTime>true</showRemainingTime></li>
+      <li Class="MedicalExperimentation.HediffCompProperties_OnAddEffects">
+        <restToFull>true</restToFull>
+        <memoryThought>ME_Thought_Restful</memoryThought>
+      </li>
+    </comps>
+    <stages>
+      <li><capMods><li><capacity>Consciousness</capacity><offset>-0.10</offset></li></capMods></li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ME_BuffBase">
+    <defName>ME_Hediff_BattleStim</defName>
+    <label>battle stim</label>
+    <description>Combat reflexes pushed past safe limits.</description>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>9000</disappearsAfterTicks><showRemainingTime>true</showRemainingTime></li>
+    </comps>
+    <stages>
+      <li>
+        <capMods>
+          <li><capacity>Moving</capacity><offset>0.30</offset></li>
+          <li><capacity>Manipulation</capacity><offset>0.10</offset></li>
+        </capMods>
+        <statOffsets>
+          <ShootingAccuracyPawn>2</ShootingAccuracyPawn>
+          <MeleeHitChance>2</MeleeHitChance>
+          <PainShockThreshold>0.30</PainShockThreshold>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ME_BuffBase">
+    <defName>ME_Hediff_Berserker</defName>
+    <label>berserker draught</label>
+    <description>Rage and numbness.</description>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>7500</disappearsAfterTicks><showRemainingTime>true</showRemainingTime></li>
+      <li Class="MedicalExperimentation.HediffCompProperties_OnAddEffects">
+        <mentalBreakChance>0.20</mentalBreakChance>
+      </li>
+    </comps>
+    <stages>
+      <li>
+        <capMods><li><capacity>Manipulation</capacity><offset>0.15</offset></li></capMods>
+        <statOffsets>
+          <MeleeHitChance>3</MeleeHitChance>
+          <PainShockThreshold>0.60</PainShockThreshold>
+        </statOffsets>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ME_BuffBase">
+    <defName>ME_Hediff_Stoneskin</defName>
+    <label>stoneskin compound</label>
+    <description>Toughened, stiffened skin.</description>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>15000</disappearsAfterTicks><showRemainingTime>true</showRemainingTime></li>
+    </comps>
+    <stages>
+      <li>
+        <statOffsets>
+          <ArmorRating_Sharp>0.30</ArmorRating_Sharp>
+          <ArmorRating_Blunt>0.30</ArmorRating_Blunt>
+        </statOffsets>
+        <capMods><li><capacity>Manipulation</capacity><offset>-0.10</offset></li></capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ME_BuffBase">
+    <defName>ME_Hediff_TissueRegen</defName>
+    <label>tissue regenerant</label>
+    <description>Accelerated tissue repair.</description>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>30000</disappearsAfterTicks><showRemainingTime>true</showRemainingTime></li>
+    </comps>
+    <stages>
+      <li><statOffsets><ImmunityGainSpeed>0.15</ImmunityGainSpeed></statOffsets></li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ME_BuffBase">
+    <defName>ME_Hediff_NerveGel</defName>
+    <label>nerve conduction gel</label>
+    <description>Smoothed nerve signalling.</description>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>30000</disappearsAfterTicks><showRemainingTime>true</showRemainingTime></li>
+    </comps>
+    <stages>
+      <li><capMods><li><capacity>Consciousness</capacity><offset>0.05</offset></li></capMods></li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef ParentName="ME_BuffBase">
+    <defName>ME_Hediff_Synaptic</defName>
+    <label>synaptic accelerant</label>
+    <description>Heightened neural plasticity.</description>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>60000</disappearsAfterTicks><showRemainingTime>true</showRemainingTime></li>
+    </comps>
+    <stages>
+      <li><statOffsets><GlobalLearningFactor>0.30</GlobalLearningFactor></statOffsets></li>
+    </stages>
+  </HediffDef>
+
+  <!-- Cortical tune-up surgical implant (permanent) -->
+  <HediffDef>
+    <defName>ME_Hediff_CorticalTuneup</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>cortical tuning</label>
+    <description>A surgically tuned cortex that learns a little faster.</description>
+    <isBad>false</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <initialSeverity>1.0</initialSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <stages>
+      <li><statOffsets><GlobalLearningFactor>0.15</GlobalLearningFactor></statOffsets></li>
+    </stages>
+  </HediffDef>
+
+  <!-- Precipice hangover (weeks) -->
+  <HediffDef>
+    <defName>ME_Hediff_PrecipiceHangover</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>precipice hangover</label>
+    <description>The body is exhausted after a full regeneration. It will pass in time.</description>
+    <isBad>true</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <initialSeverity>1.0</initialSeverity>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>900000</disappearsAfterTicks><showRemainingTime>true</showRemainingTime></li>
+    </comps>
+    <stages>
+      <li>
+        <capMods>
+          <li><capacity>Consciousness</capacity><offset>-0.15</offset></li>
+          <li><capacity>Moving</capacity><offset>-0.15</offset></li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <!-- Precipice active regenerative coma -->
+  <HediffDef>
+    <defName>ME_Hediff_Precipice</defName>
+    <hediffClass>MedicalExperimentation.Hediff_Precipice</hediffClass>
+    <label>precipice regeneration</label>
+    <description>A deep regenerative coma. The body is rebuilding itself, regrowing what was lost and clearing old scars. It does not cure disease.</description>
+    <isBad>false</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <initialSeverity>1.0</initialSeverity>
+    <everCurableByItem>false</everCurableByItem>
+    <stages>
+      <li>
+        <capMods>
+          <li><capacity>Consciousness</capacity><offset>-0.90</offset></li>
+          <li><capacity>Moving</capacity><offset>-0.90</offset></li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+</Defs>

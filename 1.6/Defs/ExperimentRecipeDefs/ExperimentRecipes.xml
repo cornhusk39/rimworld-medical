@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_AdrenalCatalyst</defName>
+    <product>ME_Compound_AdrenalCatalyst</product>
+    <productCount>4</productCount>
+    <effectSummary>a fast-acting stimulant</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineIndustrial</thingDef><count>1</count></li>
+      <li><thingDef>WakeUp</thingDef><count>1</count></li>
+      <li><thingDef>Neutroamine</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_CoagulantSerum</defName>
+    <product>ME_Compound_CoagulantSerum</product>
+    <productCount>4</productCount>
+    <effectSummary>a clotting and immune primer</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>MedicineIndustrial</thingDef><count>1</count></li>
+      <li><thingDef>Neutroamine</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+</Defs>

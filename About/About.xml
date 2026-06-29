@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Medical Experimentation</name>
+  <author>cornhusk39</author>
+  <packageId>cornhusk39.MedicalExperimentation</packageId>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Turn your medical bay into a research lab. Build an Experimentation Bench and have your doctors combine reagents into experimental compounds with unknown effects. Some combinations do nothing and waste your materials. Others produce something new, and the only way to learn what a compound does is to administer it and watch.
+
+A skilled doctor can form a partial hypothesis about a compound before testing it, and wastes fewer materials on failed experiments. Mark a prisoner for automatic testing to find out the hard way. Every patient carries a small permanent chance of reacting badly to any given compound, so nothing is ever fully safe.
+
+Refine the colony's existing drugs into stable, unstable, and perfect grades. Discover rare compounds that unlock new surgeries. Build dispersal units that vent your nastier creations at anyone who attacks.
+
+Vanilla friendly. No DLC required. A few high end recipes light up extra options if Biotech is installed.
+
+Portions of the materials used to create this content/mod are trademarks and/or copyrighted works of Ludeon Studios Inc. All rights reserved by Ludeon. This content/mod is not official and is not endorsed by Ludeon.</description>
+  <loadAfter>
+    <li>Ludeon.RimWorld</li>
+    <li>Ludeon.RimWorld.Royalty</li>
+    <li>Ludeon.RimWorld.Ideology</li>
+    <li>Ludeon.RimWorld.Biotech</li>
+    <li>Ludeon.RimWorld.Anomaly</li>
+    <li>Ludeon.RimWorld.Odyssey</li>
+  </loadAfter>
+</ModMetaData>

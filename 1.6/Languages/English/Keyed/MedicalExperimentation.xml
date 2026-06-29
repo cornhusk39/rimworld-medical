@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- Bench / experiment command -->
+  <ME_NewExperiment>New experiment</ME_NewExperiment>
+  <ME_NewExperimentDesc>Design an experiment by choosing three reagents. A doctor will combine them at this bench. The right combination produces an experimental compound; the wrong one wastes materials.</ME_NewExperimentDesc>
+  <ME_QueuedExperiments>Queued experiments: {0}</ME_QueuedExperiments>
+
+  <!-- Picker dialog -->
+  <ME_PickHint>Choose exactly three reagents. Repeats are allowed.</ME_PickHint>
+  <ME_EmptySlot>(empty)</ME_EmptySlot>
+  <ME_Add>Add</ME_Add>
+  <ME_Repeat>Repeat this experiment</ME_Repeat>
+  <ME_Confirm>Queue experiment</ME_Confirm>
+  <ME_NeedThree>Selected {0} of 3</ME_NeedThree>
+  <ME_ExperimentQueued>Experiment queued.</ME_ExperimentQueued>
+
+  <!-- Compound identity -->
+  <ME_Identified>Identified</ME_Identified>
+  <ME_Hypothesis>Hypothesis: likely {0} (analysis {1})</ME_Hypothesis>
+  <ME_Unidentified>Unidentified experimental compound. Administer it to learn what it does.</ME_Unidentified>
+
+  <!-- Messages -->
+  <ME_Discovered>Compound identified: {0}. {1}</ME_Discovered>
+  <ME_SurgeryUnlocked>New operation unlocked: {0}.</ME_SurgeryUnlocked>
+  <ME_AdverseReactionMsg>{0} reacted badly to {1}. Their body is incompatible with it.</ME_AdverseReactionMsg>
+  <ME_ExperimentSuccess>The experiment produced a new compound.</ME_ExperimentSuccess>
+  <ME_ExperimentFail>The experiment failed. Salvaged {0} of 3 reagents.</ME_ExperimentFail>
+
+  <!-- Ledger ITab -->
+  <ME_LedgerTab>Ledger</ME_LedgerTab>
+  <ME_LedgerHeader>Compounds discovered: {0} / {1}</ME_LedgerHeader>
+  <ME_LedgerDiscovered>Discovered</ME_LedgerDiscovered>
+  <ME_LedgerGaps>Yet to discover</ME_LedgerGaps>
+  <ME_LedgerFailed>Failed combinations</ME_LedgerFailed>
+  <ME_UnknownCode>Unknown compound {0}</ME_UnknownCode>
+  <ME_HypoShort>likely {0} ({1})</ME_HypoShort>
+  <ME_NoData>no data</ME_NoData>
+
+  <!-- Misc events -->
+  <ME_PrecipiceComplete>{0} has finished precipice regeneration.</ME_PrecipiceComplete>
+  <ME_BerserkerDraught>berserker draught</ME_BerserkerDraught>
+
+  <!-- Chemical dispersal unit -->
+  <ME_SelectCompound>Select compound</ME_SelectCompound>
+  <ME_SelectCompoundDesc>Choose which discovered toxic compound this unit vents at hostiles.</ME_SelectCompoundDesc>
+  <ME_NoToxicDiscovered>(no toxic compounds discovered yet)</ME_NoToxicDiscovered>
+  <ME_DispersalLoaded>Loaded: {0}</ME_DispersalLoaded>
+  <ME_None>nothing</ME_None>
+  <ME_DispersalCooldown>Recharging: {0}s</ME_DispersalCooldown>
+  <ME_DispersalFired>A dispersal unit vented {0}.</ME_DispersalFired>
+
+  <!-- Settings -->
+  <ME_Setting_Incompat>Incompatibility chance per patient per compound: {0}</ME_Setting_Incompat>
+  <ME_Setting_AdverseLethality>Adverse reaction severity bonus: {0}</ME_Setting_AdverseLethality>
+  <ME_Setting_AutoTake>Colonists may take unidentified compounds from drug policies</ME_Setting_AutoTake>
+  <ME_Setting_AutoTake_Desc>Off by default, so unidentified compounds are only administered deliberately.</ME_Setting_AutoTake_Desc>
+  <ME_Setting_PrisonerExp>Enable marking prisoners for automatic experimentation</ME_Setting_PrisonerExp>
+  <ME_Setting_FriendlyFire>Dispersal units affect everyone in the cloud</ME_Setting_FriendlyFire>
+  <ME_Setting_FriendlyFire_Desc>Chemicals do not discriminate. Turn off to spare your own pawns.</ME_Setting_FriendlyFire_Desc>
+
+</LanguageData>

@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <!-- ============================================================ -->
+  <!-- DRUG VARIANTS                                                -->
+  <!-- For each of 5 base drugs (GoJuice, WakeUp, Yayo, Flake,      -->
+  <!-- SmokeleafJoint) three graded variants:                      -->
+  <!--   Stable   = milder potency, safe (no chemical/addiction,    -->
+  <!--              no overdose, no tolerance buildup).             -->
+  <!--   Unstable = stronger potency, riskier (shares the base     -->
+  <!--              chemical/tolerance, higher addiction+overdose). -->
+  <!--   Perfect  = stronger potency AND safe (no chemical, no      -->
+  <!--              overdose, no tolerance buildup).                -->
+  <!-- All variants reuse the vanilla base drug texPath, tinted to  -->
+  <!-- mark the grade. No CompMysteryDrug: these are known drugs.   -->
+  <!-- ============================================================ -->
+
+  <!-- ============================================================ -->
+  <!-- GO-JUICE  (base severity 0.5, chemical GoJuice, listOrder 200)-->
+  <!-- ============================================================ -->
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_GoJuice_Stable</defName>
+    <recipeMaker IsNull="True" />
+    <label>stable go-juice</label>
+    <description>A carefully buffered batch of go-juice. The dose is milder than a street batch, and the formula has been stabilized so it produces no tolerance, no addiction, and no overdose risk. A safe way to take the edge of go-juice into battle.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/GoJuice</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.6,0.9,0.6)</color>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>600</WorkToMake>
+      <MarketValue>60</MarketValue>
+      <Mass>0.1</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <joyKind>Chemical</joyKind>
+      <joy>0.40</joy>
+      <drugCategory>Hard</drugCategory>
+      <foodType>Processed, Fluid</foodType>
+      <baseIngestTicks>80</baseIngestTicks>
+      <ingestSound>Ingest_Inject</ingestSound>
+      <ingestCommandString>Inject {0}</ingestCommandString>
+      <ingestReportString>Injecting {0}.</ingestReportString>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <chairSearchRadius>0</chairSearchRadius>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>GoJuiceHigh</hediffDef>
+          <severity>0.4</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>0.4</offset>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetPsyfocus">
+          <offset>0.15</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <addictiveness>0</addictiveness>
+        <existingAddictionSeverityOffset>0.20</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <isCombatEnhancingDrug>true</isCombatEnhancingDrug>
+        <listOrder>200</listOrder>
+        <overdoseSeverityOffset>0</overdoseSeverityOffset>
+        <largeOverdoseChance>0</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_GoJuice_Unstable</defName>
+    <recipeMaker IsNull="True" />
+    <label>unstable go-juice</label>
+    <description>An overcharged batch of go-juice cut with raw chemfuel. It hits far harder than a normal dose, but the volatile mix raises the chance of overdose and accelerates addiction. It still feeds the same go-juice tolerance and dependency as the real thing.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/GoJuice</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.95,0.55,0.45)</color>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>600</WorkToMake>
+      <MarketValue>53</MarketValue>
+      <Mass>0.1</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <joyKind>Chemical</joyKind>
+      <joy>0.40</joy>
+      <drugCategory>Hard</drugCategory>
+      <foodType>Processed, Fluid</foodType>
+      <baseIngestTicks>80</baseIngestTicks>
+      <ingestSound>Ingest_Inject</ingestSound>
+      <ingestCommandString>Inject {0}</ingestCommandString>
+      <ingestReportString>Injecting {0}.</ingestReportString>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <chairSearchRadius>0</chairSearchRadius>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>GoJuiceHigh</hediffDef>
+          <severity>0.75</severity>
+          <toleranceChemical>GoJuice</toleranceChemical>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>0.4</offset>
+          <toleranceChemical>GoJuice</toleranceChemical>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetPsyfocus">
+          <offset>0.15</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <chemical>GoJuice</chemical>
+        <addictiveness>0.0299</addictiveness>
+        <existingAddictionSeverityOffset>0.20</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <isCombatEnhancingDrug>true</isCombatEnhancingDrug>
+        <listOrder>200</listOrder>
+        <overdoseSeverityOffset>0.207~0.4025</overdoseSeverityOffset>
+        <largeOverdoseChance>0.00575</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_GoJuice_Perfect</defName>
+    <recipeMaker IsNull="True" />
+    <label>perfect go-juice</label>
+    <description>A flawless batch of go-juice synthesized with ultratech medicine. It delivers the full combat punch of a strong dose while remaining completely clean: no tolerance, no addiction, and no overdose risk. The pinnacle of pharmaceutical engineering.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/GoJuice</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(1.0,0.9,0.5)</color>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>600</WorkToMake>
+      <MarketValue>140</MarketValue>
+      <Mass>0.1</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <joyKind>Chemical</joyKind>
+      <joy>0.40</joy>
+      <drugCategory>Hard</drugCategory>
+      <foodType>Processed, Fluid</foodType>
+      <baseIngestTicks>80</baseIngestTicks>
+      <ingestSound>Ingest_Inject</ingestSound>
+      <ingestCommandString>Inject {0}</ingestCommandString>
+      <ingestReportString>Injecting {0}.</ingestReportString>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <chairSearchRadius>0</chairSearchRadius>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>GoJuiceHigh</hediffDef>
+          <severity>0.75</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>0.4</offset>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetPsyfocus">
+          <offset>0.15</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <addictiveness>0</addictiveness>
+        <existingAddictionSeverityOffset>0.20</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <isCombatEnhancingDrug>true</isCombatEnhancingDrug>
+        <listOrder>200</listOrder>
+        <overdoseSeverityOffset>0</overdoseSeverityOffset>
+        <largeOverdoseChance>0</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <!-- ============================================================ -->
+  <!-- WAKE-UP  (pill; base severity 0.75, chemical WakeUp, order 210)-->
+  <!-- ============================================================ -->
+
+  <ThingDef ParentName="MakeableDrugPillBase">
+    <defName>ME_WakeUp_Stable</defName>
+    <recipeMaker IsNull="True" />
+    <label>stable wake-up</label>
+    <description>A buffered wake-up pill. The stimulant dose is gentler than a standard tablet, and the formula has been stabilized so it produces no tolerance, no addiction, and no overdose or heart-strain risk. A safe pick-me-up for long shifts.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/WakeUp</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.6,0.9,0.6)</color>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>900</WorkToMake>
+      <MarketValue>42</MarketValue>
+      <Mass>0.005</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <joyKind>Chemical</joyKind>
+      <joy>0.40</joy>
+      <drugCategory>Hard</drugCategory>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>WakeUpHigh</hediffDef>
+          <severity>0.6</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>1.0</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <addictiveness>0</addictiveness>
+        <existingAddictionSeverityOffset>0.20</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <listOrder>210</listOrder>
+        <overdoseSeverityOffset>0</overdoseSeverityOffset>
+        <largeOverdoseChance>0</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="MakeableDrugPillBase">
+    <defName>ME_WakeUp_Unstable</defName>
+    <recipeMaker IsNull="True" />
+    <label>unstable wake-up</label>
+    <description>An overcharged wake-up pill cut with raw chemfuel. It banishes fatigue far more aggressively than a normal tablet, but the volatile mix raises the chance of overdose and accelerates addiction. It still feeds the same wake-up tolerance and dependency.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/WakeUp</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.95,0.55,0.45)</color>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>900</WorkToMake>
+      <MarketValue>35</MarketValue>
+      <Mass>0.005</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <joyKind>Chemical</joyKind>
+      <joy>0.40</joy>
+      <drugCategory>Hard</drugCategory>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>WakeUpHigh</hediffDef>
+          <severity>1.125</severity>
+          <toleranceChemical>WakeUp</toleranceChemical>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>1.0</offset>
+          <toleranceChemical>WakeUp</toleranceChemical>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <chemical>WakeUp</chemical>
+        <addictiveness>0.023</addictiveness>
+        <existingAddictionSeverityOffset>0.20</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <listOrder>210</listOrder>
+        <overdoseSeverityOffset>0.207~0.4025</overdoseSeverityOffset>
+        <largeOverdoseChance>0.00575</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="MakeableDrugPillBase">
+    <defName>ME_WakeUp_Perfect</defName>
+    <recipeMaker IsNull="True" />
+    <label>perfect wake-up</label>
+    <description>A flawless wake-up pill synthesized with ultratech medicine. It delivers a powerful, fatigue-erasing stimulant dose while remaining completely clean: no tolerance, no addiction, and no overdose or heart-strain risk.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/WakeUp</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(1.0,0.9,0.5)</color>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>900</WorkToMake>
+      <MarketValue>110</MarketValue>
+      <Mass>0.005</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <joyKind>Chemical</joyKind>
+      <joy>0.40</joy>
+      <drugCategory>Hard</drugCategory>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>WakeUpHigh</hediffDef>
+          <severity>1.125</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>1.0</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <addictiveness>0</addictiveness>
+        <existingAddictionSeverityOffset>0.20</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <listOrder>210</listOrder>
+        <overdoseSeverityOffset>0</overdoseSeverityOffset>
+        <largeOverdoseChance>0</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <!-- ============================================================ -->
+  <!-- YAYO  (snort; base severity 0.75, chemical Psychite, order 100)-->
+  <!-- ============================================================ -->
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_Yayo_Stable</defName>
+    <recipeMaker IsNull="True" />
+    <label>stable yayo</label>
+    <description>A buffered preparation of yayo. The euphoric dose is milder than street yayo, and the formula has been stabilized so it produces no tolerance, no addiction, and no overdose risk. A safe way to shake off rest and pain.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/Yayo</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.6,0.9,0.6)</color>
+      <drawSize>0.75</drawSize>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>350</WorkToMake>
+      <MarketValue>26</MarketValue>
+      <Mass>0.05</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <foodType>Processed</foodType>
+      <joyKind>Chemical</joyKind>
+      <joy>0.80</joy>
+      <drugCategory>Hard</drugCategory>
+      <baseIngestTicks>150</baseIngestTicks>
+      <ingestSound>Ingest_Snort</ingestSound>
+      <ingestHoldUsesTable>false</ingestHoldUsesTable>
+      <ingestCommandString>Snort {0}</ingestCommandString>
+      <ingestReportString>Snorting {0}.</ingestReportString>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>YayoHigh</hediffDef>
+          <severity>0.6</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>0.4</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <addictiveness>0</addictiveness>
+        <existingAddictionSeverityOffset>0.20</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <isCombatEnhancingDrug>true</isCombatEnhancingDrug>
+        <listOrder>100</listOrder>
+        <overdoseSeverityOffset>0</overdoseSeverityOffset>
+        <largeOverdoseChance>0</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_Yayo_Unstable</defName>
+    <recipeMaker IsNull="True" />
+    <label>unstable yayo</label>
+    <description>An overcharged batch of yayo cut with raw chemfuel. The high hits far harder than street yayo, but the volatile mix raises the chance of overdose and accelerates addiction. It still feeds the same psychite tolerance and dependency.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/Yayo</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.95,0.55,0.45)</color>
+      <drawSize>0.75</drawSize>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>350</WorkToMake>
+      <MarketValue>21</MarketValue>
+      <Mass>0.05</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <foodType>Processed</foodType>
+      <joyKind>Chemical</joyKind>
+      <joy>0.80</joy>
+      <drugCategory>Hard</drugCategory>
+      <baseIngestTicks>150</baseIngestTicks>
+      <ingestSound>Ingest_Snort</ingestSound>
+      <ingestHoldUsesTable>false</ingestHoldUsesTable>
+      <ingestCommandString>Snort {0}</ingestCommandString>
+      <ingestReportString>Snorting {0}.</ingestReportString>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>YayoHigh</hediffDef>
+          <severity>1.125</severity>
+          <toleranceChemical>Psychite</toleranceChemical>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>0.4</offset>
+          <toleranceChemical>Psychite</toleranceChemical>
+        </li>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>PsychiteTolerance</hediffDef>
+          <toleranceChemical>Psychite</toleranceChemical>
+          <severity>0.040</severity>
+          <divideByBodySize>true</divideByBodySize>
+          <multiplyByGeneToleranceFactors>true</multiplyByGeneToleranceFactors>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <chemical>Psychite</chemical>
+        <addictiveness>0.0115</addictiveness>
+        <existingAddictionSeverityOffset>0.20</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <isCombatEnhancingDrug>true</isCombatEnhancingDrug>
+        <listOrder>100</listOrder>
+        <overdoseSeverityOffset>0.207~0.4025</overdoseSeverityOffset>
+        <largeOverdoseChance>0.0115</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_Yayo_Perfect</defName>
+    <recipeMaker IsNull="True" />
+    <label>perfect yayo</label>
+    <description>A flawless batch of yayo synthesized with ultratech medicine. It delivers an intense euphoric high while remaining completely clean: no tolerance, no addiction, and no overdose risk.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/Yayo</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(1.0,0.9,0.5)</color>
+      <drawSize>0.75</drawSize>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>350</WorkToMake>
+      <MarketValue>70</MarketValue>
+      <Mass>0.05</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <foodType>Processed</foodType>
+      <joyKind>Chemical</joyKind>
+      <joy>0.80</joy>
+      <drugCategory>Hard</drugCategory>
+      <baseIngestTicks>150</baseIngestTicks>
+      <ingestSound>Ingest_Snort</ingestSound>
+      <ingestHoldUsesTable>false</ingestHoldUsesTable>
+      <ingestCommandString>Snort {0}</ingestCommandString>
+      <ingestReportString>Snorting {0}.</ingestReportString>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>YayoHigh</hediffDef>
+          <severity>1.125</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>0.4</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <addictiveness>0</addictiveness>
+        <existingAddictionSeverityOffset>0.20</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <isCombatEnhancingDrug>true</isCombatEnhancingDrug>
+        <listOrder>100</listOrder>
+        <overdoseSeverityOffset>0</overdoseSeverityOffset>
+        <largeOverdoseChance>0</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <!-- ============================================================ -->
+  <!-- FLAKE  (smoke; base severity 0.75, chemical Psychite, order 110)-->
+  <!-- ============================================================ -->
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_Flake_Stable</defName>
+    <recipeMaker IsNull="True" />
+    <label>stable flake</label>
+    <description>A buffered preparation of flake. The high is milder than street flake, and the formula has been stabilized so it produces no tolerance, no addiction, and no overdose risk. Notorious flake, made survivable.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/Yayo</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.6,0.9,0.6)</color>
+      <drawSize>0.75</drawSize>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>250</WorkToMake>
+      <MarketValue>18</MarketValue>
+      <Mass>0.05</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <foodType>Processed</foodType>
+      <joyKind>Chemical</joyKind>
+      <joy>0.70</joy>
+      <baseIngestTicks>650</baseIngestTicks>
+      <nurseable>true</nurseable>
+      <drugCategory>Hard</drugCategory>
+      <ingestSound>Ingest_Smoke</ingestSound>
+      <ingestEffect>Smoke_Flake</ingestEffect>
+      <ingestEffectEat>EatVegetarian</ingestEffectEat>
+      <ingestHoldUsesTable>false</ingestHoldUsesTable>
+      <ingestCommandString>Smoke {0}</ingestCommandString>
+      <ingestReportString>Smoking {0}.</ingestReportString>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>FlakeHigh</hediffDef>
+          <severity>0.6</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>0.2</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <addictiveness>0</addictiveness>
+        <existingAddictionSeverityOffset>0.30</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <listOrder>110</listOrder>
+        <overdoseSeverityOffset>0</overdoseSeverityOffset>
+        <largeOverdoseChance>0</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_Flake_Unstable</defName>
+    <recipeMaker IsNull="True" />
+    <label>unstable flake</label>
+    <description>An overcharged batch of flake cut with raw chemfuel. The high is even more powerful and debilitating than street flake, and the volatile mix raises the chance of overdose and accelerates an already vicious addiction. It feeds the same psychite tolerance and dependency.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/Yayo</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.95,0.55,0.45)</color>
+      <drawSize>0.75</drawSize>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>250</WorkToMake>
+      <MarketValue>14</MarketValue>
+      <Mass>0.05</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <foodType>Processed</foodType>
+      <joyKind>Chemical</joyKind>
+      <joy>0.70</joy>
+      <baseIngestTicks>650</baseIngestTicks>
+      <nurseable>true</nurseable>
+      <drugCategory>Hard</drugCategory>
+      <ingestSound>Ingest_Smoke</ingestSound>
+      <ingestEffect>Smoke_Flake</ingestEffect>
+      <ingestEffectEat>EatVegetarian</ingestEffectEat>
+      <ingestHoldUsesTable>false</ingestHoldUsesTable>
+      <ingestCommandString>Smoke {0}</ingestCommandString>
+      <ingestReportString>Smoking {0}.</ingestReportString>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>FlakeHigh</hediffDef>
+          <severity>1.125</severity>
+          <toleranceChemical>Psychite</toleranceChemical>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>0.2</offset>
+          <toleranceChemical>Psychite</toleranceChemical>
+        </li>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>PsychiteTolerance</hediffDef>
+          <toleranceChemical>Psychite</toleranceChemical>
+          <severity>0.04</severity>
+          <divideByBodySize>true</divideByBodySize>
+          <multiplyByGeneToleranceFactors>true</multiplyByGeneToleranceFactors>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <chemical>Psychite</chemical>
+        <addictiveness>0.0575</addictiveness>
+        <existingAddictionSeverityOffset>0.30</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <listOrder>110</listOrder>
+        <overdoseSeverityOffset>0.207~0.4025</overdoseSeverityOffset>
+        <largeOverdoseChance>0.01725</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_Flake_Perfect</defName>
+    <recipeMaker IsNull="True" />
+    <label>perfect flake</label>
+    <description>A flawless batch of flake synthesized with ultratech medicine. It delivers a powerful euphoric high while remaining completely clean: no tolerance, no addiction, and no overdose risk. The deadliest street drug, rendered harmless.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/Yayo</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(1.0,0.9,0.5)</color>
+      <drawSize>0.75</drawSize>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>250</WorkToMake>
+      <MarketValue>55</MarketValue>
+      <Mass>0.05</Mass>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <foodType>Processed</foodType>
+      <joyKind>Chemical</joyKind>
+      <joy>0.70</joy>
+      <baseIngestTicks>650</baseIngestTicks>
+      <nurseable>true</nurseable>
+      <drugCategory>Hard</drugCategory>
+      <ingestSound>Ingest_Smoke</ingestSound>
+      <ingestEffect>Smoke_Flake</ingestEffect>
+      <ingestEffectEat>EatVegetarian</ingestEffectEat>
+      <ingestHoldUsesTable>false</ingestHoldUsesTable>
+      <ingestCommandString>Smoke {0}</ingestCommandString>
+      <ingestReportString>Smoking {0}.</ingestReportString>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>FlakeHigh</hediffDef>
+          <severity>1.125</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>0.2</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <addictiveness>0</addictiveness>
+        <existingAddictionSeverityOffset>0.30</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <listOrder>110</listOrder>
+        <overdoseSeverityOffset>0</overdoseSeverityOffset>
+        <largeOverdoseChance>0</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <!-- ============================================================ -->
+  <!-- SMOKELEAF JOINT (smoke; base severity 0.5, chemical Smokeleaf, -->
+  <!-- order 20). NOTE: vanilla SmokeleafJoint has NO overdose fields,-->
+  <!-- so the unstable 1.15x overdose multiplier yields nothing to    -->
+  <!-- scale; unstable still gets a small overdose risk introduced as  -->
+  <!-- the "riskier" grade. It uses minToleranceToAddict like the base.-->
+  <!-- ============================================================ -->
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_SmokeleafJoint_Stable</defName>
+    <recipeMaker IsNull="True" />
+    <label>stable smokeleaf joint</label>
+    <description>A buffered smokeleaf joint. The mood lift is milder than a hand-rolled joint, and the formula has been stabilized so it produces no tolerance, no dependency, and none of the usual lung damage. A safe, mellow smoke.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/Joint</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.6,0.9,0.6)</color>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>450</WorkToMake>
+      <MarketValue>14</MarketValue>
+      <Mass>0.05</Mass>
+      <DeteriorationRate>6</DeteriorationRate>
+      <Flammability>1.3</Flammability>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <foodType>Plant, Processed</foodType>
+      <joyKind>Chemical</joyKind>
+      <joy>0.80</joy>
+      <baseIngestTicks>720</baseIngestTicks>
+      <nurseable>true</nurseable>
+      <drugCategory>Social</drugCategory>
+      <ingestSound>Ingest_Smoke</ingestSound>
+      <ingestEffect>Smoke_Joint</ingestEffect>
+      <ingestEffectEat>EatVegetarian</ingestEffectEat>
+      <ingestHoldUsesTable>false</ingestHoldUsesTable>
+      <ingestCommandString>Smoke {0}</ingestCommandString>
+      <ingestReportString>Smoking {0}.</ingestReportString>
+      <ingestReportStringEat>Consuming {0}.</ingestReportStringEat>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>SmokeleafHigh</hediffDef>
+          <severity>0.4</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>-0.1</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <addictiveness>0</addictiveness>
+        <existingAddictionSeverityOffset>0.06</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <listOrder>20</listOrder>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_SmokeleafJoint_Unstable</defName>
+    <recipeMaker IsNull="True" />
+    <label>unstable smokeleaf joint</label>
+    <description>An overcharged smokeleaf joint cut with raw chemfuel. The high is far stronger than a hand-rolled joint, but the harsh smoke raises overdose risk and accelerates dependency. It still feeds the same smokeleaf tolerance.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/Joint</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(0.95,0.55,0.45)</color>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>450</WorkToMake>
+      <MarketValue>11</MarketValue>
+      <Mass>0.05</Mass>
+      <DeteriorationRate>6</DeteriorationRate>
+      <Flammability>1.3</Flammability>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <foodType>Plant, Processed</foodType>
+      <joyKind>Chemical</joyKind>
+      <joy>0.80</joy>
+      <baseIngestTicks>720</baseIngestTicks>
+      <nurseable>true</nurseable>
+      <drugCategory>Social</drugCategory>
+      <ingestSound>Ingest_Smoke</ingestSound>
+      <ingestEffect>Smoke_Joint</ingestEffect>
+      <ingestEffectEat>EatVegetarian</ingestEffectEat>
+      <ingestHoldUsesTable>false</ingestHoldUsesTable>
+      <ingestCommandString>Smoke {0}</ingestCommandString>
+      <ingestReportString>Smoking {0}.</ingestReportString>
+      <ingestReportStringEat>Consuming {0}.</ingestReportStringEat>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>SmokeleafHigh</hediffDef>
+          <severity>0.75</severity>
+          <toleranceChemical>Smokeleaf</toleranceChemical>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>-0.1</offset>
+        </li>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>SmokeleafTolerance</hediffDef>
+          <toleranceChemical>Smokeleaf</toleranceChemical>
+          <severity>0.030</severity>
+          <divideByBodySize>true</divideByBodySize>
+          <multiplyByGeneToleranceFactors>true</multiplyByGeneToleranceFactors>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <chemical>Smokeleaf</chemical>
+        <addictiveness>0.023</addictiveness>
+        <minToleranceToAddict>0.15</minToleranceToAddict>
+        <existingAddictionSeverityOffset>0.06</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <listOrder>20</listOrder>
+        <overdoseSeverityOffset>0.18~0.35</overdoseSeverityOffset>
+        <largeOverdoseChance>0.005</largeOverdoseChance>
+      </li>
+    </comps>
+  </ThingDef>
+
+  <ThingDef ParentName="MakeableDrugBase">
+    <defName>ME_SmokeleafJoint_Perfect</defName>
+    <recipeMaker IsNull="True" />
+    <label>perfect smokeleaf joint</label>
+    <description>A flawless smokeleaf joint synthesized with ultratech filtration. It delivers a strong, mellow high while remaining completely clean: no tolerance, no dependency, and no lung damage.</description>
+    <graphicData>
+      <texPath>Things/Item/Drug/Joint</texPath>
+      <graphicClass>Graphic_StackCount</graphicClass>
+      <color>(1.0,0.9,0.5)</color>
+    </graphicData>
+    <rotatable>false</rotatable>
+    <statBases>
+      <WorkToMake>450</WorkToMake>
+      <MarketValue>45</MarketValue>
+      <Mass>0.05</Mass>
+      <DeteriorationRate>6</DeteriorationRate>
+      <Flammability>1.3</Flammability>
+    </statBases>
+    <techLevel>Spacer</techLevel>
+    <tradeTags>
+      <li>ME_Compound</li>
+    </tradeTags>
+    <ingestible>
+      <foodType>Plant, Processed</foodType>
+      <joyKind>Chemical</joyKind>
+      <joy>0.80</joy>
+      <baseIngestTicks>720</baseIngestTicks>
+      <nurseable>true</nurseable>
+      <drugCategory>Social</drugCategory>
+      <ingestSound>Ingest_Smoke</ingestSound>
+      <ingestEffect>Smoke_Joint</ingestEffect>
+      <ingestEffectEat>EatVegetarian</ingestEffectEat>
+      <ingestHoldUsesTable>false</ingestHoldUsesTable>
+      <ingestCommandString>Smoke {0}</ingestCommandString>
+      <ingestReportString>Smoking {0}.</ingestReportString>
+      <ingestReportStringEat>Consuming {0}.</ingestReportStringEat>
+      <useEatingSpeedStat>false</useEatingSpeedStat>
+      <outcomeDoers>
+        <li Class="IngestionOutcomeDoer_GiveHediff">
+          <hediffDef>SmokeleafHigh</hediffDef>
+          <severity>0.75</severity>
+        </li>
+        <li Class="IngestionOutcomeDoer_OffsetNeed">
+          <need>Rest</need>
+          <offset>-0.1</offset>
+        </li>
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <li Class="CompProperties_Drug">
+        <addictiveness>0</addictiveness>
+        <existingAddictionSeverityOffset>0.06</existingAddictionSeverityOffset>
+        <needLevelOffset>0.9</needLevelOffset>
+        <listOrder>20</listOrder>
+      </li>
+    </comps>
+  </ThingDef>
+
+</Defs>
