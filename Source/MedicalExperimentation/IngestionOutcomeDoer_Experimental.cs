@@ -31,12 +31,7 @@ namespace MedicalExperimentation
             }
 
             // Normal effect.
-            if (hediffDef != null)
-            {
-                Hediff h = HediffMaker.MakeHediff(hediffDef, pawn);
-                h.Severity = severity > 0f ? severity : hediffDef.initialSeverity;
-                pawn.health.AddHediff(h);
-            }
+            if (hediffDef != null) ApplyEffect(pawn, hediffDef, severity);
 
             // Reveal identity colony-wide.
             var ledger = GameComponent_PharmaLedger.Instance;
@@ -51,6 +46,27 @@ namespace MedicalExperimentation
                     Find.ResearchManager.FinishProject(recipe.unlocksResearch);
                     Messages.Message("ME_SurgeryUnlocked".Translate(recipe.unlocksResearch.LabelCap), MessageTypeDefOf.PositiveEvent, false);
                 }
+            }
+        }
+
+        // Applies an effect hediff, stacking severity onto an existing one (so e.g. toxic buildup
+        // accumulates across repeated doses / disperser hits toward its lethal cap). Shared by the
+        // ingestion path and the chemical dispersal unit.
+        public static void ApplyEffect(Pawn pawn, HediffDef def, float severity)
+        {
+            if (pawn?.health == null || def == null) return;
+            float add = severity > 0f ? severity : def.initialSeverity;
+            Hediff existing = pawn.health.hediffSet.GetFirstHediffOfDef(def);
+            if (existing != null)
+            {
+                float cap = def.maxSeverity;
+                existing.Severity = cap > 0f ? System.Math.Min(existing.Severity + add, cap) : existing.Severity + add;
+            }
+            else
+            {
+                Hediff h = HediffMaker.MakeHediff(def, pawn);
+                h.Severity = add;
+                pawn.health.AddHediff(h);
             }
         }
 

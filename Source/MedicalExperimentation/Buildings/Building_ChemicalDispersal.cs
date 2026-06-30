@@ -138,9 +138,7 @@ namespace MedicalExperimentation
             foreach (var p in affected)
             {
                 if (!friendlyFire && p.Faction == Faction.OfPlayer) continue;
-                Hediff h = HediffMaker.MakeHediff(effect, p);
-                h.Severity = severity;
-                p.health.AddHediff(h);
+                IngestionOutcomeDoer_Experimental.ApplyEffect(p, effect, severity);
             }
             Messages.Message("ME_DispersalFired".Translate(compound.LabelCap), this, MessageTypeDefOf.NeutralEvent, false);
         }

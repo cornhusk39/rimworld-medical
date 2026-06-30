@@ -60,7 +60,7 @@
     <label>hepatotoxin b</label>
     <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/HepatotoxinB</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
-    <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ToxicBuildup</hediffDef><severity>0.4</severity></li></outcomeDoers></ingestible>
+    <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ToxicBuildup</hediffDef><severity>0.7</severity></li></outcomeDoers></ingestible>
     <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>TX</codePrefix><revealedDescription>A potent poison. Builds dangerous toxic load in whoever takes it. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
