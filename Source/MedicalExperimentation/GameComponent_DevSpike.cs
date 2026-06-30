@@ -20,6 +20,7 @@ namespace MedicalExperimentation
         private Building benchRef;
         private Building dispersalRef;
         private Building drugLabRef;
+        private Pawn prisRef;
         private int frames;
         private int phase;
         private int deadlineTick;
@@ -198,7 +199,9 @@ namespace MedicalExperimentation
 
                 Building SpawnPowered(string def, IntVec3 at)
                 {
-                    var b = (Building)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named(def)), at, map);
+                    var td = ThingDef.Named(def);
+                    var stuff = td.MadeFromStuff ? GenStuff.DefaultStuffFor(td) : null;
+                    var b = (Building)GenSpawn.Spawn(ThingMaker.MakeThing(td, stuff), at, map);
                     b.SetFaction(Faction.OfPlayer);
                     var p = b.GetComp<CompPowerTrader>(); if (p != null) p.PowerOn = true;
                     return b;
@@ -388,6 +391,26 @@ namespace MedicalExperimentation
                 bool trialMarks = ledger != null && bsRecipe != null && ledger.ComboTried(bsRecipe.ComboKey)
                                   && !ledger.IsDiscovered(ThingDef.Named("ME_Compound_BattleStimX"));
                 sb.Append(" trialMarks=").Append(trialMarks); ok &= trialMarks;
+
+                // Prisoner administration: is a job offered, and does it actually start (not abort on reservations)?
+                Pawn warden = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                GenSpawn.Spawn(warden, CellFinder.RandomClosewalkCellNear(map.Center, map, 5), map);
+                warden.workSettings?.EnableAndInitialize();
+                Pawn pris = PawnGenerator.GeneratePawn(PawnKindDefOf.SpaceRefugee, null);
+                GenSpawn.Spawn(pris, CellFinder.RandomClosewalkCellNear(warden.Position, map, 2), map);
+                pris.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner);
+                pris.guest?.ToggleNonExclusiveInteraction(ME_DefOf.ME_AutoExperiment, true);
+                prisRef = pris;
+                warden.workSettings?.SetPriority(WorkTypeDefOf.Warden, 1);
+                SpawnStack(map, warden.Position, "ME_Compound_NeuralDefragmenter", 3);
+                var wwg = (WorkGiver_Warden_AdministerExperimental)DefDatabase<WorkGiverDef>.GetNamed("ME_AdministerExperimental").Worker;
+                Job pj = wwg.JobOnThing(warden, pris, false);
+                sb.Append(" prisOffered=").Append(pj != null);
+                if (pj != null)
+                {
+                    warden.jobs.StartJob(pj, JobCondition.InterruptForced);
+                    sb.Append(" prisStarted=").Append(warden.CurJobDef == ME_JobDefOf.ME_AdministerExperimental);
+                }
             }
             catch (Exception e)
             {
@@ -416,7 +439,10 @@ namespace MedicalExperimentation
             if (bt != null) bt.PowerOn = true;
 
             bool produced = map.listerThings.ThingsOfDef(ThingDef.Named("ME_Compound_AdrenalCatalyst")).Count > 0;
-            if (produced)
+            bool prisDosed = prisRef == null || prisRef.Dead
+                || prisRef.health.hediffSet.hediffs.Any(h => h.def.defName.StartsWith("ME_Hediff_") || h.def.defName == "ME_AdverseReaction")
+                || (GameComponent_PharmaLedger.Instance?.IsDiscovered(ThingDef.Named("ME_Compound_NeuralDefragmenter")) ?? false);
+            if (produced && prisDosed)
             {
                 Finish(true);
             }
@@ -434,7 +460,9 @@ namespace MedicalExperimentation
             finished = true;
             phase = 2;
             bool pass = logicPass && e2ePass;
-            Log.Error($"[MESpike] RESULT pass={pass} logic={logicPass} e2eProduced={e2ePass} detail=[{logicDetail}]");
+            bool prisDosed = prisRef != null && (prisRef.health.hediffSet.hediffs.Any(h => h.def.defName.StartsWith("ME_Hediff_") || h.def.defName == "ME_AdverseReaction")
+                || (GameComponent_PharmaLedger.Instance?.IsDiscovered(ThingDef.Named("ME_Compound_NeuralDefragmenter")) ?? false));
+            Log.Error($"[MESpike] RESULT pass={pass} logic={logicPass} e2eProduced={e2ePass} prisDosed={prisDosed} detail=[{logicDetail}]");
             if (GenCommandLine.CommandLineArgPassed("mequit"))
                 LongEventHandler.QueueLongEvent(() => Root.Shutdown(), "Shutdown", false, null);
         }
