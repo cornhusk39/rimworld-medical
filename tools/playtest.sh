@@ -34,5 +34,5 @@ cat > "$CFG" <<'EOF'
 EOF
 
 echo "minimal modlist set; launching for hands-on testing..."
-"$EXE" -quicktest &
+"$EXE" -quicktest "$@" &
 echo "launched (game running detached)"

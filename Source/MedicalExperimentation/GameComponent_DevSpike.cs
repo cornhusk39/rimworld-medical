@@ -15,6 +15,10 @@ namespace MedicalExperimentation
     public class GameComponent_DevSpike : GameComponent
     {
         private static readonly bool Active = GenCommandLine.CommandLineArgPassed("mespike");
+        private static readonly bool SandboxActive = GenCommandLine.CommandLineArgPassed("mesandbox");
+        private bool sandboxDone;
+        private Building benchRef;
+        private Building dispersalRef;
         private int frames;
         private int phase;
         private int deadlineTick;
@@ -26,9 +30,29 @@ namespace MedicalExperimentation
 
         public override void GameComponentUpdate()
         {
-            if (!Active) return;
+            if (!Active && !SandboxActive) return;
             Map map = Find.CurrentMap;
             if (map == null) return;
+
+            if (SandboxActive)
+            {
+                if (!sandboxDone)
+                {
+                    frames++;
+                    if (frames < 120) return;
+                    SandboxSetup(map);
+                    sandboxDone = true;
+                }
+                else
+                {
+                    // keep the test buildings powered without a real grid
+                    var bt = benchRef?.GetComp<CompPowerTrader>();
+                    if (bt != null) bt.PowerOn = true;
+                    var dt = dispersalRef?.GetComp<CompPowerTrader>();
+                    if (dt != null) dt.PowerOn = true;
+                }
+                return;
+            }
 
             if (phase == 0)
             {
@@ -159,6 +183,72 @@ namespace MedicalExperimentation
             {
                 logicDetail += " SETUP_EX=" + e.Message;
                 Finish(false);
+            }
+        }
+
+        // Interactive sandbox: set up everything for hands-on testing, then go inert.
+        private void SandboxSetup(Map map)
+        {
+            try
+            {
+                IntVec3 c = map.Center;
+
+                // Unlock all of the mod's research so every recipe/surgery is available.
+                foreach (var rp in DefDatabase<ResearchProjectDef>.AllDefs)
+                    if (rp.defName.StartsWith("ME_") && !rp.IsFinished)
+                        Find.ResearchManager.FinishProject(rp);
+
+                // Bench (kept powered each frame).
+                benchRef = (Building)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ExperimentationBench")), c, map);
+                var bt = benchRef.GetComp<CompPowerTrader>(); if (bt != null) bt.PowerOn = true;
+
+                // Dispersal unit nearby, with two toxic compounds pre-discovered so it can vent.
+                IntVec3 dcell = c + new IntVec3(4, 0, 0);
+                if (dcell.InBounds(map) && dcell.Standable(map))
+                {
+                    dispersalRef = (Building)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ChemicalDispersal")), dcell, map);
+                    var dt = dispersalRef.GetComp<CompPowerTrader>(); if (dt != null) dt.PowerOn = true;
+                }
+                var ledger = GameComponent_PharmaLedger.Instance;
+                ledger?.Discover(ThingDef.Named("ME_Compound_HepatotoxinB"));
+                ledger?.Discover(ThingDef.Named("ME_Compound_SoporificMist"));
+
+                // Reagents: a generous stock of everything.
+                foreach (var r in ReagentSet.All) SpawnStack(map, c, r.defName, 25);
+                SpawnStack(map, c, "ComponentSpacer", 12);
+                SpawnStack(map, c, "ComponentIndustrial", 12);
+                SpawnStack(map, c, "ArchiteCapsule", 5); // skipped if Biotech absent
+
+                // Sample compounds to administer immediately (most stay unidentified for testing).
+                SpawnStack(map, c, "ME_Compound_AdrenalCatalyst", 5);
+                SpawnStack(map, c, "ME_Compound_SickDrug", 5);
+                SpawnStack(map, c, "ME_Compound_LethalDrug", 3);
+                SpawnStack(map, c, "ME_Compound_Precipice", 2);
+                SpawnStack(map, c, "ME_Compound_SoporificMist", 3);
+
+                // Two doctor colonists.
+                for (int i = 0; i < 2; i++)
+                {
+                    Pawn doc = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                    GenSpawn.Spawn(doc, CellFinder.RandomClosewalkCellNear(c, map, 6), map);
+                    var med = doc.skills?.GetSkill(SkillDefOf.Medicine);
+                    if (med != null) med.Level = 12;
+                    doc.workSettings?.EnableAndInitialize();
+                }
+
+                // Two prisoners for prisoner-experiment testing.
+                for (int i = 0; i < 2; i++)
+                {
+                    Pawn pris = PawnGenerator.GeneratePawn(PawnKindDefOf.SpaceRefugee, null);
+                    GenSpawn.Spawn(pris, CellFinder.RandomClosewalkCellNear(c, map, 8), map);
+                    pris.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner);
+                }
+
+                Log.Error("[MESandbox] ready: bench + dispersal + reagents + compounds + 2 doctors + 2 prisoners at map center. Research unlocked.");
+            }
+            catch (Exception e)
+            {
+                Log.Error("[MESandbox] SETUP_EX: " + e);
             }
         }
 
