@@ -44,6 +44,49 @@ namespace MedicalExperimentation
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/ME_NewExperiment", false) ?? BaseContent.BadTex,
                 action = () => Find.WindowStack.Add(new Dialog_PickReagents(this))
             };
+
+            yield return new Command_Action
+            {
+                defaultLabel = "ME_RandomExperiment".Translate(),
+                defaultDesc = "ME_RandomExperimentDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/ME_NewExperiment", false) ?? BaseContent.BadTex,
+                action = QueueRandomExperiment
+            };
+        }
+
+        // Picks a random experiment that has not been tried yet and whose reagents are all available
+        // in the colony right now, and queues it.
+        private void QueueRandomExperiment()
+        {
+            var ledger = GameComponent_PharmaLedger.Instance;
+            var candidates = DefDatabase<ExperimentRecipeDef>.AllDefs
+                .Where(r => ledger == null || !ledger.ComboTried(r.ComboKey))
+                .Where(ReagentsAvailable)
+                .ToList();
+
+            if (candidates.Count == 0)
+            {
+                Messages.Message("ME_NoRandom".Translate(), this, MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+
+            var pick = candidates.RandomElement();
+            var reagents = pick.reagents.Select(rc => new ReagentCount(rc.thingDef, rc.count)).ToList();
+            AddOrder(new ExperimentOrder(reagents, false));
+            Messages.Message("ME_RandomQueued".Translate(), this, MessageTypeDefOf.TaskCompletion, false);
+        }
+
+        private bool ReagentsAvailable(ExperimentRecipeDef r)
+        {
+            foreach (var rc in r.reagents)
+            {
+                if (rc.thingDef == null) return false;
+                int have = Map.listerThings.ThingsOfDef(rc.thingDef)
+                    .Where(t => !t.IsForbidden(Faction.OfPlayer))
+                    .Sum(t => t.stackCount);
+                if (have < rc.count) return false;
+            }
+            return true;
         }
 
         public override string GetInspectString()

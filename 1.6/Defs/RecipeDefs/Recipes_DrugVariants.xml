@@ -22,7 +22,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -74,7 +74,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -126,7 +126,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -180,7 +180,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -232,7 +232,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -284,7 +284,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -338,7 +338,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -390,7 +390,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -442,7 +442,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -496,7 +496,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -548,7 +548,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -600,7 +600,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -654,7 +654,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -706,7 +706,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>
@@ -758,7 +758,7 @@
     <workSpeedStat>DrugCookingSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
-    <researchPrerequisite>ME_ExperimentalPharmacology</researchPrerequisite>
+    <researchPrerequisite>ME_DrugRefinement</researchPrerequisite>
     <recipeUsers>
       <li>ME_ExperimentationBench</li>
     </recipeUsers>

@@ -21,8 +21,10 @@ namespace MedicalExperimentation
         {
             var ledger = GameComponent_PharmaLedger.Instance;
             var recipes = DefDatabase<ExperimentRecipeDef>.AllDefsListForReading;
-            int total = recipes.Count;
-            int found = recipes.Count(r => ledger != null && ledger.IsDiscovered(r.product));
+            // Group by product: many combos can map to the same compound (e.g. the failed/lethal dummies).
+            var products = recipes.Select(r => r.product).Where(p => p != null).Distinct().ToList();
+            int total = products.Count;
+            int found = products.Count(p => ledger != null && ledger.IsDiscovered(p));
 
             Rect outer = new Rect(0f, 0f, size.x, size.y).ContractedBy(10f);
             Text.Font = GameFont.Medium;
@@ -38,13 +40,14 @@ namespace MedicalExperimentation
             Widgets.BeginScrollView(viewArea, ref scroll, view);
             float y = 0f;
 
-            // Discovered
+            // Discovered (grouped by product)
             y = SectionHeader(view.width, y, "ME_LedgerDiscovered".Translate());
-            foreach (var r in recipes.Where(r => ledger != null && ledger.IsDiscovered(r.product)))
+            foreach (var p in products.Where(p => ledger != null && ledger.IsDiscovered(p)))
             {
+                var r = recipes.First(x => x.product == p);
                 Rect row = new Rect(0f, y, view.width, rowH);
                 if (Mouse.IsOver(row)) Widgets.DrawHighlight(row);
-                Widgets.Label(new Rect(4f, y + 3f, view.width * 0.45f, rowH), r.product.LabelCap);
+                Widgets.Label(new Rect(4f, y + 3f, view.width * 0.45f, rowH), p.LabelCap);
                 Widgets.Label(new Rect(view.width * 0.45f, y + 3f, view.width * 0.55f, rowH), ComboLabel(r));
                 y += rowH;
             }
@@ -52,13 +55,14 @@ namespace MedicalExperimentation
             // Gaps (undiscovered) - shown by code + hypothesis, not by combo
             y += 6f;
             y = SectionHeader(view.width, y, "ME_LedgerGaps".Translate());
-            foreach (var r in recipes.Where(r => ledger == null || !ledger.IsDiscovered(r.product)))
+            foreach (var p in products.Where(p => ledger == null || !ledger.IsDiscovered(p)))
             {
+                var r = recipes.First(x => x.product == p);
                 Rect row = new Rect(0f, y, view.width, rowH);
                 if (Mouse.IsOver(row)) Widgets.DrawHighlight(row);
-                string code = CompMysteryDrug.CodeFor(r.product);
+                string code = CompMysteryDrug.CodeFor(p);
                 Widgets.Label(new Rect(4f, y + 3f, view.width * 0.45f, rowH), "ME_UnknownCode".Translate(code));
-                float hyp = ledger?.HypothesisStrength(r.product) ?? 0f;
+                float hyp = ledger?.HypothesisStrength(p) ?? 0f;
                 string hint = hyp > 0f ? "ME_HypoShort".Translate(r.effectSummary, hyp.ToStringPercent()) : "ME_NoData".Translate();
                 GUI.color = new Color(0.7f, 0.7f, 0.7f);
                 Widgets.Label(new Rect(view.width * 0.45f, y + 3f, view.width * 0.55f, rowH), hint);

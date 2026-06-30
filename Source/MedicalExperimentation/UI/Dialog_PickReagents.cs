@@ -12,7 +12,6 @@ namespace MedicalExperimentation
     {
         private readonly Building_ExperimentationBench bench;
         private readonly List<ThingDef> chosen = new List<ThingDef>();
-        private bool repeat;
         private Vector2 scroll;
 
         public Dialog_PickReagents(Building_ExperimentationBench bench)
@@ -83,8 +82,6 @@ namespace MedicalExperimentation
 
             // Footer
             float fy = inRect.height - 80f;
-            Widgets.CheckboxLabeled(new Rect(0f, fy, 200f, 28f), "ME_Repeat".Translate(), ref repeat);
-
             bool ready = chosen.Count == 3;
             if (Widgets.ButtonText(new Rect(inRect.width - 320f, fy + 30f, 150f, 36f), "ME_Confirm".Translate()) && ready)
             {
@@ -109,7 +106,7 @@ namespace MedicalExperimentation
             var grouped = chosen.GroupBy(d => d)
                 .Select(g => new ReagentCount(g.Key, g.Count()))
                 .ToList();
-            bench.AddOrder(new ExperimentOrder(grouped, repeat));
+            bench.AddOrder(new ExperimentOrder(grouped, false));
             Messages.Message("ME_ExperimentQueued".Translate(), bench, MessageTypeDefOf.TaskCompletion, false);
         }
     }

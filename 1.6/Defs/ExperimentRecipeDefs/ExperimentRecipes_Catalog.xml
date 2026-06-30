@@ -137,6 +137,19 @@
   </MedicalExperimentation.ExperimentRecipeDef>
 
   <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Refinement</defName>
+    <product>ME_Compound_RefinementSample</product>
+    <productCount>2</productCount>
+    <effectSummary>a refinement proof-of-concept</effectSummary>
+    <unlocksResearch>ME_DrugRefinement</unlocksResearch>
+    <reagents>
+      <li><thingDef>MedicineIndustrial</thingDef><count>1</count></li>
+      <li><thingDef>Neutroamine</thingDef><count>1</count></li>
+      <li><thingDef>Chemfuel</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+
+  <MedicalExperimentation.ExperimentRecipeDef>
     <defName>ME_Exp_Precipice</defName>
     <product>ME_Compound_Precipice</product>
     <productCount>2</productCount>

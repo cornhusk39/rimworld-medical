@@ -13,6 +13,7 @@ namespace MedicalExperimentation
         public ThoughtDef memoryThought;      // mood memory to grant
         public float mentalBreakChance;       // Berserker Draught
         public HediffDef permanentHediff;     // lasting downside (e.g. neural scar)
+        public bool killPawn;                 // lethal experimental drug
 
         public HediffCompProperties_OnAddEffects() { compClass = typeof(HediffComp_OnAddEffects); }
     }
@@ -55,6 +56,11 @@ namespace MedicalExperimentation
             {
                 pawn.mindState.mentalStateHandler.TryStartMentalState(
                     MentalStateDefOf.Berserk, "ME_BerserkerDraught".Translate(), forced: true);
+            }
+
+            if (Props.killPawn && !pawn.Dead)
+            {
+                pawn.Kill(null);
             }
         }
     }

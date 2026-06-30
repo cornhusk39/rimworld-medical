@@ -4,6 +4,10 @@
   <!-- Bench / experiment command -->
   <ME_NewExperiment>New experiment</ME_NewExperiment>
   <ME_NewExperimentDesc>Design an experiment by choosing three reagents. A doctor will combine them at this bench. The right combination produces an experimental compound; the wrong one wastes materials.</ME_NewExperimentDesc>
+  <ME_RandomExperiment>Queue random experiment</ME_RandomExperiment>
+  <ME_RandomExperimentDesc>Automatically queue an untried experiment that can be made from ingredients you currently have. Most blind attempts produce something harmful.</ME_RandomExperimentDesc>
+  <ME_NoRandom>No untried experiment can be made from available ingredients.</ME_NoRandom>
+  <ME_RandomQueued>Queued a random experiment.</ME_RandomQueued>
   <ME_QueuedExperiments>Queued experiments: {0}</ME_QueuedExperiments>
 
   <!-- Picker dialog -->

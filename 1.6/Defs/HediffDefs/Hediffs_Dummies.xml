@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- Most random experiments yield one of these. -->
+  <HediffDef>
+    <defName>ME_Hediff_ExpSickness</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>experimental sickness</label>
+    <description>A failed compound that does nothing but make the patient violently ill. It passes.</description>
+    <isBad>true</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <initialSeverity>0.7</initialSeverity>
+    <scenarioCanAdd>false</scenarioCanAdd>
+    <comps>
+      <li Class="HediffCompProperties_SeverityPerDay"><severityPerDay>-1.0</severityPerDay></li>
+    </comps>
+    <stages>
+      <li>
+        <label>mild</label>
+        <painOffset>0.15</painOffset>
+        <capMods><li><capacity>Consciousness</capacity><offset>-0.15</offset></li></capMods>
+      </li>
+      <li>
+        <minSeverity>0.5</minSeverity>
+        <label>severe</label>
+        <painOffset>0.35</painOffset>
+        <vomitMtbDays>0.15</vomitMtbDays>
+        <capMods>
+          <li><capacity>Consciousness</capacity><offset>-0.30</offset></li>
+          <li><capacity>Moving</capacity><offset>-0.25</offset></li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+  <HediffDef>
+    <defName>ME_Hediff_LethalToxin</defName>
+    <hediffClass>HediffWithComps</hediffClass>
+    <label>lethal toxin</label>
+    <description>A compound that shuts the body down.</description>
+    <isBad>true</isBad>
+    <maxSeverity>1.0</maxSeverity>
+    <initialSeverity>1.0</initialSeverity>
+    <scenarioCanAdd>false</scenarioCanAdd>
+    <comps>
+      <li Class="MedicalExperimentation.HediffCompProperties_OnAddEffects">
+        <killPawn>true</killPawn>
+      </li>
+    </comps>
+  </HediffDef>
+
+  <HediffDef ParentName="ME_BuffBase">
+    <defName>ME_Hediff_RefinementSample</defName>
+    <label>refinement sample</label>
+    <description>A harmless proof-of-concept dose.</description>
+    <comps>
+      <li Class="HediffCompProperties_Disappears"><disappearsAfterTicks>2500</disappearsAfterTicks></li>
+    </comps>
+    <stages>
+      <li />
+    </stages>
+  </HediffDef>
+
+</Defs>

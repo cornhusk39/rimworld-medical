@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
+  <!-- Positioned past x=21 (the rightmost vanilla research) so the cards sit in clear space. -->
   <ResearchProjectDef>
     <defName>ME_ExperimentalPharmacology</defName>
     <label>experimental pharmacology</label>
@@ -15,37 +16,22 @@
     <requiredResearchFacilities>
       <li>MultiAnalyzer</li>
     </requiredResearchFacilities>
-    <researchViewX>14</researchViewX>
-    <researchViewY>2.6</researchViewY>
+    <researchViewX>23.0</researchViewX>
+    <researchViewY>2.0</researchViewY>
   </ResearchProjectDef>
 
-  <!-- Surgery-unlock projects. Auto-completed by code when the matching compound is discovered
-       (see GameComponent_PharmaLedger). Manual research is left as a costly fallback because vanilla
-       1.6 has no hidden-research flag; see BUILD-LOG. They branch off experimental pharmacology. -->
+  <!-- Gates the drug-variant recipes. Discovered by testing a refinement sample (or researched). -->
   <ResearchProjectDef>
-    <defName>ME_Surgery_ScarTissue</defName>
-    <label>regenerative grafting</label>
-    <description>Reconstruct scarred tissue surgically. Discovered by testing Tissue Regenerant, or researched the long way.</description>
-    <baseCost>2000</baseCost>
+    <defName>ME_DrugRefinement</defName>
+    <label>drug refinement</label>
+    <description>Stabilize and concentrate existing drugs into graded variants. Discovered by testing a refinement sample, or researched the long way.</description>
+    <baseCost>2500</baseCost>
     <techLevel>Spacer</techLevel>
     <prerequisites>
       <li>ME_ExperimentalPharmacology</li>
     </prerequisites>
-    <researchViewX>15.2</researchViewX>
-    <researchViewY>1.6</researchViewY>
-  </ResearchProjectDef>
-
-  <ResearchProjectDef>
-    <defName>ME_Surgery_NerveRepair</defName>
-    <label>nerve reconduction</label>
-    <description>Repair damaged nerves surgically. Discovered by testing Nerve Conduction Gel, or researched the long way.</description>
-    <baseCost>2000</baseCost>
-    <techLevel>Spacer</techLevel>
-    <prerequisites>
-      <li>ME_ExperimentalPharmacology</li>
-    </prerequisites>
-    <researchViewX>15.2</researchViewX>
-    <researchViewY>2.6</researchViewY>
+    <researchViewX>24.5</researchViewX>
+    <researchViewY>0.5</researchViewY>
   </ResearchProjectDef>
 
   <ResearchProjectDef>
@@ -57,8 +43,34 @@
     <prerequisites>
       <li>ME_ExperimentalPharmacology</li>
     </prerequisites>
-    <researchViewX>15.2</researchViewX>
-    <researchViewY>4.6</researchViewY>
+    <researchViewX>24.5</researchViewX>
+    <researchViewY>1.7</researchViewY>
+  </ResearchProjectDef>
+
+  <ResearchProjectDef>
+    <defName>ME_Surgery_ScarTissue</defName>
+    <label>regenerative grafting</label>
+    <description>Reconstruct scarred tissue surgically. Discovered by testing Tissue Regenerant, or researched the long way.</description>
+    <baseCost>2000</baseCost>
+    <techLevel>Spacer</techLevel>
+    <prerequisites>
+      <li>ME_ExperimentalPharmacology</li>
+    </prerequisites>
+    <researchViewX>24.5</researchViewX>
+    <researchViewY>2.9</researchViewY>
+  </ResearchProjectDef>
+
+  <ResearchProjectDef>
+    <defName>ME_Surgery_NerveRepair</defName>
+    <label>nerve reconduction</label>
+    <description>Repair damaged nerves surgically. Discovered by testing Nerve Conduction Gel, or researched the long way.</description>
+    <baseCost>2000</baseCost>
+    <techLevel>Spacer</techLevel>
+    <prerequisites>
+      <li>ME_ExperimentalPharmacology</li>
+    </prerequisites>
+    <researchViewX>24.5</researchViewX>
+    <researchViewY>4.1</researchViewY>
   </ResearchProjectDef>
 
   <ResearchProjectDef>
@@ -70,8 +82,8 @@
     <prerequisites>
       <li>ME_ExperimentalPharmacology</li>
     </prerequisites>
-    <researchViewX>15.2</researchViewX>
-    <researchViewY>3.6</researchViewY>
+    <researchViewX>24.5</researchViewX>
+    <researchViewY>5.3</researchViewY>
   </ResearchProjectDef>
 
 </Defs>
