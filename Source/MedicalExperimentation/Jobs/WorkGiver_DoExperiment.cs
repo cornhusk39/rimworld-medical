@@ -8,15 +8,19 @@ namespace MedicalExperimentation
     // Offers experiment jobs at benches that have queued orders, to pawns assigned Doctor work.
     public class WorkGiver_DoExperiment : WorkGiver_Scanner
     {
-        // Scan the same way vanilla finds workbenches (the bench is an IBillGiver), which is the reliable
-        // path the work scanner actually invokes. Filter to our bench with orders in JobOnThing.
         public override PathEndMode PathEndMode => PathEndMode.InteractionCell;
-        public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForGroup(ThingRequestGroup.PotentialBillGiver);
+
+        // Use the global-things scan path (the same one WorkGiver_Warden uses and which reliably fires),
+        // returning the benches directly via listerThings (faction-independent, registered on spawn).
+        public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
+        {
+            return pawn.Map.listerThings.ThingsOfDef(ThingDef.Named("ME_ExperimentationBench"));
+        }
 
         public override bool ShouldSkip(Pawn pawn, bool forced = false)
         {
-            foreach (var b in pawn.Map.listerBuildings.AllBuildingsColonistOfClass<Building_ExperimentationBench>())
-                if (b.HasOrders) return false;
+            foreach (var t in pawn.Map.listerThings.ThingsOfDef(ThingDef.Named("ME_ExperimentationBench")))
+                if (t is Building_ExperimentationBench b && b.HasOrders) return false;
             return true;
         }
 

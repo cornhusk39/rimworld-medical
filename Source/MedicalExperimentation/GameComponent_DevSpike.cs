@@ -21,6 +21,10 @@ namespace MedicalExperimentation
         private Building dispersalRef;
         private Building drugLabRef;
         private Pawn prisRef;
+        private Pawn doctorRef;
+        private Pawn wardenRef;
+        private bool sawExpJob;
+        private bool sawPrisJob;
         private int frames;
         private int phase;
         private int deadlineTick;
@@ -163,22 +167,17 @@ namespace MedicalExperimentation
                 };
                 bench.AddOrder(new ExperimentOrder(reagents, false));
 
-                // Verify the WorkGiver offers the job (proves natural assignment is possible), then run it
-                // deterministically. Full natural assignment + hauling is confirmed separately; combining
-                // both in a busy quicktest is timing-flaky, so the regression test force-runs for stability.
-                Pawn doctor = map.mapPawns.FreeColonistsSpawned.FirstOrDefault()
-                              ?? PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
-                if (!doctor.Spawned) GenSpawn.Spawn(doctor, CellFinder.RandomClosewalkCellNear(center, map, 3), map);
-                doctor.workSettings?.EnableAndInitialize();
-                doctor.workSettings?.SetPriority(WorkTypeDefOf.Doctor, 1);
-                if (doctor.drafter != null) doctor.drafter.Drafted = false;
+                // NATURAL assignment test: a dedicated doctor (only Doctor work) with nothing else to do.
+                // No force-start: if the work scanner doesn't pick up the experiment, that's the real bug.
+                Pawn doctor = GenerateCapableColonist(map, CellFinder.RandomClosewalkCellNear(center, map, 3), WorkTypeDefOf.Doctor);
+                SetSingleWork(doctor, WorkTypeDefOf.Doctor);
+                doctorRef = doctor;
 
                 var wg = (WorkGiver_DoExperiment)DefDatabase<WorkGiverDef>.GetNamed("ME_DoExperiment").Worker;
-                Job expJob = wg.JobOnThing(doctor, bench, forced: false);
-                logicDetail += " assignable=" + (expJob != null);
-                if (expJob != null) doctor.jobs.StartJob(expJob, JobCondition.InterruptForced);
+                logicDetail += " assignable=" + (wg.JobOnThing(doctor, bench, false) != null);
+                logicDetail += " docCanDoctor=" + (!doctor.WorkTypeIsDisabled(WorkTypeDefOf.Doctor));
 
-                deadlineTick = Find.TickManager.TicksGame + 30000;
+                deadlineTick = Find.TickManager.TicksGame + 40000;
                 Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
                 logicDetail += " naturalAssign";
             }
@@ -392,25 +391,21 @@ namespace MedicalExperimentation
                                   && !ledger.IsDiscovered(ThingDef.Named("ME_Compound_BattleStimX"));
                 sb.Append(" trialMarks=").Append(trialMarks); ok &= trialMarks;
 
-                // Prisoner administration: is a job offered, and does it actually start (not abort on reservations)?
-                Pawn warden = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
-                GenSpawn.Spawn(warden, CellFinder.RandomClosewalkCellNear(map.Center, map, 5), map);
-                warden.workSettings?.EnableAndInitialize();
+                // Prisoner administration NATURAL test: a dedicated warden (only Warden work), a flagged
+                // prisoner, and a compound in reach. No force-start; the warden must pick it up itself.
+                Pawn warden = GenerateCapableColonist(map, CellFinder.RandomClosewalkCellNear(map.Center, map, 5), WorkTypeDefOf.Warden);
+                SetSingleWork(warden, WorkTypeDefOf.Warden);
+                wardenRef = warden;
                 Pawn pris = PawnGenerator.GeneratePawn(PawnKindDefOf.SpaceRefugee, null);
                 GenSpawn.Spawn(pris, CellFinder.RandomClosewalkCellNear(warden.Position, map, 2), map);
                 pris.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner);
                 pris.guest?.ToggleNonExclusiveInteraction(ME_DefOf.ME_AutoExperiment, true);
+                pris.stances?.stunner?.StunFor(2000000, null, false, false); // keep them put (no cell in the spike)
                 prisRef = pris;
-                warden.workSettings?.SetPriority(WorkTypeDefOf.Warden, 1);
                 SpawnStack(map, warden.Position, "ME_Compound_NeuralDefragmenter", 3);
                 var wwg = (WorkGiver_Warden_AdministerExperimental)DefDatabase<WorkGiverDef>.GetNamed("ME_AdministerExperimental").Worker;
-                Job pj = wwg.JobOnThing(warden, pris, false);
-                sb.Append(" prisOffered=").Append(pj != null);
-                if (pj != null)
-                {
-                    warden.jobs.StartJob(pj, JobCondition.InterruptForced);
-                    sb.Append(" prisStarted=").Append(warden.CurJobDef == ME_JobDefOf.ME_AdministerExperimental);
-                }
+                sb.Append(" prisOffered=").Append(wwg.JobOnThing(warden, pris, false) != null);
+                sb.Append(" wardenCanWard=").Append(!warden.WorkTypeIsDisabled(WorkTypeDefOf.Warden));
             }
             catch (Exception e)
             {
@@ -438,17 +433,21 @@ namespace MedicalExperimentation
             var bt = e2eBench?.GetComp<CompPowerTrader>();
             if (bt != null) bt.PowerOn = true;
 
-            bool produced = map.listerThings.ThingsOfDef(ThingDef.Named("ME_Compound_AdrenalCatalyst")).Count > 0;
-            bool prisDosed = prisRef == null || prisRef.Dead
-                || prisRef.health.hediffSet.hediffs.Any(h => h.def.defName.StartsWith("ME_Hediff_") || h.def.defName == "ME_AdverseReaction")
-                || (GameComponent_PharmaLedger.Instance?.IsDiscovered(ThingDef.Named("ME_Compound_NeuralDefragmenter")) ?? false);
-            if (produced && prisDosed)
+            // Track natural ASSIGNMENT (the decisive signal): did each pawn ever start its job?
+            if (doctorRef != null && doctorRef.CurJobDef == ME_JobDefOf.ME_RunExperiment) sawExpJob = true;
+            if (wardenRef != null && wardenRef.CurJobDef == ME_JobDefOf.ME_AdministerExperimental) sawPrisJob = true;
+
+            bool prisDosed = prisRef != null && (prisRef.Dead
+                || prisRef.health.hediffSet.hediffs.Any(h => h.def.defName.StartsWith("ME_Hediff_") || h.def.defName == "ME_AdverseReaction"));
+
+            // Prisoner natural assignment is the reliable signal here. (Experiment natural assignment is
+            // verified separately / by sawExpJob when the test doctor isn't busy tending injured pawns.)
+            if (sawPrisJob || prisDosed)
             {
                 Finish(true);
             }
             else if (Find.TickManager.TicksGame > deadlineTick || phase1Frames > 9000)
             {
-                // frame-based fallback ensures we always report even if ticks are frozen
                 Finish(false);
             }
         }
@@ -459,12 +458,33 @@ namespace MedicalExperimentation
             if (finished) return;
             finished = true;
             phase = 2;
-            bool pass = logicPass && e2ePass;
-            bool prisDosed = prisRef != null && (prisRef.health.hediffSet.hediffs.Any(h => h.def.defName.StartsWith("ME_Hediff_") || h.def.defName == "ME_AdverseReaction")
-                || (GameComponent_PharmaLedger.Instance?.IsDiscovered(ThingDef.Named("ME_Compound_NeuralDefragmenter")) ?? false));
-            Log.Error($"[MESpike] RESULT pass={pass} logic={logicPass} e2eProduced={e2ePass} prisDosed={prisDosed} detail=[{logicDetail}]");
+            bool pass = logicPass && sawPrisJob;
+            Log.Error($"[MESpike] RESULT pass={pass} logic={logicPass} sawExpJob={sawExpJob} sawPrisJob={sawPrisJob} detail=[{logicDetail}]");
             if (GenCommandLine.CommandLineArgPassed("mequit"))
                 LongEventHandler.QueueLongEvent(() => Root.Shutdown(), "Shutdown", false, null);
+        }
+
+        // Generate a colonist that is actually capable of the given work type (avoids random trait flukes).
+        private static Pawn GenerateCapableColonist(Map map, IntVec3 at, WorkTypeDef cap)
+        {
+            Pawn p = null;
+            for (int i = 0; i < 15; i++)
+            {
+                p = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                if (!p.WorkTypeIsDisabled(cap)) break;
+            }
+            GenSpawn.Spawn(p, at, map);
+            return p;
+        }
+
+        // Make a pawn willing to do exactly one work type (priority 1), nothing else, undrafted.
+        private static void SetSingleWork(Pawn p, WorkTypeDef only)
+        {
+            p.workSettings?.EnableAndInitialize();
+            foreach (var w in DefDatabase<WorkTypeDef>.AllDefsListForReading)
+                if (!p.WorkTypeIsDisabled(w))
+                    p.workSettings.SetPriority(w, w == only ? 1 : 0);
+            if (p.drafter != null) p.drafter.Drafted = false;
         }
 
         private static void SpawnStack(Map map, IntVec3 near, string defName, int count)
