@@ -328,6 +328,10 @@ namespace MedicalExperimentation
                 bool defsOk = things.All(n => DefDatabase<ThingDef>.GetNamedSilentFail(n) != null);
                 sb.Append(" contentDefs=").Append(defsOk); ok &= defsOk;
 
+                // Compound descriptions must not leak the effect before discovery.
+                bool descMasked = ThingDef.Named("ME_Compound_HepatotoxinB").description.StartsWith("An experimental compound");
+                sb.Append(" descMasked=").Append(descMasked); ok &= descMasked;
+
                 // Bench bill wiring: variant/precipice recipes attached + DoBill workgiver present
                 var benchDef = ThingDef.Named("ME_ExperimentationBench");
                 bool benchRecipes = benchDef.AllRecipes.Any(r => r.defName.StartsWith("ME_Make_"))

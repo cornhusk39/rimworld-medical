@@ -4,110 +4,110 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_ImmunoPrimer</defName>
     <label>immuno-primer</label>
-    <description>Boosts immune response and disease resistance for a time. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/ImmunoPrimer</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_ImmunoPrimer</hediffDef></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix><revealedDescription>Boosts immune response and disease resistance for a time. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_NeuralDefragmenter</defName>
     <label>neural defragmenter</label>
-    <description>Clears a bad memory, at the cost of minor permanent neural scarring. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/NeuralDefragmenter</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_NeuralDefrag</hediffDef></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix><revealedDescription>Clears a bad memory, at the cost of minor permanent neural scarring. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_SomnolentDraught</defName>
     <label>somnolent draught</label>
-    <description>Forces deep restorative sleep and lifts the mood, then leaves grogginess. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/SomnolentDraught</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_Somnolent</hediffDef></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix><revealedDescription>Forces deep restorative sleep and lifts the mood, then leaves grogginess. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_BattleStimX</defName>
     <label>battle stim x</label>
-    <description>A powerful combat stimulant. Sharpens aim, speed, and pain tolerance. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/BattleStimX</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_BattleStim</hediffDef></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>CX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>CX</codePrefix><revealedDescription>A powerful combat stimulant. Sharpens aim, speed, and pain tolerance. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_BerserkerDraught</defName>
     <label>berserker draught</label>
-    <description>Massive melee power and pain immunity, with a risk of losing control. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/BerserkerDraught</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_Berserker</hediffDef></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>CX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>CX</codePrefix><revealedDescription>Massive melee power and pain immunity, with a risk of losing control. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_Stoneskin</defName>
     <label>stoneskin compound</label>
-    <description>Toughens the skin against harm at the cost of dexterity. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/Stoneskin</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_Stoneskin</hediffDef></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>CX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>CX</codePrefix><revealedDescription>Toughens the skin against harm at the cost of dexterity. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_HepatotoxinB</defName>
     <label>hepatotoxin b</label>
-    <description>A potent poison. Builds dangerous toxic load in whoever takes it. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/HepatotoxinB</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ToxicBuildup</hediffDef><severity>0.4</severity></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>TX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>TX</codePrefix><revealedDescription>A potent poison. Builds dangerous toxic load in whoever takes it. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_SoporificMist</defName>
     <label>soporific mist</label>
-    <description>A fast knockout agent. Renders a target unconscious without lasting harm. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/SoporificMist</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>Anesthetic</hediffDef><severity>1.0</severity></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>TX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>TX</codePrefix><revealedDescription>A fast knockout agent. Renders a target unconscious without lasting harm. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_TissueRegenerant</defName>
     <label>tissue regenerant</label>
-    <description>Speeds healing and tissue repair for a time. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/TissueRegenerant</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_TissueRegen</hediffDef></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix><revealedDescription>Speeds healing and tissue repair for a time. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_NerveConductionGel</defName>
     <label>nerve conduction gel</label>
-    <description>Smooths nerve signalling, briefly sharpening reflexes. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/NerveConductionGel</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_NerveGel</hediffDef></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix><revealedDescription>Smooths nerve signalling, briefly sharpening reflexes. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_SynapticAccelerant</defName>
     <label>synaptic accelerant</label>
-    <description>Heightens learning for a time. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <graphicData><texPath>Things/Item/Compounds/SynapticAccelerant</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_Synaptic</hediffDef></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix><revealedDescription>Heightens learning for a time. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_Precipice</defName>
     <label>precipice</label>
-    <description>An archotech-grade regenerative agent. It throws the body into a multi-day regenerative coma that regrows lost parts and clears scars, but cannot cure disease, and leaves a long hangover. Identified by testing.</description>
+    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
     <statBases><MarketValue>320</MarketValue><Mass>0.1</Mass></statBases>
     <graphicData><texPath>Things/Item/Compounds/Precipice</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_Precipice</hediffDef></li></outcomeDoers></ingestible>
-    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix><revealedDescription>An archotech-grade regenerative agent. It throws the body into a multi-day regenerative coma that regrows lost parts and clears scars, but cannot cure disease, and leaves a long hangover. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>
 
 </Defs>

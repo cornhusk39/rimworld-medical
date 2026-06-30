@@ -7,6 +7,7 @@ namespace MedicalExperimentation
     public class CompProperties_MysteryDrug : CompProperties
     {
         public string codePrefix = "RX"; // RX therapeutic, CX combat, TX toxic
+        public string revealedDescription; // the real effect text, shown only once discovered
 
         public CompProperties_MysteryDrug() { compClass = typeof(CompMysteryDrug); }
     }
@@ -49,6 +50,7 @@ namespace MedicalExperimentation
             if (ledger == null) return null;
             if (ledger.IsDiscovered(parent.def))
             {
+                if (!Props.revealedDescription.NullOrEmpty()) return Props.revealedDescription;
                 var recipe = ExperimentResolver.RecipeForProduct(parent.def);
                 return "ME_Identified".Translate() + (recipe?.effectSummary.NullOrEmpty() == false ? ": " + recipe.effectSummary : "");
             }
