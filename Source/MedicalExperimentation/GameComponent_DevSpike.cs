@@ -169,7 +169,7 @@ namespace MedicalExperimentation
                 if (doctor.drafter != null) doctor.drafter.Drafted = false;
                 doctor.jobs?.EndCurrentJob(JobCondition.InterruptForced);
 
-                deadlineTick = Find.TickManager.TicksGame + 12000;
+                deadlineTick = Find.TickManager.TicksGame + 30000;
                 Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
                 logicDetail += " naturalAssign";
             }
@@ -333,7 +333,7 @@ namespace MedicalExperimentation
             {
                 Finish(true);
             }
-            else if (Find.TickManager.TicksGame > deadlineTick || phase1Frames > 4000)
+            else if (Find.TickManager.TicksGame > deadlineTick || phase1Frames > 9000)
             {
                 // frame-based fallback ensures we always report even if ticks are frozen
                 Finish(false);

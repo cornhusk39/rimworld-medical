@@ -1,31 +1,26 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 using Verse.AI;
 
 namespace MedicalExperimentation
 {
-    // Pawn works at the bench, then consumes the exact reserved reagents and resolves the outcome:
+    // Pawn hauls the exact chosen reagents to the bench one at a time, then works and resolves the outcome:
     // a correct combo always produces its compound; a wrong one runs the Medicine-skill-scaled salvage roll.
-    // Reagents are consumed at completion (reserved up front), so a save/load mid-job simply restarts cleanly.
+    // Hauled reagents are tallied in `gathered` (saved), so a mid-job save/load is safe.
     public class JobDriver_Experiment : JobDriver
     {
         private const int WorkAmount = 2200;
+        private Dictionary<ThingDef, int> gathered = new Dictionary<ThingDef, int>();
 
         private Building_ExperimentationBench Bench => job.targetA.Thing as Building_ExperimentationBench;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
             if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed)) return false;
-            if (job.targetQueueB != null)
-            {
-                for (int i = 0; i < job.targetQueueB.Count; i++)
-                {
-                    int cnt = (job.countQueue != null && i < job.countQueue.Count) ? job.countQueue[i] : 1;
-                    if (!pawn.Reserve(job.targetQueueB[i], job, 1, cnt, null, errorOnFailed)) return false;
-                }
-            }
+            pawn.ReserveAsManyAsPossible(job.GetTargetQueue(TargetIndex.B), job);
             return true;
         }
 
@@ -34,21 +29,44 @@ namespace MedicalExperimentation
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             this.FailOnBurningImmobile(TargetIndex.A);
 
-            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.InteractionCell);
-
-            Toil work = ToilMaker.MakeToil("ME_work");
-            work.defaultCompleteMode = ToilCompleteMode.Delay;
-            work.defaultDuration = WorkAmount;
-            work.WithProgressBarToilDelay(TargetIndex.A);
-            work.handlingFacing = true;
-            work.activeSkill = () => SkillDefOf.Medicine;
-            work.tickAction = delegate
+            Toil doWork = ToilMaker.MakeToil("ME_work");
+            doWork.defaultCompleteMode = ToilCompleteMode.Delay;
+            doWork.defaultDuration = WorkAmount;
+            doWork.WithProgressBarToilDelay(TargetIndex.A);
+            doWork.handlingFacing = true;
+            doWork.activeSkill = () => SkillDefOf.Medicine;
+            doWork.tickAction = delegate
             {
                 pawn.skills?.Learn(SkillDefOf.Medicine, 0.075f);
                 pawn.rotationTracker.FaceTarget(job.targetA);
             };
-            work.FailOnCannotTouch(TargetIndex.A, PathEndMode.InteractionCell);
-            yield return work;
+            doWork.FailOnCannotTouch(TargetIndex.A, PathEndMode.InteractionCell);
+
+            // Haul each chosen reagent to the bench, then work.
+            yield return Toils_Jump.JumpIf(doWork, () => job.GetTargetQueue(TargetIndex.B).NullOrEmpty());
+
+            Toil extract = Toils_JobTransforms.ExtractNextTargetFromQueue(TargetIndex.B);
+            yield return extract;
+            yield return Toils_Goto.GotoThing(TargetIndex.B, PathEndMode.ClosestTouch)
+                .FailOnDespawnedNullOrForbidden(TargetIndex.B);
+            yield return Toils_Haul.StartCarryThing(TargetIndex.B, putRemainderInQueue: true,
+                subtractNumTakenFromJobCount: false, failIfStackCountLessThanJobCount: false);
+            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.InteractionCell);
+
+            Toil deposit = ToilMaker.MakeToil("ME_deposit");
+            deposit.initAction = delegate
+            {
+                Thing carried = pawn.carryTracker.CarriedThing;
+                if (carried != null && !carried.Destroyed)
+                {
+                    gathered[carried.def] = (gathered.TryGetValue(carried.def, out int n) ? n : 0) + carried.stackCount;
+                    carried.Destroy();
+                }
+            };
+            yield return deposit;
+            yield return Toils_Jump.JumpIf(extract, () => !job.GetTargetQueue(TargetIndex.B).NullOrEmpty());
+
+            yield return doWork;
 
             Toil finalize = ToilMaker.MakeToil("ME_finalize");
             finalize.defaultCompleteMode = ToilCompleteMode.Instant;
@@ -62,21 +80,9 @@ namespace MedicalExperimentation
             if (bench == null) return;
             Map map = pawn.Map;
 
-            // Consume the reserved reagents, recording the multiset that was used.
             var defs = new List<ThingDef>();
-            if (job.targetQueueB != null)
-            {
-                for (int i = 0; i < job.targetQueueB.Count; i++)
-                {
-                    Thing th = job.targetQueueB[i].Thing;
-                    if (th == null || th.Destroyed) continue;
-                    int cnt = (job.countQueue != null && i < job.countQueue.Count) ? job.countQueue[i] : 1;
-                    int take = Math.Min(cnt, th.stackCount);
-                    if (take <= 0) continue;
-                    for (int k = 0; k < take; k++) defs.Add(th.def);
-                    th.SplitOff(take).Destroy();
-                }
-            }
+            foreach (var kv in gathered)
+                for (int i = 0; i < kv.Value; i++) defs.Add(kv.Key);
 
             string key = ExperimentRecipeDef.MakeKey(defs);
             var ledger = GameComponent_PharmaLedger.Instance;
@@ -107,6 +113,14 @@ namespace MedicalExperimentation
             }
 
             bench.NotifyOrderCompleted(key);
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Collections.Look(ref gathered, "ME_gathered", LookMode.Def, LookMode.Value);
+            if (Scribe.mode == LoadSaveMode.PostLoadInit && gathered == null)
+                gathered = new Dictionary<ThingDef, int>();
         }
     }
 }

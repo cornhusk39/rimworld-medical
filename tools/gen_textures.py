@@ -76,7 +76,7 @@ def compound_vial():
     d.rounded_rectangle((46, 64, 82, 100), radius=12, fill=(245, 245, 245, 255))
     # highlight
     d.ellipse((50, 48, 60, 66), fill=(255, 255, 255, 180))
-    save(img, os.path.join("Things", "Item", "Compound.png"))
+    save(add_outline(img, px=4), os.path.join("Things", "Item", "Compound.png"))
 
 def cmd_new_experiment():
     W, H = 64, 64
@@ -89,7 +89,7 @@ def cmd_new_experiment():
     # plus
     d.rectangle((46, 30, 58, 36), fill=(120, 200, 140, 255))
     d.rectangle((49, 27, 55, 39), fill=(120, 200, 140, 255))
-    save(img, os.path.join("UI", "Commands", "ME_NewExperiment.png"))
+    save(add_outline(img, px=3), os.path.join("UI", "Commands", "ME_NewExperiment.png"))
 
 def chemical_dispersal():
     """1x1 top-down canister emitter with vents."""
