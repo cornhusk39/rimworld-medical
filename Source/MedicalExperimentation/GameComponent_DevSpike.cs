@@ -210,8 +210,17 @@ namespace MedicalExperimentation
                         Find.ResearchManager.FinishProject(rp);
 
                 benchRef = SpawnPowered("ME_ExperimentationBench", c);
-                dispersalRef = SpawnPowered("ME_ChemicalDispersal", c + new IntVec3(5, 0, 0));
                 drugLabRef = SpawnPowered("DrugLab", c + new IntVec3(0, 0, 4)); // to see synthesis bills unlock
+                // Dispersal placed away from the colony so its cloud only catches the test foe below.
+                dispersalRef = SpawnPowered("ME_ChemicalDispersal", c + new IntVec3(12, 0, 0));
+                var enemyFac = Find.FactionManager.AllFactions.FirstOrDefault(f => !f.IsPlayer && !f.def.hidden && f.HostileTo(Faction.OfPlayer));
+                if (enemyFac != null)
+                {
+                    var kind = DefDatabase<PawnKindDef>.GetNamedSilentFail("Pirate") ?? PawnKindDefOf.Colonist;
+                    var foe = PawnGenerator.GeneratePawn(kind, enemyFac);
+                    GenSpawn.Spawn(foe, c + new IntVec3(13, 0, 0), map);
+                    foe.stances?.stunner?.StunFor(2000000, null, false, false); // stand still so the unit vents on it
+                }
 
                 // Pre-discover a representative set so Drug Lab bills, Precipice synthesis, and the armed
                 // dispersal unit are immediately visible. The rest stay unknown so the discovery loop is testable.
@@ -355,10 +364,13 @@ namespace MedicalExperimentation
                 prec.Tick();
                 sb.Append(" precipice=").Append(prec != null); ok &= prec != null;
 
-                // Dispersal unit spawns
+                // Dispersal unit spawns + its gas/sound emit path runs without throwing
                 var disp = GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ChemicalDispersal")),
                     CellFinder.RandomClosewalkCellNear(map.Center, map, 8), map);
                 sb.Append(" dispersal=").Append(disp.Spawned); ok &= disp.Spawned;
+                ledger?.Discover(ThingDef.Named("ME_Compound_HepatotoxinB"));
+                try { ((Building_ChemicalDispersal)disp).DebugFireNow(); sb.Append(" emitOk=True"); }
+                catch (Exception e) { sb.Append(" emitOk=EX:").Append(e.Message); ok = false; }
 
                 // Drug-Lab synthesis recipe is hidden until discovered, available after (via Harmony patch).
                 var synthSyn = DefDatabase<RecipeDef>.GetNamedSilentFail("ME_Synth_SynapticAccelerant"); // discovered above

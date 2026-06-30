@@ -36,7 +36,7 @@
     <graphicData>
       <texPath>Things/Item/Compounds/AdrenalCatalyst</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-    </graphicData>
+    <drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible>
       <outcomeDoers>
         <li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental">
@@ -58,7 +58,7 @@
     <graphicData>
       <texPath>Things/Item/Compounds/CoagulantSerum</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-    </graphicData>
+    <drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible>
       <outcomeDoers>
         <li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental">

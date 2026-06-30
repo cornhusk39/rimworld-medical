@@ -3,6 +3,7 @@ using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Verse.Sound;
 
 namespace MedicalExperimentation
 {
@@ -91,6 +92,13 @@ namespace MedicalExperimentation
             return true;
         }
 
+        // Test hook: vent immediately if a compound is selected (ignores cooldown/power/dose).
+        public void DebugFireNow()
+        {
+            ThingDef c = SelectedCompound;
+            if (c != null) Emit(c);
+        }
+
         private void Emit(ThingDef compound)
         {
             HediffDef effect = EffectHediffOf(compound);
@@ -99,10 +107,28 @@ namespace MedicalExperimentation
             float severity = doer.severity > 0f ? doer.severity : effect.initialSeverity;
             bool friendlyFire = MedExpMod.Settings?.dispersalFriendlyFire ?? true;
 
+            // Vent sound (reused vanilla one-shot gas-deploy sound).
+            DefDatabase<SoundDef>.GetNamedSilentFail("GasPack_Deploy")?.PlayOneShot(new TargetInfo(Position, Map));
+
+            // Visible gas cloud: reuse the vanilla tox-gas fleck, plus colored puffs (teal for knockout,
+            // green for toxic) so the cloud reads as the right compound.
+            Color tint = compound.defName == "ME_Compound_SoporificMist"
+                ? new Color(0.6f, 0.85f, 0.85f, 0.55f)
+                : new Color(0.55f, 0.8f, 0.35f, 0.55f);
+            FleckDef gasFleck = DefDatabase<FleckDef>.GetNamedSilentFail("Fleck_ToxGasSmall");
             foreach (var cell in GenRadial.RadialCellsAround(Position, CloudRadius, true))
             {
                 if (!cell.InBounds(Map)) continue;
-                if (Rand.Value < 0.5f) FleckMaker.ThrowDustPuffThick(cell.ToVector3Shifted(), Map, 2f, new Color(0.6f, 0.8f, 0.4f, 0.6f));
+                if (gasFleck != null && Rand.Value < 0.85f)
+                {
+                    FleckCreationData d = FleckMaker.GetDataStatic(cell.ToVector3Shifted(), Map, gasFleck, Rand.Range(1.6f, 2.6f));
+                    d.rotationRate = Rand.Range(-20f, 20f);
+                    d.velocityAngle = Rand.Range(0f, 360f);
+                    d.velocitySpeed = Rand.Range(0.3f, 0.7f);
+                    Map.flecks.CreateFleck(d);
+                }
+                if (Rand.Value < 0.35f)
+                    FleckMaker.ThrowDustPuffThick(cell.ToVector3Shifted(), Map, Rand.Range(1.4f, 2.2f), tint);
             }
 
             var affected = GenRadial.RadialDistinctThingsAround(Position, Map, CloudRadius, true)
