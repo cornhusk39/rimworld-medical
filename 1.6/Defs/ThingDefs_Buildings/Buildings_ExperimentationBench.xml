@@ -37,7 +37,6 @@
       <li>ME_ExperimentalPharmacology</li>
     </researchPrerequisites>
     <inspectorTabs>
-      <li>ITab_Bills</li>
       <li>MedicalExperimentation.ITab_ExperimentLedger</li>
     </inspectorTabs>
     <building>

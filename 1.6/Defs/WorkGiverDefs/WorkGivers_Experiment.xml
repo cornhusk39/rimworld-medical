@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-  <!-- Lets doctors run the deterministic bills at the bench (drug variants, Precipice synthesis). -->
-  <WorkGiverDef>
-    <defName>ME_DoBillsExperimentationBench</defName>
-    <giverClass>RimWorld.WorkGiver_DoBill</giverClass>
-    <workType>Doctor</workType>
-    <verb>do</verb>
-    <gerund>doing bills at</gerund>
-    <priorityInType>55</priorityInType>
-    <fixedBillGiverDefs>
-      <li>ME_ExperimentationBench</li>
-    </fixedBillGiverDefs>
-    <requiredCapacities>
-      <li>Manipulation</li>
-    </requiredCapacities>
-    <prioritizeSustains>true</prioritizeSustains>
-  </WorkGiverDef>
-
+  <!-- The experimentation bench runs experiments only; all crafting bills live at the vanilla Drug Lab. -->
   <WorkGiverDef>
     <defName>ME_DoExperiment</defName>
     <label>run experiments</label>

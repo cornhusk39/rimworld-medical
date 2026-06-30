@@ -13,7 +13,7 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>9000</workAmount>
     <researchPrerequisite>ME_CraftPrecipice</researchPrerequisite>
-    <recipeUsers><li>ME_ExperimentationBench</li></recipeUsers>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
     <products><ME_Compound_Precipice>1</ME_Compound_Precipice></products>
     <ingredients>
       <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>1</count></li>
@@ -35,7 +35,7 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>12000</workAmount>
     <researchPrerequisite>ME_CraftPrecipice</researchPrerequisite>
-    <recipeUsers><li>ME_ExperimentationBench</li></recipeUsers>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
     <products><ME_Compound_Precipice>1</ME_Compound_Precipice></products>
     <ingredients>
       <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>1</count></li>

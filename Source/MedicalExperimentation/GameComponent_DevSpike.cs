@@ -332,11 +332,12 @@ namespace MedicalExperimentation
                 bool descMasked = ThingDef.Named("ME_Compound_HepatotoxinB").description.StartsWith("An experimental compound");
                 sb.Append(" descMasked=").Append(descMasked); ok &= descMasked;
 
-                // Bench bill wiring: variant/precipice recipes attached + DoBill workgiver present
-                var benchDef = ThingDef.Named("ME_ExperimentationBench");
-                bool benchRecipes = benchDef.AllRecipes.Any(r => r.defName.StartsWith("ME_Make_"))
-                    && DefDatabase<WorkGiverDef>.GetNamedSilentFail("ME_DoBillsExperimentationBench") != null;
-                sb.Append(" benchBills=").Append(benchRecipes); ok &= benchRecipes;
+                // All crafting recipes live at the Drug Lab; the experiment bench has no crafting bills.
+                var drugLab = ThingDef.Named("DrugLab");
+                bool labRecipes = drugLab.AllRecipes.Any(r => r.defName.StartsWith("ME_Make_"))
+                    && drugLab.AllRecipes.Any(r => r.defName.StartsWith("ME_Synth_"));
+                bool benchClean = ThingDef.Named("ME_ExperimentationBench").AllRecipes.All(r => !r.defName.StartsWith("ME_Make_"));
+                sb.Append(" labRecipes=").Append(labRecipes && benchClean); ok &= labRecipes && benchClean;
 
                 var ledger = GameComponent_PharmaLedger.Instance;
                 float savedChance = MedExpMod.Settings.incompatibilityChance;
