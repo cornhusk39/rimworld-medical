@@ -2,6 +2,7 @@
 <Defs>
 
   <ThingDef Name="ME_CompoundBase" ParentName="DrugBase" Abstract="True">
+    <thingClass>MedicalExperimentation.Thing_Compound</thingClass>
     <techLevel>Spacer</techLevel>
     <statBases>
       <MarketValue>28</MarketValue>

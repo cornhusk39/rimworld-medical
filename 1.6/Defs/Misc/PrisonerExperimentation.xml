@@ -23,7 +23,7 @@
     <workType>Warden</workType>
     <verb>administer experimental compounds</verb>
     <gerund>administering experimental compounds</gerund>
-    <priorityInType>20</priorityInType>
+    <priorityInType>45</priorityInType>
     <prioritizeSustains>true</prioritizeSustains>
     <requiredCapacities>
       <li>Manipulation</li>

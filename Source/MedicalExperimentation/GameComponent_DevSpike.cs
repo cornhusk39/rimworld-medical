@@ -275,12 +275,17 @@ namespace MedicalExperimentation
                     doc.workSettings?.EnableAndInitialize();
                 }
 
-                // Two prisoners for prisoner-experiment testing.
+                // Two prisoners flagged for auto-experimentation. Stunned in place so a warden walks up
+                // and administers an undiscovered compound on unpause (no prison build needed for the demo).
                 for (int i = 0; i < 2; i++)
                 {
                     Pawn pris = PawnGenerator.GeneratePawn(PawnKindDefOf.SpaceRefugee, null);
-                    GenSpawn.Spawn(pris, CellFinder.RandomClosewalkCellNear(c, map, 8), map);
+                    GenSpawn.Spawn(pris, CellFinder.RandomClosewalkCellNear(c, map, 5), map);
                     pris.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner);
+                    pris.guest?.ToggleNonExclusiveInteraction(ME_DefOf.ME_AutoExperiment, true);
+                    pris.guest.interactionMode = DefDatabase<PrisonerInteractionModeDef>.GetNamed("NoInteraction");
+                    if (pris.needs?.food != null) pris.needs.food.CurLevel = pris.needs.food.MaxLevel;
+                    pris.stances?.stunner?.StunFor(2000000, null, false, false);
                 }
 
                 // A maimed test subject (missing leg + permanent scars) for Precipice + the surgeries.
@@ -355,6 +360,16 @@ namespace MedicalExperimentation
                 sb.Append(" administer=").Append(disc && eff);
                 ok &= disc && eff;
 
+                // Once identified, the item's info-card description must reveal the real effect (not stay
+                // generic). Tested on the "failed compound", which the player reported reading wrong.
+                var failedDef = ThingDef.Named("ME_Compound_SickDrug");
+                var failedThing = ThingMaker.MakeThing(failedDef);
+                bool descBefore = failedThing.DescriptionFlavor == failedDef.description; // generic while unknown
+                ledger?.Discover(failedDef);
+                bool descAfter = failedThing.DescriptionFlavor != failedDef.description
+                    && !failedThing.DescriptionFlavor.NullOrEmpty();
+                sb.Append(" descReveal=").Append(descBefore && descAfter); ok &= descBefore && descAfter;
+
                 // Forced incompatibility -> adverse reaction, no benefit
                 MedExpMod.Settings.incompatibilityChance = 1f;
                 Pawn p2 = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
@@ -400,6 +415,8 @@ namespace MedicalExperimentation
                 GenSpawn.Spawn(pris, CellFinder.RandomClosewalkCellNear(warden.Position, map, 2), map);
                 pris.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner);
                 pris.guest?.ToggleNonExclusiveInteraction(ME_DefOf.ME_AutoExperiment, true);
+                pris.guest.interactionMode = DefDatabase<PrisonerInteractionModeDef>.GetNamed("NoInteraction"); // no recruit job to preempt
+                if (pris.needs?.food != null) pris.needs.food.CurLevel = pris.needs.food.MaxLevel; // no food job to preempt
                 pris.stances?.stunner?.StunFor(2000000, null, false, false); // keep them put (no cell in the spike)
                 prisRef = pris;
                 SpawnStack(map, warden.Position, "ME_Compound_NeuralDefragmenter", 3);
