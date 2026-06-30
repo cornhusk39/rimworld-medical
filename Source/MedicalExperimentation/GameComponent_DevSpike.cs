@@ -19,6 +19,7 @@ namespace MedicalExperimentation
         private bool sandboxDone;
         private Building benchRef;
         private Building dispersalRef;
+        private Building drugLabRef;
         private int frames;
         private int phase;
         private int deadlineTick;
@@ -47,10 +48,11 @@ namespace MedicalExperimentation
                 else
                 {
                     // keep the test buildings powered without a real grid
-                    var bt = benchRef?.GetComp<CompPowerTrader>();
-                    if (bt != null) bt.PowerOn = true;
-                    var dt = dispersalRef?.GetComp<CompPowerTrader>();
-                    if (dt != null) dt.PowerOn = true;
+                    foreach (var bld in new[] { benchRef, dispersalRef, drugLabRef })
+                    {
+                        var pt = bld?.GetComp<CompPowerTrader>();
+                        if (pt != null) pt.PowerOn = true;
+                    }
                 }
                 return;
             }
@@ -186,50 +188,73 @@ namespace MedicalExperimentation
             }
         }
 
-        // Interactive sandbox: set up everything for hands-on testing, then go inert.
+        // Interactive sandbox: one paused scene that exercises every still-needs-human-eyes feature.
         private void SandboxSetup(Map map)
         {
             try
             {
                 IntVec3 c = map.Center;
+                var ledger = GameComponent_PharmaLedger.Instance;
 
-                // Unlock all of the mod's research so every recipe/surgery is available.
+                Building SpawnPowered(string def, IntVec3 at)
+                {
+                    var b = (Building)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named(def)), at, map);
+                    b.SetFaction(Faction.OfPlayer);
+                    var p = b.GetComp<CompPowerTrader>(); if (p != null) p.PowerOn = true;
+                    return b;
+                }
+
+                // Unlock all of the mod's research so variant/surgery/precipice recipes are gated only by discovery.
                 foreach (var rp in DefDatabase<ResearchProjectDef>.AllDefs)
                     if (rp.defName.StartsWith("ME_") && !rp.IsFinished)
                         Find.ResearchManager.FinishProject(rp);
 
-                // Bench (kept powered each frame).
-                benchRef = (Building)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ExperimentationBench")), c, map);
-                benchRef.SetFaction(Faction.OfPlayer);
-                var bt = benchRef.GetComp<CompPowerTrader>(); if (bt != null) bt.PowerOn = true;
+                benchRef = SpawnPowered("ME_ExperimentationBench", c);
+                dispersalRef = SpawnPowered("ME_ChemicalDispersal", c + new IntVec3(5, 0, 0));
+                drugLabRef = SpawnPowered("DrugLab", c + new IntVec3(0, 0, 4)); // to see synthesis bills unlock
 
-                // Dispersal unit nearby, with two toxic compounds pre-discovered so it can vent.
-                IntVec3 dcell = c + new IntVec3(4, 0, 0);
-                if (dcell.InBounds(map) && dcell.Standable(map))
+                // Pre-discover a representative set so Drug Lab bills, Precipice synthesis, and the armed
+                // dispersal unit are immediately visible. The rest stay unknown so the discovery loop is testable.
+                string[] preDisc = { "ME_Compound_AdrenalCatalyst", "ME_Compound_TissueRegenerant",
+                    "ME_Compound_NerveConductionGel", "ME_Compound_SynapticAccelerant",
+                    "ME_Compound_Precipice", "ME_Compound_HepatotoxinB", "ME_Compound_SoporificMist" };
+                foreach (var d in preDisc) ledger?.Discover(ThingDef.Named(d));
+
+                // Pre-seed the ledger so the "Tried combinations" log + picker warnings are visible up front:
+                // one real hit and one dud.
+                if (ledger != null)
                 {
-                    dispersalRef = (Building)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ChemicalDispersal")), dcell, map);
-                    dispersalRef.SetFaction(Faction.OfPlayer);
-                    var dt = dispersalRef.GetComp<CompPowerTrader>(); if (dt != null) dt.PowerOn = true;
+                    var adr = ExperimentResolver.RecipeForProduct(ThingDef.Named("ME_Compound_AdrenalCatalyst"));
+                    if (adr != null) ledger.RecordCombo(adr.ComboKey, adr.product);
+                    string dudKey = ExperimentRecipeDef.MakeKey(new[] { ThingDef.Named("Beer"), ThingDef.Named("Beer"), ThingDef.Named("Beer") });
+                    ledger.RecordCombo(dudKey, null);
+                    ledger.RaiseHypothesis(ThingDef.Named("ME_Compound_ImmunoPrimer"), 0.6f); // a partial-hypothesis example
                 }
-                var ledger = GameComponent_PharmaLedger.Instance;
-                ledger?.Discover(ThingDef.Named("ME_Compound_HepatotoxinB"));
-                ledger?.Discover(ThingDef.Named("ME_Compound_SoporificMist"));
 
-                // Reagents: a generous stock of everything.
+                // Reagents, components, food.
                 foreach (var r in ReagentSet.All) SpawnStack(map, c, r.defName, 25);
                 SpawnStack(map, c, "ComponentSpacer", 12);
                 SpawnStack(map, c, "ComponentIndustrial", 12);
-                SpawnStack(map, c, "ArchiteCapsule", 5); // skipped if Biotech absent
-                SpawnStack(map, c, "MealSurvivalPack", 40); // keep pawns fed if left idle
+                SpawnStack(map, c, "ArchiteCapsule", 5);
+                SpawnStack(map, c, "MealSurvivalPack", 40);
 
-                // Sample compounds to administer immediately (most stay unidentified for testing).
-                SpawnStack(map, c, "ME_Compound_AdrenalCatalyst", 5);
-                SpawnStack(map, c, "ME_Compound_SickDrug", 5);
-                SpawnStack(map, c, "ME_Compound_LethalDrug", 3);
-                SpawnStack(map, c, "ME_Compound_Precipice", 2);
-                SpawnStack(map, c, "ME_Compound_SoporificMist", 3);
+                // A sample of every compound so all sprites are visible and anything is administrable.
+                string[] samples = { "AdrenalCatalyst", "CoagulantSerum", "ImmunoPrimer", "NeuralDefragmenter",
+                    "SomnolentDraught", "BattleStimX", "BerserkerDraught", "Stoneskin", "HepatotoxinB",
+                    "SoporificMist", "TissueRegenerant", "NerveConductionGel", "SynapticAccelerant",
+                    "Precipice", "SickDrug", "LethalDrug", "InertDrug" };
+                foreach (var s in samples) SpawnStack(map, c, "ME_Compound_" + s, 4);
 
-                // Two doctor colonists.
+                // Queue a FRESH (undiscovered) experiment so hauling + production is visible on unpause.
+                var coag = new List<ReagentCount>
+                {
+                    new ReagentCount(ThingDef.Named("MedicineHerbal"), 1),
+                    new ReagentCount(ThingDef.Named("MedicineIndustrial"), 1),
+                    new ReagentCount(ThingDef.Named("Neutroamine"), 1),
+                };
+                (benchRef as Building_ExperimentationBench)?.AddOrder(new ExperimentOrder(coag, false));
+
+                // Two doctors (Medicine 12).
                 for (int i = 0; i < 2; i++)
                 {
                     Pawn doc = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
@@ -247,11 +272,40 @@ namespace MedicalExperimentation
                     pris.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner);
                 }
 
-                Log.Error("[MESandbox] ready: bench + dispersal + reagents + compounds + 2 doctors + 2 prisoners at map center. Research unlocked.");
+                // A maimed test subject (missing leg + permanent scars) for Precipice + the surgeries.
+                MakeTestSubject(map, c);
+
+                Find.TickManager.CurTimeSpeed = TimeSpeed.Paused;
+                Log.Error("[MESandbox] ready: bench+druglab+dispersal, all reagents+compounds, 2 doctors, 2 prisoners, 1 maimed subject; an experiment is queued. Paused.");
             }
             catch (Exception e)
             {
                 Log.Error("[MESandbox] SETUP_EX: " + e);
+            }
+        }
+
+        private static void MakeTestSubject(Map map, IntVec3 c)
+        {
+            Pawn subj = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+            GenSpawn.Spawn(subj, CellFinder.RandomClosewalkCellNear(c, map, 5), map);
+
+            // Amputate a leg.
+            var legDef = DefDatabase<BodyPartDef>.GetNamedSilentFail("Leg");
+            var leg = subj.health.hediffSet.GetNotMissingParts().FirstOrDefault(p => p.def == legDef);
+            var missing = DefDatabase<HediffDef>.GetNamedSilentFail("MissingBodyPart");
+            if (leg != null && missing != null) subj.health.AddHediff(missing, leg);
+
+            // Two permanent scars.
+            var scarParts = subj.health.hediffSet.GetNotMissingParts()
+                .Where(p => p.def.defName == "Torso" || p.def.defName == "Arm").Take(2).ToList();
+            foreach (var part in scarParts)
+            {
+                if (HediffDefOf.Cut == null) break;
+                var cut = (Hediff_Injury)HediffMaker.MakeHediff(HediffDefOf.Cut, subj, part);
+                cut.Severity = 4f;
+                var perm = cut.TryGetComp<HediffComp_GetsPermanent>();
+                if (perm != null) perm.IsPermanent = true;
+                subj.health.AddHediff(cut, part);
             }
         }
 
