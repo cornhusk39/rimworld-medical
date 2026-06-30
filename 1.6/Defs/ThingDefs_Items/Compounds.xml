@@ -34,9 +34,8 @@
     <label>adrenal catalyst</label>
     <description>A refined stimulant compound. Sharpens focus and quickens the body for about a day. Identified by testing.</description>
     <graphicData>
-      <texPath>Things/Item/Compound</texPath>
+      <texPath>Things/Item/Compounds/AdrenalCatalyst</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <color>(0.85,0.72,0.40)</color>
     </graphicData>
     <ingestible>
       <outcomeDoers>
@@ -57,9 +56,8 @@
     <label>coagulant serum</label>
     <description>A clotting and immune-priming serum. Helps the body hold blood and fight infection for a while. Identified by testing.</description>
     <graphicData>
-      <texPath>Things/Item/Compound</texPath>
+      <texPath>Things/Item/Compounds/CoagulantSerum</texPath>
       <graphicClass>Graphic_Single</graphicClass>
-      <color>(0.78,0.45,0.45)</color>
     </graphicData>
     <ingestible>
       <outcomeDoers>
