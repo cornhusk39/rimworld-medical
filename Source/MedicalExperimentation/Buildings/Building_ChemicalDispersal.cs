@@ -68,8 +68,27 @@ namespace MedicalExperimentation
                 && p.Position.InHorDistOf(Position, DetectRadius));
             if (!hostileNear) return;
 
+            // Each shot consumes one dose of the selected compound from colony stock.
+            if (!ConsumeDose(compound)) return;
+
             Emit(compound);
             cooldownLeft = CooldownTicks;
+        }
+
+        private int AvailableDoses(ThingDef compound)
+        {
+            if (compound == null) return 0;
+            return Map.listerThings.ThingsOfDef(compound)
+                .Where(t => !t.IsForbidden(Faction.OfPlayer))
+                .Sum(t => t.stackCount);
+        }
+
+        private bool ConsumeDose(ThingDef compound)
+        {
+            Thing dose = Map.listerThings.ThingsOfDef(compound).FirstOrDefault(t => !t.IsForbidden(Faction.OfPlayer));
+            if (dose == null) return false;
+            dose.SplitOff(1).Destroy();
+            return true;
         }
 
         private void Emit(ThingDef compound)
@@ -125,6 +144,7 @@ namespace MedicalExperimentation
             var c = SelectedCompound;
             if (!s.NullOrEmpty()) s += "\n";
             s += "ME_DispersalLoaded".Translate(c != null ? c.LabelCap.ToString() : "ME_None".Translate().ToString());
+            if (c != null) s += "\n" + "ME_DispersalDoses".Translate(AvailableDoses(c));
             if (cooldownLeft > 0) s += "\n" + "ME_DispersalCooldown".Translate((cooldownLeft / 60).ToString());
             return s;
         }

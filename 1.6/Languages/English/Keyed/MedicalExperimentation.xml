@@ -47,9 +47,10 @@
 
   <!-- Chemical dispersal unit -->
   <ME_SelectCompound>Select compound</ME_SelectCompound>
-  <ME_SelectCompoundDesc>Choose which discovered toxic compound this unit vents at hostiles.</ME_SelectCompoundDesc>
+  <ME_SelectCompoundDesc>Choose which discovered toxic compound this unit vents at hostiles. It draws from your stockpiled compounds and consumes one dose each time it fires.</ME_SelectCompoundDesc>
   <ME_NoToxicDiscovered>(no toxic compounds discovered yet)</ME_NoToxicDiscovered>
-  <ME_DispersalLoaded>Loaded: {0}</ME_DispersalLoaded>
+  <ME_DispersalLoaded>Compound: {0}</ME_DispersalLoaded>
+  <ME_DispersalDoses>Doses in stock: {0}</ME_DispersalDoses>
   <ME_None>nothing</ME_None>
   <ME_DispersalCooldown>Recharging: {0}s</ME_DispersalCooldown>
   <ME_DispersalFired>A dispersal unit vented {0}.</ME_DispersalFired>

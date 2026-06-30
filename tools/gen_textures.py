@@ -6,6 +6,17 @@ Extended per-milestone; each function writes one PNG under 1.6/Textures (or Text
 import os
 from PIL import Image, ImageDraw, ImageFilter
 
+def add_outline(img, px=5, color=(0, 0, 0, 255)):
+    """Add a bold solid outline (silhouette halo) around the opaque shape, RimWorld style."""
+    alpha = img.split()[3]
+    dil = alpha.filter(ImageFilter.MaxFilter(px * 2 + 1))
+    mask = dil.point(lambda a: 255 if a > 12 else 0)
+    out = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    black = Image.new("RGBA", img.size, color)
+    out = Image.composite(black, out, mask)
+    out.alpha_composite(img)
+    return out
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEX = os.path.join(ROOT, "Textures")
 
@@ -46,7 +57,7 @@ def experimentation_bench():
     # a tray / mortar on the right
     d.ellipse((196, 60, 236, 88), fill=(120, 124, 130, 255), outline=(70, 72, 76, 255), width=2)
     d.ellipse((204, 64, 228, 82), fill=(80, 83, 88, 255))
-    save(img, os.path.join("Things", "Building", "ExperimentationBench.png"))
+    save(add_outline(img, px=5), os.path.join("Things", "Building", "ExperimentationBench.png"))
 
 # ---- items ----------------------------------------------------------------
 
@@ -95,7 +106,7 @@ def chemical_dispersal():
         rad = math.radians(ang)
         cx, cy = 64 + 30 * math.cos(rad), 64 + 30 * math.sin(rad)
         d.ellipse((cx - 4, cy - 4, cx + 4, cy + 4), fill=(120, 170, 100, 255))
-    save(img, os.path.join("Things", "Building", "ChemicalDispersal.png"))
+    save(add_outline(img, px=5), os.path.join("Things", "Building", "ChemicalDispersal.png"))
 
 if __name__ == "__main__":
     experimentation_bench()

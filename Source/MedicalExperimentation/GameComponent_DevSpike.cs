@@ -23,6 +23,7 @@ namespace MedicalExperimentation
         private int phase;
         private int deadlineTick;
         private int phase1Frames;
+        private Building e2eBench;
         private bool logicPass;
         private string logicDetail = "";
 
@@ -142,10 +143,10 @@ namespace MedicalExperimentation
                 IntVec3 center = map.Center;
                 Building_ExperimentationBench bench = (Building_ExperimentationBench)GenSpawn.Spawn(
                     ThingMaker.MakeThing(ThingDef.Named("ME_ExperimentationBench")), center, map);
-
-                Pawn doctor = map.mapPawns.FreeColonistsSpawned.FirstOrDefault()
-                              ?? PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
-                if (!doctor.Spawned) GenSpawn.Spawn(doctor, CellFinder.RandomClosewalkCellNear(center, map, 4), map);
+                e2eBench = bench;
+                bench.SetFaction(Faction.OfPlayer); // colonists only service player-faction benches
+                var pt = bench.GetComp<CompPowerTrader>();
+                if (pt != null) pt.PowerOn = true;
 
                 SpawnStack(map, center, "MedicineIndustrial", 5);
                 SpawnStack(map, center, "WakeUp", 5);
@@ -159,25 +160,18 @@ namespace MedicalExperimentation
                 };
                 bench.AddOrder(new ExperimentOrder(reagents, false));
 
-                // Power the test bench (no grid in the spike). PowerOn at assignment time is enough;
-                // the job itself has no power fail-condition once started.
-                var pt = bench.GetComp<CompPowerTrader>();
-                if (pt != null) pt.PowerOn = true;
+                // Use an EXISTING colony doctor, NATURAL work assignment (no forced StartJob).
+                Pawn doctor = map.mapPawns.FreeColonistsSpawned.FirstOrDefault()
+                              ?? PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                if (!doctor.Spawned) GenSpawn.Spawn(doctor, CellFinder.RandomClosewalkCellNear(center, map, 3), map);
+                doctor.workSettings?.EnableAndInitialize();
+                doctor.workSettings?.SetPriority(WorkTypeDefOf.Doctor, 1);
+                if (doctor.drafter != null) doctor.drafter.Drafted = false;
+                doctor.jobs?.EndCurrentJob(JobCondition.InterruptForced);
 
-                var wg = (WorkGiver_DoExperiment)DefDatabase<WorkGiverDef>.GetNamed("ME_DoExperiment").Worker;
-                Job job = wg.JobOnThing(doctor, bench, forced: true);
-                if (job != null)
-                {
-                    doctor.jobs.StartJob(job, JobCondition.InterruptForced);
-                    logicDetail += " jobStarted=True";
-                }
-                else
-                {
-                    logicDetail += " jobStarted=False(NOJOB)";
-                }
-
-                deadlineTick = Find.TickManager.TicksGame + 8000;
+                deadlineTick = Find.TickManager.TicksGame + 12000;
                 Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+                logicDetail += " naturalAssign";
             }
             catch (Exception e)
             {
@@ -200,6 +194,7 @@ namespace MedicalExperimentation
 
                 // Bench (kept powered each frame).
                 benchRef = (Building)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ExperimentationBench")), c, map);
+                benchRef.SetFaction(Faction.OfPlayer);
                 var bt = benchRef.GetComp<CompPowerTrader>(); if (bt != null) bt.PowerOn = true;
 
                 // Dispersal unit nearby, with two toxic compounds pre-discovered so it can vent.
@@ -207,6 +202,7 @@ namespace MedicalExperimentation
                 if (dcell.InBounds(map) && dcell.Standable(map))
                 {
                     dispersalRef = (Building)GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ChemicalDispersal")), dcell, map);
+                    dispersalRef.SetFaction(Faction.OfPlayer);
                     var dt = dispersalRef.GetComp<CompPowerTrader>(); if (dt != null) dt.PowerOn = true;
                 }
                 var ledger = GameComponent_PharmaLedger.Instance;
@@ -328,6 +324,9 @@ namespace MedicalExperimentation
             // Force time to advance in case the quicktest map re-paused itself.
             if (Find.TickManager.Paused || Find.TickManager.CurTimeSpeed == TimeSpeed.Normal)
                 Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+            // Keep the test bench powered so natural work assignment can proceed.
+            var bt = e2eBench?.GetComp<CompPowerTrader>();
+            if (bt != null) bt.PowerOn = true;
 
             bool produced = map.listerThings.ThingsOfDef(ThingDef.Named("ME_Compound_AdrenalCatalyst")).Count > 0;
             if (produced)

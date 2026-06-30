@@ -8,13 +8,10 @@ namespace MedicalExperimentation
     // Offers experiment jobs at benches that have queued orders, to pawns assigned Doctor work.
     public class WorkGiver_DoExperiment : WorkGiver_Scanner
     {
+        // Scan the same way vanilla finds workbenches (the bench is an IBillGiver), which is the reliable
+        // path the work scanner actually invokes. Filter to our bench with orders in JobOnThing.
         public override PathEndMode PathEndMode => PathEndMode.InteractionCell;
-        public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForUndefined();
-
-        public override IEnumerable<Thing> PotentialWorkThingsGlobal(Pawn pawn)
-        {
-            return pawn.Map.listerBuildings.AllBuildingsColonistOfClass<Building_ExperimentationBench>();
-        }
+        public override ThingRequest PotentialWorkThingRequest => ThingRequest.ForGroup(ThingRequestGroup.PotentialBillGiver);
 
         public override bool ShouldSkip(Pawn pawn, bool forced = false)
         {
