@@ -105,7 +105,7 @@
     <label>precipice</label>
     <description>An archotech-grade regenerative agent. It throws the body into a multi-day regenerative coma that regrows lost parts and clears scars, but cannot cure disease, and leaves a long hangover. Identified by testing.</description>
     <statBases><MarketValue>320</MarketValue><Mass>0.1</Mass></statBases>
-    <graphicData><texPath>Things/Item/Compound</texPath><graphicClass>Graphic_Single</graphicClass><color>(0.88,0.84,0.97)</color></graphicData>
+    <graphicData><texPath>Things/Item/Compounds/Precipice</texPath><graphicClass>Graphic_Single</graphicClass></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_Precipice</hediffDef></li></outcomeDoers></ingestible>
     <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
   </ThingDef>

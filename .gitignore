@@ -5,3 +5,6 @@ Source/**/bin/
 *.suo
 
 # Keep the compiled mod assembly (shipped), ignore intermediates only
+
+# Review artifact
+image-inventory.html
