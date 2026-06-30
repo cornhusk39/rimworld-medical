@@ -8,6 +8,10 @@
   <ME_RandomExperimentDesc>Automatically queue an untried experiment that can be made from ingredients you currently have. Most blind attempts produce something harmful.</ME_RandomExperimentDesc>
   <ME_NoRandom>No untried experiment can be made from available ingredients.</ME_NoRandom>
   <ME_RandomQueued>Queued a random experiment.</ME_RandomQueued>
+  <ME_AutoExperiment>Auto-experiment</ME_AutoExperiment>
+  <ME_AutoExperimentDesc>While enabled, automatically queue a new untried experiment whenever the bench is idle and the reagents are available. Stops on its own when nothing new can be made.</ME_AutoExperimentDesc>
+  <ME_ComboWasDud>Tried before: produced nothing. Running it again will waste these reagents.</ME_ComboWasDud>
+  <ME_ComboMade>Tried before: this combination made {0}.</ME_ComboMade>
   <ME_QueuedExperiments>Queued experiments: {0}</ME_QueuedExperiments>
 
   <!-- Picker dialog -->
@@ -36,7 +40,8 @@
   <ME_LedgerHeader>Compounds discovered: {0} / {1}</ME_LedgerHeader>
   <ME_LedgerDiscovered>Discovered</ME_LedgerDiscovered>
   <ME_LedgerGaps>Yet to discover</ME_LedgerGaps>
-  <ME_LedgerFailed>Failed combinations</ME_LedgerFailed>
+  <ME_LedgerTried>Tried combinations</ME_LedgerTried>
+  <ME_ResultNothing>nothing</ME_ResultNothing>
   <ME_UnknownCode>Unknown compound {0}</ME_UnknownCode>
   <ME_HypoShort>likely {0} ({1})</ME_HypoShort>
   <ME_NoData>no data</ME_NoData>

@@ -83,6 +83,17 @@ namespace MedicalExperimentation
             // Footer
             float fy = inRect.height - 80f;
             bool ready = chosen.Count == 3;
+
+            if (ready)
+            {
+                string hint = PriorResultHint();
+                if (hint != null)
+                {
+                    GUI.color = new Color(0.95f, 0.8f, 0.4f);
+                    Widgets.Label(new Rect(0f, fy - 2f, inRect.width, 24f), hint);
+                    GUI.color = Color.white;
+                }
+            }
             if (Widgets.ButtonText(new Rect(inRect.width - 320f, fy + 30f, 150f, 36f), "ME_Confirm".Translate()) && ready)
             {
                 Queue();
@@ -98,6 +109,22 @@ namespace MedicalExperimentation
                 Widgets.Label(new Rect(0f, fy + 38f, 300f, 24f), "ME_NeedThree".Translate(chosen.Count));
                 GUI.color = Color.white;
             }
+        }
+
+        // If this exact 3-reagent combo was tried before, tell the player what it made so they don't waste reagents.
+        private string PriorResultHint()
+        {
+            var ledger = GameComponent_PharmaLedger.Instance;
+            if (ledger == null) return null;
+            string key = ExperimentRecipeDef.MakeKey(chosen);
+            if (!ledger.ComboTried(key)) return null;
+            if (ledger.ComboWasDud(key)) return "ME_ComboWasDud".Translate();
+            ThingDef prod = ledger.ComboResult(key);
+            if (prod == null) return null;
+            string name = ledger.IsDiscovered(prod)
+                ? prod.LabelCap.ToString()
+                : "experimental compound " + CompMysteryDrug.CodeFor(prod);
+            return "ME_ComboMade".Translate(name);
         }
 
         private void Queue()

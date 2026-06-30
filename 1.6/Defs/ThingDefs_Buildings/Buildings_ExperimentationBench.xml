@@ -12,6 +12,7 @@
       <drawSize>(3,1.5)</drawSize>
     </graphicData>
     <altitudeLayer>Building</altitudeLayer>
+    <tickerType>Rare</tickerType>
     <fillPercent>0.5</fillPercent>
     <useHitPoints>true</useHitPoints>
     <statBases>

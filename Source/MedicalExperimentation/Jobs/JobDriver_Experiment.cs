@@ -94,7 +94,7 @@ namespace MedicalExperimentation
                 Thing product = ThingMaker.MakeThing(recipe.product);
                 product.stackCount = Math.Max(1, recipe.productCount);
                 GenPlace.TryPlaceThing(product, dropCell, map, ThingPlaceMode.Near);
-                ledger?.RecordCombo(key, false);
+                ledger?.RecordCombo(key, recipe.product);
 
                 // The synthesizing doctor may form a partial hypothesis about an unidentified compound,
                 // scaling with Medicine skill (shown in the ledger / item tooltip until it is administered).
@@ -121,7 +121,7 @@ namespace MedicalExperimentation
                     back.stackCount = 1;
                     GenPlace.TryPlaceThing(back, dropCell, map, ThingPlaceMode.Near);
                 }
-                ledger?.RecordCombo(key, true);
+                ledger?.RecordCombo(key, null);
                 Messages.Message("ME_ExperimentFail".Translate(salvaged), bench, MessageTypeDefOf.NeutralEvent, false);
             }
 

@@ -34,8 +34,8 @@ namespace MedicalExperimentation
             Rect viewArea = new Rect(outer.x, outer.y + 36f, outer.width, outer.height - 36f);
             float rowH = 26f;
             // estimate content height
-            int dudCount = ledger?.DudComboKeys.Count() ?? 0;
-            float height = (total + dudCount + 6) * rowH + 80f;
+            int triedCount = ledger?.AllComboResults.Count ?? 0;
+            float height = (total + triedCount + 6) * rowH + 80f;
             Rect view = new Rect(0f, 0f, viewArea.width - 16f, height);
             Widgets.BeginScrollView(viewArea, ref scroll, view);
             float y = 0f;
@@ -70,17 +70,19 @@ namespace MedicalExperimentation
                 y += rowH;
             }
 
-            // Failed combos
-            if (dudCount > 0)
+            // Tried combinations log: every combo tried, and what it produced.
+            if (triedCount > 0)
             {
                 y += 6f;
-                y = SectionHeader(view.width, y, "ME_LedgerFailed".Translate());
-                foreach (var key in ledger.DudComboKeys)
+                y = SectionHeader(view.width, y, "ME_LedgerTried".Translate());
+                foreach (var kv in ledger.AllComboResults)
                 {
                     Rect row = new Rect(0f, y, view.width, rowH);
                     if (Mouse.IsOver(row)) Widgets.DrawHighlight(row);
-                    GUI.color = new Color(0.75f, 0.55f, 0.55f);
-                    Widgets.Label(new Rect(4f, y + 3f, view.width, rowH), KeyToLabel(key));
+                    bool dud = kv.Value.NullOrEmpty();
+                    GUI.color = dud ? new Color(0.75f, 0.55f, 0.55f) : new Color(0.8f, 0.85f, 0.8f);
+                    Widgets.Label(new Rect(4f, y + 3f, view.width * 0.55f, rowH), KeyToLabel(kv.Key));
+                    Widgets.Label(new Rect(view.width * 0.55f, y + 3f, view.width * 0.45f, rowH), ResultLabel(kv.Value));
                     GUI.color = Color.white;
                     y += rowH;
                 }
@@ -103,6 +105,16 @@ namespace MedicalExperimentation
         {
             return string.Join(" + ", r.reagents.Where(x => x.thingDef != null)
                 .Select(x => x.count > 1 ? x.count + "x " + x.thingDef.label : x.thingDef.label));
+        }
+
+        private string ResultLabel(string productDefName)
+        {
+            if (productDefName.NullOrEmpty()) return "ME_ResultNothing".Translate();
+            var def = DefDatabase<ThingDef>.GetNamedSilentFail(productDefName);
+            if (def == null) return "?";
+            var ledger = GameComponent_PharmaLedger.Instance;
+            if (ledger != null && ledger.IsDiscovered(def)) return def.LabelCap;
+            return CompMysteryDrug.CodeFor(def);
         }
 
         private static string KeyToLabel(string key)

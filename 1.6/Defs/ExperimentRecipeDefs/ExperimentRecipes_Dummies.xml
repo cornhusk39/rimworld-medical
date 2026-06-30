@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-  <!-- Auto-generated dummy recipes (tools/gen_dummy_recipes.py). 40 sick + 10 lethal. -->
+  <!-- Auto-generated dummy recipes (tools/gen_dummy_recipes.py). 40 sick + 10 lethal + 20 inert. -->
 
   <MedicalExperimentation.ExperimentRecipeDef>
     <defName>ME_Exp_Dummy_Sick_001</defName>
@@ -581,6 +581,244 @@
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
       <li><thingDef>Neutroamine</thingDef><count>1</count></li>
+      <li><thingDef>Ambrosia</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_001</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Neutroamine</thingDef><count>1</count></li>
+      <li><thingDef>Chemfuel</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_002</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>2</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_003</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_004</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>GoJuice</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_005</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>WakeUp</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_006</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>Yayo</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_007</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>Flake</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_008</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>PsychoidLeaves</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_009</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>SmokeleafLeaves</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_010</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>Ambrosia</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_011</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>Chemfuel</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_012</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Luciferium</thingDef><count>1</count></li>
+      <li><thingDef>Beer</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_013</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>2</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_014</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>1</count></li>
+      <li><thingDef>GoJuice</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_015</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>1</count></li>
+      <li><thingDef>WakeUp</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_016</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>1</count></li>
+      <li><thingDef>Yayo</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_017</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>1</count></li>
+      <li><thingDef>Flake</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_018</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>1</count></li>
+      <li><thingDef>PsychoidLeaves</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_019</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>1</count></li>
+      <li><thingDef>SmokeleafLeaves</thingDef><count>1</count></li>
+    </reagents>
+  </MedicalExperimentation.ExperimentRecipeDef>
+  <MedicalExperimentation.ExperimentRecipeDef>
+    <defName>ME_Exp_Dummy_Inert_020</defName>
+    <product>ME_Compound_InertDrug</product>
+    <productCount>3</productCount>
+    <toxic>true</toxic>
+    <effectSummary>an inert compound</effectSummary>
+    <reagents>
+      <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
+      <li><thingDef>Penoxycyline</thingDef><count>1</count></li>
       <li><thingDef>Ambrosia</thingDef><count>1</count></li>
     </reagents>
   </MedicalExperimentation.ExperimentRecipeDef>

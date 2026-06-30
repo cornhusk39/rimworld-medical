@@ -12,9 +12,19 @@ namespace MedicalExperimentation
     public class Building_ExperimentationBench : Building_WorkTable
     {
         private List<ExperimentOrder> orders = new List<ExperimentOrder>();
+        private bool autoExperiment;
 
         public List<ExperimentOrder> Orders => orders;
         public bool HasOrders => orders != null && orders.Count > 0;
+
+        public override void TickRare()
+        {
+            base.TickRare();
+            // While auto-experiment is on, keep one experiment queued as long as an untried recipe's
+            // reagents are available. Stops automatically when nothing new can be made.
+            if (autoExperiment && Spawned && orders.Count == 0)
+                TryQueueRandomExperiment(quiet: true);
+        }
 
         public void AddOrder(ExperimentOrder order)
         {
@@ -50,13 +60,22 @@ namespace MedicalExperimentation
                 defaultLabel = "ME_RandomExperiment".Translate(),
                 defaultDesc = "ME_RandomExperimentDesc".Translate(),
                 icon = ContentFinder<Texture2D>.Get("UI/Commands/ME_NewExperiment", false) ?? BaseContent.BadTex,
-                action = QueueRandomExperiment
+                action = () => TryQueueRandomExperiment(quiet: false)
+            };
+
+            yield return new Command_Toggle
+            {
+                defaultLabel = "ME_AutoExperiment".Translate(),
+                defaultDesc = "ME_AutoExperimentDesc".Translate(),
+                icon = ContentFinder<Texture2D>.Get("UI/Commands/ME_NewExperiment", false) ?? BaseContent.BadTex,
+                isActive = () => autoExperiment,
+                toggleAction = () => autoExperiment = !autoExperiment
             };
         }
 
         // Picks a random experiment that has not been tried yet and whose reagents are all available
-        // in the colony right now, and queues it.
-        private void QueueRandomExperiment()
+        // in the colony right now, and queues it. Returns false (and, if not quiet, messages) when none fit.
+        private bool TryQueueRandomExperiment(bool quiet)
         {
             var ledger = GameComponent_PharmaLedger.Instance;
             var candidates = DefDatabase<ExperimentRecipeDef>.AllDefs
@@ -66,14 +85,15 @@ namespace MedicalExperimentation
 
             if (candidates.Count == 0)
             {
-                Messages.Message("ME_NoRandom".Translate(), this, MessageTypeDefOf.RejectInput, false);
-                return;
+                if (!quiet) Messages.Message("ME_NoRandom".Translate(), this, MessageTypeDefOf.RejectInput, false);
+                return false;
             }
 
             var pick = candidates.RandomElement();
             var reagents = pick.reagents.Select(rc => new ReagentCount(rc.thingDef, rc.count)).ToList();
             AddOrder(new ExperimentOrder(reagents, false));
-            Messages.Message("ME_RandomQueued".Translate(), this, MessageTypeDefOf.TaskCompletion, false);
+            if (!quiet) Messages.Message("ME_RandomQueued".Translate(), this, MessageTypeDefOf.TaskCompletion, false);
+            return true;
         }
 
         private bool ReagentsAvailable(ExperimentRecipeDef r)
@@ -104,6 +124,7 @@ namespace MedicalExperimentation
         {
             base.ExposeData();
             Scribe_Collections.Look(ref orders, "ME_orders", LookMode.Deep);
+            Scribe_Values.Look(ref autoExperiment, "ME_autoExperiment", false);
             if (Scribe.mode == LoadSaveMode.PostLoadInit && orders == null) orders = new List<ExperimentOrder>();
         }
     }

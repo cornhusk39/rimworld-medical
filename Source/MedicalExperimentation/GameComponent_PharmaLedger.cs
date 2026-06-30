@@ -12,9 +12,8 @@ namespace MedicalExperimentation
         private HashSet<string> discovered = new HashSet<string>();
         // product defName -> hypothesis strength 0..1 (partial knowledge from a doctor's analysis)
         private Dictionary<string, float> hypotheses = new Dictionary<string, float>();
-        // combo keys the colony has tried (any outcome), and the subset that produced nothing
-        private HashSet<string> triedCombos = new HashSet<string>();
-        private HashSet<string> dudCombos = new HashSet<string>();
+        // every combo the colony has tried -> the product defName it made ("" means it produced nothing)
+        private Dictionary<string, string> comboResults = new Dictionary<string, string>();
 
         public GameComponent_PharmaLedger(Game game) { }
 
@@ -43,19 +42,27 @@ namespace MedicalExperimentation
             if (strength > cur) hypotheses[product.defName] = strength;
         }
 
-        public void RecordCombo(string comboKey, bool wasDud)
+        // product == null means the combo produced nothing (a dud).
+        public void RecordCombo(string comboKey, ThingDef product)
         {
             if (comboKey.NullOrEmpty()) return;
-            triedCombos.Add(comboKey);
-            if (wasDud) dudCombos.Add(comboKey);
-            else dudCombos.Remove(comboKey);
+            comboResults[comboKey] = product?.defName ?? "";
         }
 
-        public bool ComboTried(string comboKey) => triedCombos.Contains(comboKey);
-        public bool ComboDud(string comboKey) => dudCombos.Contains(comboKey);
+        public bool ComboTried(string comboKey) => comboResults.ContainsKey(comboKey);
+
+        // Returns the product ThingDef a tried combo made; null if untried OR if it was a dud (use ComboTried/ComboWasDud to tell apart).
+        public ThingDef ComboResult(string comboKey)
+        {
+            if (comboResults.TryGetValue(comboKey, out string defName) && !defName.NullOrEmpty())
+                return DefDatabase<ThingDef>.GetNamedSilentFail(defName);
+            return null;
+        }
+
+        public bool ComboWasDud(string comboKey) => comboResults.TryGetValue(comboKey, out string d) && d.NullOrEmpty();
 
         public IEnumerable<string> DiscoveredDefNames => discovered;
-        public IEnumerable<string> DudComboKeys => dudCombos;
+        public IReadOnlyDictionary<string, string> AllComboResults => comboResults;
         public int DiscoveredCount => discovered.Count;
 
         public override void ExposeData()
@@ -63,14 +70,12 @@ namespace MedicalExperimentation
             base.ExposeData();
             Scribe_Collections.Look(ref discovered, "discovered", LookMode.Value);
             Scribe_Collections.Look(ref hypotheses, "hypotheses", LookMode.Value, LookMode.Value);
-            Scribe_Collections.Look(ref triedCombos, "triedCombos", LookMode.Value);
-            Scribe_Collections.Look(ref dudCombos, "dudCombos", LookMode.Value);
+            Scribe_Collections.Look(ref comboResults, "comboResults", LookMode.Value, LookMode.Value);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (discovered == null) discovered = new HashSet<string>();
                 if (hypotheses == null) hypotheses = new Dictionary<string, float>();
-                if (triedCombos == null) triedCombos = new HashSet<string>();
-                if (dudCombos == null) dudCombos = new HashSet<string>();
+                if (comboResults == null) comboResults = new Dictionary<string, string>();
             }
         }
     }

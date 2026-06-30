@@ -20,6 +20,15 @@
   </ThingDef>
 
   <ThingDef ParentName="ME_CompoundBase">
+    <defName>ME_Compound_InertDrug</defName>
+    <label>inert compound</label>
+    <description>A stable but biologically inert compound. It does nothing at all when administered. Identified by testing.</description>
+    <graphicData><texPath>Things/Item/Compound</texPath><graphicClass>Graphic_Single</graphicClass><color>(0.72,0.72,0.74)</color></graphicData>
+    <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental" /></outcomeDoers></ingestible>
+    <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
+  </ThingDef>
+
+  <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_RefinementSample</defName>
     <label>refinement sample</label>
     <description>A proof-of-concept dose. Testing it teaches the colony how to refine existing drugs into graded variants. Identified by testing.</description>

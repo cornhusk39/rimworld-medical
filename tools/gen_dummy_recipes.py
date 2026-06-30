@@ -42,13 +42,14 @@ used_keys = {key(c) for c in USED}
 all_combos = [list(c) for c in combinations_with_replacement(REAGENTS, 3)]
 free = [c for c in all_combos if key(c) not in used_keys]
 
-needed = 50
+needed = 70
 if len(free) < needed:
     raise SystemExit(f"not enough free combos: {len(free)}")
 
 picked = free[:needed]
 sick = picked[:40]
 kill = picked[40:50]
+inert = picked[50:70]
 
 def recipe(defname, product, count, summary, combo):
     counts = {}
@@ -67,11 +68,13 @@ def recipe(defname, product, count, summary, combo):
         f"  </MedicalExperimentation.ExperimentRecipeDef>\n")
 
 parts = ['<?xml version="1.0" encoding="utf-8"?>\n<Defs>\n\n']
-parts.append("  <!-- Auto-generated dummy recipes (tools/gen_dummy_recipes.py). 40 sick + 10 lethal. -->\n\n")
+parts.append("  <!-- Auto-generated dummy recipes (tools/gen_dummy_recipes.py). 40 sick + 10 lethal + 20 inert. -->\n\n")
 for i, c in enumerate(sick, 1):
     parts.append(recipe(f"ME_Exp_Dummy_Sick_{i:03d}", "ME_Compound_SickDrug", 3, "a compound that just sickens", c))
 for i, c in enumerate(kill, 1):
     parts.append(recipe(f"ME_Exp_Dummy_Kill_{i:03d}", "ME_Compound_LethalDrug", 3, "a lethal compound", c))
+for i, c in enumerate(inert, 1):
+    parts.append(recipe(f"ME_Exp_Dummy_Inert_{i:03d}", "ME_Compound_InertDrug", 3, "an inert compound", c))
 parts.append("\n</Defs>\n")
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
