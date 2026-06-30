@@ -47,43 +47,4 @@
     <researchViewY>1.7</researchViewY>
   </ResearchProjectDef>
 
-  <ResearchProjectDef>
-    <defName>ME_Surgery_ScarTissue</defName>
-    <label>regenerative grafting</label>
-    <description>Reconstruct scarred tissue surgically. Discovered by testing Tissue Regenerant, or researched the long way.</description>
-    <baseCost>2000</baseCost>
-    <techLevel>Spacer</techLevel>
-    <prerequisites>
-      <li>ME_ExperimentalPharmacology</li>
-    </prerequisites>
-    <researchViewX>24.5</researchViewX>
-    <researchViewY>2.9</researchViewY>
-  </ResearchProjectDef>
-
-  <ResearchProjectDef>
-    <defName>ME_Surgery_NerveRepair</defName>
-    <label>nerve reconduction</label>
-    <description>Repair damaged nerves surgically. Discovered by testing Nerve Conduction Gel, or researched the long way.</description>
-    <baseCost>2000</baseCost>
-    <techLevel>Spacer</techLevel>
-    <prerequisites>
-      <li>ME_ExperimentalPharmacology</li>
-    </prerequisites>
-    <researchViewX>24.5</researchViewX>
-    <researchViewY>4.1</researchViewY>
-  </ResearchProjectDef>
-
-  <ResearchProjectDef>
-    <defName>ME_Surgery_CorticalTuneup</defName>
-    <label>cortical tuning</label>
-    <description>Fine-tune the cortex for faster learning. Discovered by testing Synaptic Accelerant, or researched the long way.</description>
-    <baseCost>2000</baseCost>
-    <techLevel>Spacer</techLevel>
-    <prerequisites>
-      <li>ME_ExperimentalPharmacology</li>
-    </prerequisites>
-    <researchViewX>24.5</researchViewX>
-    <researchViewY>5.3</researchViewY>
-  </ResearchProjectDef>
-
 </Defs>

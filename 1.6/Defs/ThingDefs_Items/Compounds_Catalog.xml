@@ -76,7 +76,7 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_TissueRegenerant</defName>
     <label>tissue regenerant</label>
-    <description>Speeds healing. Studying it unlocks the regrow scar tissue operation. Identified by testing.</description>
+    <description>Speeds healing and tissue repair for a time. Identified by testing.</description>
     <graphicData><texPath>Things/Item/Compounds/TissueRegenerant</texPath><graphicClass>Graphic_Single</graphicClass></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_TissueRegen</hediffDef></li></outcomeDoers></ingestible>
     <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
@@ -85,7 +85,7 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_NerveConductionGel</defName>
     <label>nerve conduction gel</label>
-    <description>Smooths nerve signalling. Studying it unlocks the nerve repair operation. Identified by testing.</description>
+    <description>Smooths nerve signalling, briefly sharpening reflexes. Identified by testing.</description>
     <graphicData><texPath>Things/Item/Compounds/NerveConductionGel</texPath><graphicClass>Graphic_Single</graphicClass></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_NerveGel</hediffDef></li></outcomeDoers></ingestible>
     <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>
@@ -94,7 +94,7 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_SynapticAccelerant</defName>
     <label>synaptic accelerant</label>
-    <description>Heightens learning for a time. Studying it unlocks the cortical tune-up operation. Identified by testing.</description>
+    <description>Heightens learning for a time. Identified by testing.</description>
     <graphicData><texPath>Things/Item/Compounds/SynapticAccelerant</texPath><graphicClass>Graphic_Single</graphicClass></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_Synaptic</hediffDef></li></outcomeDoers></ingestible>
     <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix></li></comps>

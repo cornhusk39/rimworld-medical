@@ -167,21 +167,6 @@
     </stages>
   </HediffDef>
 
-  <!-- Cortical tune-up surgical implant (permanent) -->
-  <HediffDef>
-    <defName>ME_Hediff_CorticalTuneup</defName>
-    <hediffClass>HediffWithComps</hediffClass>
-    <label>cortical tuning</label>
-    <description>A surgically tuned cortex that learns a little faster.</description>
-    <isBad>false</isBad>
-    <maxSeverity>1.0</maxSeverity>
-    <initialSeverity>1.0</initialSeverity>
-    <everCurableByItem>false</everCurableByItem>
-    <stages>
-      <li><statOffsets><GlobalLearningFactor>0.15</GlobalLearningFactor></statOffsets></li>
-    </stages>
-  </HediffDef>
-
   <!-- Precipice hangover (weeks) -->
   <HediffDef>
     <defName>ME_Hediff_PrecipiceHangover</defName>

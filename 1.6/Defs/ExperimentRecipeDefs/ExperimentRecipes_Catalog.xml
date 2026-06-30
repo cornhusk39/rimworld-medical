@@ -104,7 +104,6 @@
     <product>ME_Compound_TissueRegenerant</product>
     <productCount>3</productCount>
     <effectSummary>a healing agent</effectSummary>
-    <unlocksResearch>ME_Surgery_ScarTissue</unlocksResearch>
     <reagents>
       <li><thingDef>MedicineUltratech</thingDef><count>2</count></li>
       <li><thingDef>Neutroamine</thingDef><count>1</count></li>
@@ -116,7 +115,6 @@
     <product>ME_Compound_NerveConductionGel</product>
     <productCount>3</productCount>
     <effectSummary>a nerve treatment</effectSummary>
-    <unlocksResearch>ME_Surgery_NerveRepair</unlocksResearch>
     <reagents>
       <li><thingDef>MedicineUltratech</thingDef><count>1</count></li>
       <li><thingDef>Luciferium</thingDef><count>1</count></li>
@@ -129,7 +127,6 @@
     <product>ME_Compound_SynapticAccelerant</product>
     <productCount>3</productCount>
     <effectSummary>a cognitive enhancer</effectSummary>
-    <unlocksResearch>ME_Surgery_CorticalTuneup</unlocksResearch>
     <reagents>
       <li><thingDef>WakeUp</thingDef><count>2</count></li>
       <li><thingDef>MedicineUltratech</thingDef><count>1</count></li>

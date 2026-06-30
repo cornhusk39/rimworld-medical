@@ -316,9 +316,7 @@ namespace MedicalExperimentation
             {
                 // Content defs present
                 string[] things = { "ME_GoJuice_Stable", "ME_GoJuice_Perfect", "ME_ChemicalDispersal", "ME_Compound_Precipice" };
-                bool defsOk = things.All(n => DefDatabase<ThingDef>.GetNamedSilentFail(n) != null)
-                    && DefDatabase<RecipeDef>.GetNamedSilentFail("ME_Surgery_RegrowScar") != null
-                    && DefDatabase<RecipeDef>.GetNamedSilentFail("ME_Surgery_CorticalTuneup") != null;
+                bool defsOk = things.All(n => DefDatabase<ThingDef>.GetNamedSilentFail(n) != null);
                 sb.Append(" contentDefs=").Append(defsOk); ok &= defsOk;
 
                 // Bench bill wiring: variant/precipice recipes attached + DoBill workgiver present
@@ -330,7 +328,7 @@ namespace MedicalExperimentation
                 var ledger = GameComponent_PharmaLedger.Instance;
                 float savedChance = MedExpMod.Settings.incompatibilityChance;
 
-                // Administer a surgery-unlock compound -> effect + discovery + research unlock
+                // Administer a compound -> effect applied + identified colony-wide
                 MedExpMod.Settings.incompatibilityChance = 0f;
                 Pawn p1 = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
                 GenSpawn.Spawn(p1, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
@@ -338,9 +336,8 @@ namespace MedicalExperimentation
                 Administer(p1, syn);
                 bool disc = ledger != null && ledger.IsDiscovered(syn);
                 bool eff = p1.health.hediffSet.HasHediff(HediffDef.Named("ME_Hediff_Synaptic"));
-                bool research = DefDatabase<ResearchProjectDef>.GetNamed("ME_Surgery_CorticalTuneup").IsFinished;
-                sb.Append(" administer=").Append(disc && eff).Append(" unlock=").Append(research);
-                ok &= disc && eff && research;
+                sb.Append(" administer=").Append(disc && eff);
+                ok &= disc && eff;
 
                 // Forced incompatibility -> adverse reaction, no benefit
                 MedExpMod.Settings.incompatibilityChance = 1f;
