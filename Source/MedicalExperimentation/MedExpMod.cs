@@ -1,3 +1,5 @@
+using System.Reflection;
+using HarmonyLib;
 using UnityEngine;
 using Verse;
 
@@ -29,6 +31,7 @@ namespace MedicalExperimentation
         public MedExpMod(ModContentPack content) : base(content)
         {
             Settings = GetSettings<MedExpSettings>();
+            new Harmony("cornhusk39.medicalexperimentation").PatchAll(Assembly.GetExecutingAssembly());
             Log.Message("[Medical Experimentation] loaded.");
         }
 

@@ -19,6 +19,8 @@
     <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4633" />
     <!-- Compile-time access to private/internal game members without reflection. -->
     <PackageReference Include="Krafs.Publicizer" Version="2.*" PrivateAssets="all" />
+    <!-- Reference only: the standalone Harmony mod provides 0Harmony.dll at runtime. -->
+    <PackageReference Include="Lib.Harmony" Version="2.*" ExcludeAssets="runtime" />
     <!-- Lets dotnet build target net472 without Visual Studio targeting packs installed. -->
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.*" PrivateAssets="all" />
   </ItemGroup>

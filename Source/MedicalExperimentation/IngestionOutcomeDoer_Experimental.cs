@@ -20,6 +20,10 @@ namespace MedicalExperimentation
             var incompat = GameComponent_DrugIncompat.Instance;
             bool incompatible = incompat != null && incompat.IsIncompatible(pawn, compound);
 
+            // A human trial counts as completing the experiment regardless of outcome, so the bench will
+            // not re-queue this combo (covers compounds obtained off the bench too).
+            MarkComboTried(compound);
+
             if (incompatible)
             {
                 ApplyAdverse(pawn, compound);
@@ -48,6 +52,14 @@ namespace MedicalExperimentation
                     Messages.Message("ME_SurgeryUnlocked".Translate(recipe.unlocksResearch.LabelCap), MessageTypeDefOf.PositiveEvent, false);
                 }
             }
+        }
+
+        private static void MarkComboTried(ThingDef compound)
+        {
+            var ledger = GameComponent_PharmaLedger.Instance;
+            var recipe = ExperimentResolver.RecipeForProduct(compound);
+            if (ledger != null && recipe != null && !ledger.ComboTried(recipe.ComboKey))
+                ledger.RecordCombo(recipe.ComboKey, compound);
         }
 
         private void ApplyAdverse(Pawn pawn, ThingDef compound)

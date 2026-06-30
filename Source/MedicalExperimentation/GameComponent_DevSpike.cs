@@ -308,6 +308,18 @@ namespace MedicalExperimentation
                 var disp = GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ChemicalDispersal")),
                     CellFinder.RandomClosewalkCellNear(map.Center, map, 8), map);
                 sb.Append(" dispersal=").Append(disp.Spawned); ok &= disp.Spawned;
+
+                // Drug-Lab synthesis recipe is hidden until discovered, available after (via Harmony patch).
+                var synthSyn = DefDatabase<RecipeDef>.GetNamedSilentFail("ME_Synth_SynapticAccelerant"); // discovered above
+                var synthAdr = DefDatabase<RecipeDef>.GetNamedSilentFail("ME_Synth_AdrenalCatalyst");     // not discovered
+                bool gateOk = synthSyn != null && synthSyn.AvailableNow && synthAdr != null && !synthAdr.AvailableNow;
+                sb.Append(" synthGate=").Append(gateOk); ok &= gateOk;
+
+                // A human trial marks the combo done even when incompatible (BattleStimX dosed incompatibly above).
+                var bsRecipe = ExperimentResolver.RecipeForProduct(ThingDef.Named("ME_Compound_BattleStimX"));
+                bool trialMarks = ledger != null && bsRecipe != null && ledger.ComboTried(bsRecipe.ComboKey)
+                                  && !ledger.IsDiscovered(ThingDef.Named("ME_Compound_BattleStimX"));
+                sb.Append(" trialMarks=").Append(trialMarks); ok &= trialMarks;
             }
             catch (Exception e)
             {
