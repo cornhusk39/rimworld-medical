@@ -95,6 +95,19 @@ namespace MedicalExperimentation
                 product.stackCount = Math.Max(1, recipe.productCount);
                 GenPlace.TryPlaceThing(product, dropCell, map, ThingPlaceMode.Near);
                 ledger?.RecordCombo(key, false);
+
+                // The synthesizing doctor may form a partial hypothesis about an unidentified compound,
+                // scaling with Medicine skill (shown in the ledger / item tooltip until it is administered).
+                if (ledger != null && !ledger.IsDiscovered(recipe.product))
+                {
+                    float lvl = pawn.skills?.GetSkill(SkillDefOf.Medicine)?.Level ?? 0f;
+                    if (Rand.Chance(0.04f * lvl))
+                    {
+                        float strength = lvl / 20f;
+                        ledger.RaiseHypothesis(recipe.product, strength > 1f ? 1f : strength);
+                    }
+                }
+
                 Messages.Message("ME_ExperimentSuccess".Translate(), product, MessageTypeDefOf.PositiveEvent, false);
             }
             else

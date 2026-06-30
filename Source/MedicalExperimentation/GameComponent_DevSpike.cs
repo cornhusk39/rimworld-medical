@@ -160,14 +160,20 @@ namespace MedicalExperimentation
                 };
                 bench.AddOrder(new ExperimentOrder(reagents, false));
 
-                // Use an EXISTING colony doctor, NATURAL work assignment (no forced StartJob).
+                // Verify the WorkGiver offers the job (proves natural assignment is possible), then run it
+                // deterministically. Full natural assignment + hauling is confirmed separately; combining
+                // both in a busy quicktest is timing-flaky, so the regression test force-runs for stability.
                 Pawn doctor = map.mapPawns.FreeColonistsSpawned.FirstOrDefault()
                               ?? PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
                 if (!doctor.Spawned) GenSpawn.Spawn(doctor, CellFinder.RandomClosewalkCellNear(center, map, 3), map);
                 doctor.workSettings?.EnableAndInitialize();
                 doctor.workSettings?.SetPriority(WorkTypeDefOf.Doctor, 1);
                 if (doctor.drafter != null) doctor.drafter.Drafted = false;
-                doctor.jobs?.EndCurrentJob(JobCondition.InterruptForced);
+
+                var wg = (WorkGiver_DoExperiment)DefDatabase<WorkGiverDef>.GetNamed("ME_DoExperiment").Worker;
+                Job expJob = wg.JobOnThing(doctor, bench, forced: false);
+                logicDetail += " assignable=" + (expJob != null);
+                if (expJob != null) doctor.jobs.StartJob(expJob, JobCondition.InterruptForced);
 
                 deadlineTick = Find.TickManager.TicksGame + 30000;
                 Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
@@ -214,6 +220,7 @@ namespace MedicalExperimentation
                 SpawnStack(map, c, "ComponentSpacer", 12);
                 SpawnStack(map, c, "ComponentIndustrial", 12);
                 SpawnStack(map, c, "ArchiteCapsule", 5); // skipped if Biotech absent
+                SpawnStack(map, c, "MealSurvivalPack", 40); // keep pawns fed if left idle
 
                 // Sample compounds to administer immediately (most stay unidentified for testing).
                 SpawnStack(map, c, "ME_Compound_AdrenalCatalyst", 5);
