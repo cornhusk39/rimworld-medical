@@ -167,11 +167,11 @@
     </stages>
   </HediffDef>
 
-  <!-- Precipice hangover (weeks) -->
+  <!-- Metamorphosis hangover (weeks) -->
   <HediffDef>
     <defName>ME_Hediff_PrecipiceHangover</defName>
     <hediffClass>HediffWithComps</hediffClass>
-    <label>precipice hangover</label>
+    <label>metamorphosis hangover</label>
     <description>The body is exhausted after a full regeneration. It will pass in time.</description>
     <isBad>true</isBad>
     <maxSeverity>1.0</maxSeverity>
@@ -189,11 +189,11 @@
     </stages>
   </HediffDef>
 
-  <!-- Precipice active regenerative coma -->
+  <!-- Metamorphosis active regenerative coma -->
   <HediffDef>
     <defName>ME_Hediff_Precipice</defName>
     <hediffClass>MedicalExperimentation.Hediff_Precipice</hediffClass>
-    <label>precipice regeneration</label>
+    <label>metamorphosis regeneration</label>
     <description>A deep regenerative coma. The body is rebuilding itself, regrowing what was lost and clearing old scars. It does not cure disease.</description>
     <isBad>false</isBad>
     <maxSeverity>1.0</maxSeverity>
@@ -203,7 +203,7 @@
       <li>
         <!-- Cap (setMax), do NOT subtract (offset), the vital capacities. An offset of -0.90 pushes a pawn
              whose Consciousness is already reduced (a missing lung lowers Breathing, which lowers
-             Consciousness) to <=0, which RimWorld treats as death - hence "died to precipice regeneration".
+             Consciousness) to <=0, which RimWorld treats as death - hence "died to metamorphosis regeneration".
              setMax only caps and never drops a pawn below their real level, so the coma is deep but can
              never be lethal. Mirrors vanilla anesthetic. -->
         <capMods>

@@ -102,10 +102,10 @@
 
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_Precipice</defName>
-    <label>precipice</label>
+    <label>metamorphosis</label>
     <description>An archotech-grade regenerative agent. It throws the body into a multi-day regenerative coma that regrows lost parts and clears scars, but cannot cure disease, and leaves a long hangover.</description>
     <statBases><MarketValue>320</MarketValue><Mass>0.1</Mass></statBases>
-    <graphicData><texPath>Things/Item/Compounds/Precipice</texPath><graphicClass>Graphic_Single</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
+    <graphicData><texPath>Things/Item/Compounds/Metamorphosis</texPath><graphicClass>Graphic_Random</graphicClass><drawSize>(0.7,0.7)</drawSize></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_Precipice</hediffDef></li></outcomeDoers></ingestible>
     <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix><revealedDescription>An archotech-grade regenerative agent. It throws the body into a multi-day regenerative coma that regrows lost parts and clears scars, but cannot cure disease, and leaves a long hangover. Identified by testing.</revealedDescription></li></comps>
   </ThingDef>

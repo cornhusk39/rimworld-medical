@@ -4,9 +4,9 @@
   <!-- Biotech version: uses an archite capsule. Only loads when Biotech is active. -->
   <RecipeDef MayRequire="Ludeon.RimWorld.Biotech">
     <defName>ME_Make_Precipice_Archite</defName>
-    <label>synthesize precipice (archite)</label>
-    <description>Synthesize Precipice using an archite capsule.</description>
-    <jobString>Synthesizing precipice.</jobString>
+    <label>synthesize metamorphosis (archite)</label>
+    <description>Synthesize Metamorphosis using an archite capsule.</description>
+    <jobString>Synthesizing metamorphosis.</jobString>
     <workSkill>Intellectual</workSkill>
     <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>
@@ -26,9 +26,9 @@
   <!-- Vanilla fallback: always available. With Biotech, both recipes exist (archite one is cheaper). -->
   <RecipeDef>
     <defName>ME_Make_Precipice_Vanilla</defName>
-    <label>synthesize precipice</label>
-    <description>Synthesize Precipice from glitterworld medicine and advanced components.</description>
-    <jobString>Synthesizing precipice.</jobString>
+    <label>synthesize metamorphosis</label>
+    <description>Synthesize Metamorphosis from glitterworld medicine and advanced components.</description>
+    <jobString>Synthesizing metamorphosis.</jobString>
     <workSkill>Intellectual</workSkill>
     <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
     <effectWorking>Cook</effectWorking>

@@ -209,9 +209,11 @@ namespace MedicalExperimentation
                     return b;
                 }
 
-                // Unlock all of the mod's research so variant/surgery/precipice recipes are gated only by discovery.
+                // Unlock the mod's research EXCEPT Metamorphosis synthesis - it's left locked so you can test
+                // both unlock paths: finish ME_CraftPrecipice (research path) OR experiment
+                // luciferium + glitterworld medicine + ambrosia and administer the result (compound path).
                 foreach (var rp in DefDatabase<ResearchProjectDef>.AllDefs)
-                    if (rp.defName.StartsWith("ME_") && !rp.IsFinished)
+                    if (rp.defName.StartsWith("ME_") && rp.defName != "ME_CraftPrecipice" && !rp.IsFinished)
                         Find.ResearchManager.FinishProject(rp);
 
                 benchRef = SpawnPowered("ME_ExperimentationBench", c);
@@ -229,9 +231,11 @@ namespace MedicalExperimentation
 
                 // Pre-discover a representative set so Drug Lab bills, Precipice synthesis, and the armed
                 // dispersal unit are immediately visible. The rest stay unknown so the discovery loop is testable.
+                // Note: Metamorphosis (ME_Compound_Precipice) is deliberately NOT pre-discovered so its Drug
+                // Lab bill starts hidden - discover it or finish its research to make it appear.
                 string[] preDisc = { "ME_Compound_AdrenalCatalyst", "ME_Compound_TissueRegenerant",
                     "ME_Compound_NerveConductionGel", "ME_Compound_SynapticAccelerant",
-                    "ME_Compound_Precipice", "ME_Compound_HepatotoxinB", "ME_Compound_SoporificMist" };
+                    "ME_Compound_HepatotoxinB", "ME_Compound_SoporificMist" };
                 foreach (var d in preDisc) ledger?.Discover(ThingDef.Named(d));
 
                 // Pre-seed the ledger so the "Tried combinations" log + picker warnings are visible up front:
@@ -245,8 +249,9 @@ namespace MedicalExperimentation
                     ledger.RaiseHypothesis(ThingDef.Named("ME_Compound_ImmunoPrimer"), 0.6f); // a partial-hypothesis example
                 }
 
-                // Reagents, components, food.
+                // Reagents, components, food. Ambrosia too (the Metamorphosis experiment needs it).
                 foreach (var r in ReagentSet.All) SpawnStack(map, c, r.defName, 25);
+                SpawnStack(map, c, "Ambrosia", 10);
                 SpawnStack(map, c, "ComponentSpacer", 12);
                 SpawnStack(map, c, "ComponentIndustrial", 12);
                 SpawnStack(map, c, "ArchiteCapsule", 5);
@@ -465,7 +470,10 @@ namespace MedicalExperimentation
                 GenSpawn.Spawn(pris, prisonCenter + new IntVec3(1, 0, 0), map);
                 pris.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner);
                 pris.guest?.ToggleNonExclusiveInteraction(ME_DefOf.ME_AutoExperiment, true);
-                pris.guest.interactionMode = DefDatabase<PrisonerInteractionModeDef>.GetNamed("NoInteraction");
+                // "MaintainOnly" is 1.6's no-active-interaction mode ("NoInteraction" doesn't exist). Guard it
+                // so a bad name never leaves the prisoner with an unset mode (which makes vanilla escape NPE).
+                var maintainOnly = DefDatabase<PrisonerInteractionModeDef>.GetNamedSilentFail("MaintainOnly");
+                if (maintainOnly != null) pris.guest.interactionMode = maintainOnly;
                 if (pris.needs?.food != null) pris.needs.food.CurLevel = pris.needs.food.MaxLevel;
                 prisRef = pris;
                 // Unknown compounds in a stockpile outside the prison so a real fetch + carry-in is required.

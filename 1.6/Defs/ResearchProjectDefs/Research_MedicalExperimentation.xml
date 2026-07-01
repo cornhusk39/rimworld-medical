@@ -44,8 +44,8 @@
 
   <ResearchProjectDef>
     <defName>ME_CraftPrecipice</defName>
-    <label>precipice synthesis</label>
-    <description>How to synthesize Precipice reliably. Discovered by testing Precipice, or researched the long way.</description>
+    <label>metamorphosis synthesis</label>
+    <description>How to synthesize Metamorphosis reliably. Discovered by testing Metamorphosis, or researched the long way.</description>
     <baseCost>5000</baseCost>
     <techLevel>Spacer</techLevel>
     <tab>ME_Research</tab>
