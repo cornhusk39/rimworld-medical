@@ -401,6 +401,17 @@ namespace MedicalExperimentation
                 bool precipiceSafe = prec != null && !p3.Dead; // applied, ticked, and the missing-lung pawn survived
                 sb.Append(" precipice=").Append(precipiceSafe); ok &= precipiceSafe;
 
+                // "No need" confirmation predicate: a pawn with nothing to heal prompts; one with a missing
+                // part does not.
+                Pawn p4 = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                GenSpawn.Spawn(p4, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
+                foreach (var h in p4.health.hediffSet.hediffs.ToList()) p4.health.RemoveHediff(h);
+                bool cleanNoNeed = PrecipiceUtility.HasNothingToHeal(p4);
+                var p4leg = p4.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def == DefDatabase<BodyPartDef>.GetNamedSilentFail("Leg"));
+                if (p4leg != null) p4.health.AddHediff(HediffDef.Named("MissingBodyPart"), p4leg);
+                bool maimedHasNeed = !PrecipiceUtility.HasNothingToHeal(p4);
+                sb.Append(" precipiceNeed=").Append(cleanNoNeed && maimedHasNeed); ok &= cleanNoNeed && maimedHasNeed;
+
                 // Dispersal unit spawns + its gas/sound emit path runs without throwing
                 var disp = GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ChemicalDispersal")),
                     CellFinder.RandomClosewalkCellNear(map.Center, map, 8), map);

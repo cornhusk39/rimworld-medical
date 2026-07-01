@@ -46,6 +46,7 @@
   <ME_LedgerGaps>Yet to discover</ME_LedgerGaps>
   <ME_LedgerTried>Tried combinations</ME_LedgerTried>
   <ME_UndiscoveredCompound>Undiscovered compound</ME_UndiscoveredCompound>
+  <ME_PrecipiceNoNeedConfirm>{0} has no injuries, missing parts, or scars for Precipice to heal. Administering it will still force them through a multi-day regenerative coma and a weeks-long hangover, for no benefit.\n\nAre you sure?</ME_PrecipiceNoNeedConfirm>
   <ME_GapsCount>{0} compound(s) yet to discover.</ME_GapsCount>
   <ME_ResultNothing>nothing</ME_ResultNothing>
   <ME_UnknownCode>Unknown compound {0}</ME_UnknownCode>
