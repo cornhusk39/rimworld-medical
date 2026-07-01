@@ -201,9 +201,14 @@
     <everCurableByItem>false</everCurableByItem>
     <stages>
       <li>
+        <!-- Cap (setMax), do NOT subtract (offset), the vital capacities. An offset of -0.90 pushes a pawn
+             whose Consciousness is already reduced (a missing lung lowers Breathing, which lowers
+             Consciousness) to <=0, which RimWorld treats as death - hence "died to precipice regeneration".
+             setMax only caps and never drops a pawn below their real level, so the coma is deep but can
+             never be lethal. Mirrors vanilla anesthetic. -->
         <capMods>
-          <li><capacity>Consciousness</capacity><offset>-0.90</offset></li>
-          <li><capacity>Moving</capacity><offset>-0.90</offset></li>
+          <li><capacity>Consciousness</capacity><setMax>0.1</setMax></li>
+          <li><capacity>Moving</capacity><setMax>0.1</setMax></li>
         </capMods>
       </li>
     </stages>

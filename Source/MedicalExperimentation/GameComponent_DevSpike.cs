@@ -389,12 +389,17 @@ namespace MedicalExperimentation
                 sb.Append(" adverse=").Append(adverse); ok &= adverse;
                 MedExpMod.Settings.incompatibilityChance = savedChance;
 
-                // Precipice hediff applies and ticks without throwing
+                // Precipice must NOT kill a pawn with a MISSING LUNG (reported bug: the -0.90 Consciousness
+                // offset dropped an already-reduced Consciousness to <=0 = "died to precipice regeneration").
                 Pawn p3 = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
                 GenSpawn.Spawn(p3, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
+                var lungDef = DefDatabase<BodyPartDef>.GetNamedSilentFail("Lung");
+                var lung = p3.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def == lungDef);
+                if (lung != null) p3.health.AddHediff(HediffDef.Named("MissingBodyPart"), lung);
                 var prec = p3.health.AddHediff(HediffDef.Named("ME_Hediff_Precipice"));
-                prec.Tick();
-                sb.Append(" precipice=").Append(prec != null); ok &= prec != null;
+                for (int i = 0; i < 5; i++) prec.Tick();
+                bool precipiceSafe = prec != null && !p3.Dead; // applied, ticked, and the missing-lung pawn survived
+                sb.Append(" precipice=").Append(precipiceSafe); ok &= precipiceSafe;
 
                 // Dispersal unit spawns + its gas/sound emit path runs without throwing
                 var disp = GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ChemicalDispersal")),

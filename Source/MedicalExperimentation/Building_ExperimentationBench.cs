@@ -71,6 +71,38 @@ namespace MedicalExperimentation
                 isActive = () => autoExperiment,
                 toggleAction = () => autoExperiment = !autoExperiment
             };
+
+            if (Prefs.DevMode)
+            {
+                yield return new Command_Action
+                {
+                    defaultLabel = "Dev: unlock all experimental recipes",
+                    defaultDesc = "Discovers every experimental compound and finishes the mod's research, so all Drug Lab recipes (including Precipice) become available.",
+                    action = UnlockAllForDev
+                };
+            }
+        }
+
+        // Dev-only: identify every compound and finish the mod's research so all crafting recipes appear.
+        private void UnlockAllForDev()
+        {
+            var ledger = GameComponent_PharmaLedger.Instance;
+            int discovered = 0;
+            if (ledger != null)
+            {
+                foreach (var d in DefDatabase<ThingDef>.AllDefs)
+                    if (d.HasComp(typeof(CompMysteryDrug)) && !ledger.IsDiscovered(d))
+                    {
+                        ledger.Discover(d);
+                        discovered++;
+                    }
+            }
+            foreach (var rp in DefDatabase<ResearchProjectDef>.AllDefs)
+                if (rp.defName.StartsWith("ME_") && !rp.IsFinished)
+                    Find.ResearchManager.FinishProject(rp);
+
+            Messages.Message("Dev: discovered " + discovered + " compounds and finished mod research.",
+                this, MessageTypeDefOf.TaskCompletion, false);
         }
 
         // Picks a random experiment that has not been tried yet and whose reagents are all available
