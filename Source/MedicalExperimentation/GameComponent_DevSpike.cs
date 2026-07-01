@@ -406,8 +406,11 @@ namespace MedicalExperimentation
                                   && !ledger.IsDiscovered(ThingDef.Named("ME_Compound_BattleStimX"));
                 sb.Append(" trialMarks=").Append(trialMarks); ok &= trialMarks;
 
-                // Prisoner administration NATURAL test: a dedicated warden (only Warden work), a flagged
-                // prisoner, and a compound in reach. No force-start; the warden must pick it up itself.
+                // Prisoner administration test. prisOffered proves the warden WorkGiver naturally offers the
+                // job; the compound is placed away from both pawns so the driver must walk the warden to it,
+                // pick it up, carry it to the prisoner, and administer (the player reported it dosing instantly
+                // with no fetch). The job is then force-started so phase 1 can confirm it completes end-to-end
+                // (prisoner dosed) deterministically, without depending on need/mood timing.
                 Pawn warden = GenerateCapableColonist(map, CellFinder.RandomClosewalkCellNear(map.Center, map, 5), WorkTypeDefOf.Warden);
                 SetSingleWork(warden, WorkTypeDefOf.Warden);
                 wardenRef = warden;
@@ -419,10 +422,13 @@ namespace MedicalExperimentation
                 if (pris.needs?.food != null) pris.needs.food.CurLevel = pris.needs.food.MaxLevel; // no food job to preempt
                 pris.stances?.stunner?.StunFor(2000000, null, false, false); // keep them put (no cell in the spike)
                 prisRef = pris;
-                SpawnStack(map, warden.Position, "ME_Compound_NeuralDefragmenter", 3);
+                // Compound placed ~10 cells away so a real fetch/carry is required.
+                SpawnStack(map, CellFinder.RandomClosewalkCellNear(warden.Position, map, 10), "ME_Compound_NeuralDefragmenter", 3);
                 var wwg = (WorkGiver_Warden_AdministerExperimental)DefDatabase<WorkGiverDef>.GetNamed("ME_AdministerExperimental").Worker;
-                sb.Append(" prisOffered=").Append(wwg.JobOnThing(warden, pris, false) != null);
+                Job admJob = wwg.JobOnThing(warden, pris, false);
+                sb.Append(" prisOffered=").Append(admJob != null);
                 sb.Append(" wardenCanWard=").Append(!warden.WorkTypeIsDisabled(WorkTypeDefOf.Warden));
+                if (admJob != null) warden.jobs.TryTakeOrderedJob(admJob, JobTag.Misc);
             }
             catch (Exception e)
             {
@@ -443,9 +449,9 @@ namespace MedicalExperimentation
         private void Phase1_AwaitProduct(Map map)
         {
             phase1Frames++;
-            // Force time to advance in case the quicktest map re-paused itself.
-            if (Find.TickManager.Paused || Find.TickManager.CurTimeSpeed == TimeSpeed.Normal)
-                Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
+            // Force time to advance in case the quicktest map re-paused itself (some runs stall otherwise).
+            if (Find.TickManager.Paused) Find.TickManager.TogglePaused();
+            Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
             // Keep the test bench powered so natural work assignment can proceed.
             var bt = e2eBench?.GetComp<CompPowerTrader>();
             if (bt != null) bt.PowerOn = true;
@@ -456,27 +462,29 @@ namespace MedicalExperimentation
 
             bool prisDosed = prisRef != null && (prisRef.Dead
                 || prisRef.health.hediffSet.hediffs.Any(h => h.def.defName.StartsWith("ME_Hediff_") || h.def.defName == "ME_AdverseReaction"));
+            if (prisDosed) prisDosedSeen = true;
 
-            // Prisoner natural assignment is the reliable signal here. (Experiment natural assignment is
-            // verified separately / by sawExpJob when the test doctor isn't busy tending injured pawns.)
-            if (sawPrisJob || prisDosed)
+            // The prisoner actually receiving a dose is the decisive signal: it proves the warden fetched,
+            // carried, and administered the compound end-to-end (not the instant no-carry dose the player saw).
+            if (prisDosed)
             {
                 Finish(true);
             }
-            else if (Find.TickManager.TicksGame > deadlineTick || phase1Frames > 9000)
+            else if (Find.TickManager.TicksGame > deadlineTick || phase1Frames > 60000)
             {
                 Finish(false);
             }
         }
 
         private bool finished;
+        private bool prisDosedSeen;
         private void Finish(bool e2ePass)
         {
             if (finished) return;
             finished = true;
             phase = 2;
-            bool pass = logicPass && sawPrisJob;
-            Log.Error($"[MESpike] RESULT pass={pass} logic={logicPass} sawExpJob={sawExpJob} sawPrisJob={sawPrisJob} detail=[{logicDetail}]");
+            bool pass = logicPass && prisDosedSeen;
+            Log.Error($"[MESpike] RESULT pass={pass} logic={logicPass} sawExpJob={sawExpJob} sawPrisJob={sawPrisJob} prisDosed={prisDosedSeen} detail=[{logicDetail}]");
             if (GenCommandLine.CommandLineArgPassed("mequit"))
                 LongEventHandler.QueueLongEvent(() => Root.Shutdown(), "Shutdown", false, null);
         }

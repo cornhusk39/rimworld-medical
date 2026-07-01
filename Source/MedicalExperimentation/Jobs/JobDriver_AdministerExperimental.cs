@@ -5,9 +5,9 @@ using Verse.AI;
 
 namespace MedicalExperimentation
 {
-    // Warden goes to a flagged prisoner and administers one dose of an experimental compound, running its
-    // ingestion outcome (effect + identification, or an adverse reaction). The dose is consumed from the
-    // reserved stock at completion (no separate haul step, which was prone to aborting and looping).
+    // Warden fetches one dose of an experimental compound, carries it to a flagged prisoner, and
+    // administers it (running its ingestion outcome: effect + identification, or an adverse reaction).
+    // Modeled on vanilla feed-patient so the pickup/carry is visible and doesn't loop.
     // TargetA = prisoner, TargetB = the compound stack.
     public class JobDriver_AdministerExperimental : JobDriver
     {
@@ -16,17 +16,26 @@ namespace MedicalExperimentation
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
             if (!pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed)) return false;
-            if (job.targetB.HasThing && !pawn.Reserve(job.targetB, job, 10, 1, null, errorOnFailed)) return false;
+            if (!pawn.Reserve(job.targetB, job, 10, 1, null, errorOnFailed)) return false;
             return true;
         }
 
         public override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDestroyedOrNull(TargetIndex.A);
+            this.FailOnDestroyedNullOrForbidden(TargetIndex.B);
             this.FailOn(() => !Prisoner.IsPrisonerOfColony
                               || !Prisoner.guest.IsInteractionEnabled(ME_DefOf.ME_AutoExperiment));
 
-            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch);
+            // Walk to the compound and pick up one dose into the carry tracker.
+            yield return Toils_Goto.GotoThing(TargetIndex.B, PathEndMode.ClosestTouch)
+                .FailOnDespawnedNullOrForbidden(TargetIndex.B);
+            yield return Toils_Haul.StartCarryThing(TargetIndex.B, putRemainderInQueue: false,
+                subtractNumTakenFromJobCount: false, failIfStackCountLessThanJobCount: false);
+
+            // Carry it to the prisoner.
+            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.Touch)
+                .FailOnDestroyedOrNull(TargetIndex.A);
 
             Toil administer = ToilMaker.MakeToil("ME_administer");
             administer.defaultCompleteMode = ToilCompleteMode.Delay;
@@ -34,6 +43,7 @@ namespace MedicalExperimentation
             administer.handlingFacing = true;
             administer.WithProgressBarToilDelay(TargetIndex.A);
             administer.tickAction = () => pawn.rotationTracker.FaceTarget(job.targetA);
+            administer.FailOnCannotTouch(TargetIndex.A, PathEndMode.Touch);
             yield return administer;
 
             Toil dose = ToilMaker.MakeToil("ME_dose");
@@ -44,9 +54,8 @@ namespace MedicalExperimentation
 
         private void Administer()
         {
-            Thing drug = job.targetB.Thing;
-            // fall back to any reachable dose of the same kind if the reserved one is gone
-            if ((drug == null || drug.Destroyed) && job.targetB.HasThing) drug = null;
+            // Use the dose the warden carried over.
+            Thing drug = pawn.carryTracker.CarriedThing;
             if (drug == null) return;
 
             Thing one = drug.stackCount > 1 ? drug.SplitOff(1) : drug;
@@ -56,6 +65,10 @@ namespace MedicalExperimentation
                     doer.DoIngestionOutcome(Prisoner, one, 1);
             }
             if (!one.Destroyed) one.Destroy();
+
+            // Put any leftover carried doses back down.
+            if (pawn.carryTracker.CarriedThing != null)
+                pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
         }
     }
 }
