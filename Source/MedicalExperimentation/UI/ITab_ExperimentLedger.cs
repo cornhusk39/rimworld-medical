@@ -52,23 +52,15 @@ namespace MedicalExperimentation
                 y += rowH;
             }
 
-            // Gaps (undiscovered) - shown by code + hypothesis, not by combo
+            // Gaps: only a count of what remains. Unidentified compounds are anonymous - no per-compound
+            // codes or hints, so the ledger never gives away identities you haven't tested for.
             y += 6f;
             y = SectionHeader(view.width, y, "ME_LedgerGaps".Translate());
-            foreach (var p in products.Where(p => ledger == null || !ledger.IsDiscovered(p)))
-            {
-                var r = recipes.First(x => x.product == p);
-                Rect row = new Rect(0f, y, view.width, rowH);
-                if (Mouse.IsOver(row)) Widgets.DrawHighlight(row);
-                string code = CompMysteryDrug.CodeFor(p);
-                Widgets.Label(new Rect(4f, y + 3f, view.width * 0.45f, rowH), "ME_UnknownCode".Translate(code));
-                float hyp = ledger?.HypothesisStrength(p) ?? 0f;
-                string hint = hyp > 0f ? "ME_HypoShort".Translate(r.effectSummary, hyp.ToStringPercent()) : "ME_NoData".Translate();
-                GUI.color = new Color(0.7f, 0.7f, 0.7f);
-                Widgets.Label(new Rect(view.width * 0.45f, y + 3f, view.width * 0.55f, rowH), hint);
-                GUI.color = Color.white;
-                y += rowH;
-            }
+            int gaps = products.Count(p => ledger == null || !ledger.IsDiscovered(p));
+            GUI.color = new Color(0.7f, 0.7f, 0.7f);
+            Widgets.Label(new Rect(4f, y + 3f, view.width, rowH), "ME_GapsCount".Translate(gaps));
+            GUI.color = Color.white;
+            y += rowH;
 
             // Tried combinations log: every combo tried, and what it produced.
             if (triedCount > 0)
@@ -114,7 +106,7 @@ namespace MedicalExperimentation
             if (def == null) return "?";
             var ledger = GameComponent_PharmaLedger.Instance;
             if (ledger != null && ledger.IsDiscovered(def)) return def.LabelCap;
-            return CompMysteryDrug.CodeFor(def);
+            return "ME_UndiscoveredCompound".Translate();
         }
 
         private static string KeyToLabel(string key)

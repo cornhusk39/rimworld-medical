@@ -123,7 +123,7 @@ namespace MedicalExperimentation
             if (prod == null) return null;
             string name = ledger.IsDiscovered(prod)
                 ? prod.LabelCap.ToString()
-                : "experimental compound " + CompMysteryDrug.CodeFor(prod);
+                : "ME_UndiscoveredCompound".Translate().ToString();
             return "ME_ComboMade".Translate(name);
         }
 

@@ -16,7 +16,9 @@ namespace MedicalExperimentation
             if (!(t is Pawn prisoner)) return null;
             if (!ShouldTakeCareOfPrisoner(pawn, prisoner, forced)) return null;
             if (!prisoner.IsPrisonerOfColony) return null;
-            if (!prisoner.guest.IsInteractionEnabled(ME_DefOf.ME_AutoExperiment)) return null;
+            // A manual right-click order ("Prioritize experimenting on") works even if the prisoner isn't
+            // flagged for auto-experimentation; the automatic warden job needs the flag.
+            if (!forced && !prisoner.guest.IsInteractionEnabled(ME_DefOf.ME_AutoExperiment)) return null;
             if (HasActiveExperimentEffect(prisoner)) return null;
 
             Thing drug = GenClosest.ClosestThingReachable(pawn.Position, pawn.Map,

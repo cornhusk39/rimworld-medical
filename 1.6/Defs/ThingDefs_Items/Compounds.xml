@@ -2,7 +2,6 @@
 <Defs>
 
   <ThingDef Name="ME_CompoundBase" ParentName="DrugBase" Abstract="True">
-    <thingClass>MedicalExperimentation.Thing_Compound</thingClass>
     <techLevel>Spacer</techLevel>
     <statBases>
       <MarketValue>28</MarketValue>
@@ -33,7 +32,7 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_AdrenalCatalyst</defName>
     <label>adrenal catalyst</label>
-    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
+    <description>A fast-acting stimulant. Sharpens consciousness and reflexes for a time.</description>
     <graphicData>
       <texPath>Things/Item/Compounds/AdrenalCatalyst</texPath>
       <graphicClass>Graphic_Single</graphicClass>
@@ -55,7 +54,7 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_CoagulantSerum</defName>
     <label>coagulant serum</label>
-    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
+    <description>A clotting and immune primer. Slows bleeding and bolsters the body's defenses for a time.</description>
     <graphicData>
       <texPath>Things/Item/Compounds/CoagulantSerum</texPath>
       <graphicClass>Graphic_Single</graphicClass>

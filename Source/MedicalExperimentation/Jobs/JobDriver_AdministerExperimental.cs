@@ -25,7 +25,7 @@ namespace MedicalExperimentation
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.FailOnDestroyedNullOrForbidden(TargetIndex.B);
             this.FailOn(() => !Prisoner.IsPrisonerOfColony
-                              || !Prisoner.guest.IsInteractionEnabled(ME_DefOf.ME_AutoExperiment));
+                              || (!job.playerForced && !Prisoner.guest.IsInteractionEnabled(ME_DefOf.ME_AutoExperiment)));
 
             // Walk to the compound and pick up one dose into the carry tracker.
             yield return Toils_Goto.GotoThing(TargetIndex.B, PathEndMode.ClosestTouch)

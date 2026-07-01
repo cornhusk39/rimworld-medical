@@ -348,7 +348,8 @@ namespace MedicalExperimentation
                 sb.Append(" contentDefs=").Append(defsOk); ok &= defsOk;
 
                 // Compound descriptions must not leak the effect before discovery.
-                bool descMasked = ThingDef.Named("ME_Compound_HepatotoxinB").description.StartsWith("An experimental compound");
+                // Anonymity now lives on the single unknown item; real compounds carry their real text.
+                bool descMasked = ThingDef.Named("ME_UnknownCompound").label.ToLower().Contains("unidentified");
                 sb.Append(" descMasked=").Append(descMasked); ok &= descMasked;
 
                 // All crafting recipes live at the Drug Lab; the experiment bench has no crafting bills.
@@ -372,12 +373,11 @@ namespace MedicalExperimentation
                 sb.Append(" administer=").Append(disc && eff);
                 ok &= disc && eff;
 
-                // A real (identified) compound's info-card description shows its real effect, not the generic
-                // placeholder. Tested on the "failed compound", which the player reported reading wrong.
-                var failedDef = ThingDef.Named("ME_Compound_SickDrug");
-                var failedThing = ThingMaker.MakeThing(failedDef);
-                bool descReveal = failedThing.DescriptionFlavor != failedDef.description
-                    && !failedThing.DescriptionFlavor.NullOrEmpty();
+                // Real compounds carry their true effect as the actual item description (no generic
+                // "unknown until administered" placeholder left on any real compound).
+                bool descReveal = DefDatabase<ThingDef>.AllDefs
+                    .Where(d => d.defName.StartsWith("ME_Compound_"))
+                    .All(d => !d.description.NullOrEmpty() && !d.description.Contains("unknown until"));
                 sb.Append(" descReveal=").Append(descReveal); ok &= descReveal;
 
                 // Forced incompatibility -> adverse reaction, no benefit
@@ -440,6 +440,16 @@ namespace MedicalExperimentation
                 sb.Append(" prisSecure=").Append(pris.guest.PrisonerIsSecure);
                 sb.Append(" prisOffered=").Append(wwg.JobOnThing(warden, pris, false) != null);
                 sb.Append(" wardenCanWard=").Append(!warden.WorkTypeIsDisabled(WorkTypeDefOf.Warden));
+
+                // Right-click "Prioritize experimenting on": a forced order is offered even for an UNFLAGGED
+                // prisoner (the auto job needs the flag; the manual order does not).
+                Pawn pris2 = PawnGenerator.GeneratePawn(PawnKindDefOf.SpaceRefugee, null);
+                GenSpawn.Spawn(pris2, prisonCenter + new IntVec3(-1, 0, 0), map);
+                pris2.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner); // NOT flagged
+                bool forcedOffered = wwg.def.directOrderable
+                    && wwg.JobOnThing(warden, pris2, true) != null
+                    && wwg.JobOnThing(warden, pris2, false) == null; // auto path correctly skips the unflagged one
+                sb.Append(" forcedExp=").Append(forcedOffered); ok &= forcedOffered;
             }
             catch (Exception e)
             {

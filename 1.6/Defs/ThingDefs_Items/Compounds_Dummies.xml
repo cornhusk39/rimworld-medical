@@ -4,7 +4,7 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_SickDrug</defName>
     <label>failed compound</label>
-    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
+    <description>A dead-end compound. It does nothing useful and only makes the patient sick.</description>
     <graphicData><texPath>Things/Item/Compound</texPath><graphicClass>Graphic_Single</graphicClass><color>(0.55,0.62,0.35)</color></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_ExpSickness</hediffDef><severity>0.7</severity></li></outcomeDoers></ingestible>
     <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>TX</codePrefix><revealedDescription>A dead-end compound. It does nothing useful and only makes the patient sick. Identified by testing.</revealedDescription></li></comps>
@@ -13,7 +13,7 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_LethalDrug</defName>
     <label>fatal compound</label>
-    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
+    <description>A catastrophic compound. It kills whoever takes it.</description>
     <graphicData><texPath>Things/Item/Compound</texPath><graphicClass>Graphic_Single</graphicClass><color>(0.35,0.30,0.30)</color></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_LethalToxin</hediffDef></li></outcomeDoers></ingestible>
     <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>TX</codePrefix><revealedDescription>A catastrophic compound. It kills whoever takes it. Identified by testing, at a cost.</revealedDescription></li></comps>
@@ -22,7 +22,7 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_InertDrug</defName>
     <label>inert compound</label>
-    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
+    <description>A stable but biologically inert compound. It does nothing at all when administered.</description>
     <graphicData><texPath>Things/Item/Compound</texPath><graphicClass>Graphic_Single</graphicClass><color>(0.72,0.72,0.74)</color></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental" /></outcomeDoers></ingestible>
     <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix><revealedDescription>A stable but biologically inert compound. It does nothing at all when administered. Identified by testing.</revealedDescription></li></comps>
@@ -31,7 +31,7 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_RefinementSample</defName>
     <label>refinement sample</label>
-    <description>An experimental compound. Its effect is unknown until it is administered to a subject.</description>
+    <description>A proof-of-concept dose. Testing it teaches the colony how to refine existing drugs into graded variants.</description>
     <graphicData><texPath>Things/Item/Compound</texPath><graphicClass>Graphic_Single</graphicClass><color>(0.65,0.80,0.75)</color></graphicData>
     <ingestible><outcomeDoers><li Class="MedicalExperimentation.IngestionOutcomeDoer_Experimental"><hediffDef>ME_Hediff_RefinementSample</hediffDef></li></outcomeDoers></ingestible>
     <comps><li Class="MedicalExperimentation.CompProperties_MysteryDrug"><codePrefix>RX</codePrefix><revealedDescription>A proof-of-concept dose. Testing it teaches the colony how to refine existing drugs into graded variants. Identified by testing.</revealedDescription></li></comps>

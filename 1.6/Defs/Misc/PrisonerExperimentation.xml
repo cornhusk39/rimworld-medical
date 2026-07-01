@@ -21,10 +21,11 @@
     <label>administer experimental compounds</label>
     <giverClass>MedicalExperimentation.WorkGiver_Warden_AdministerExperimental</giverClass>
     <workType>Warden</workType>
-    <verb>administer experimental compounds</verb>
-    <gerund>administering experimental compounds</gerund>
+    <verb>experiment on</verb>
+    <gerund>experimenting on</gerund>
     <priorityInType>45</priorityInType>
     <prioritizeSustains>true</prioritizeSustains>
+    <directOrderable>true</directOrderable>
     <requiredCapacities>
       <li>Manipulation</li>
     </requiredCapacities>

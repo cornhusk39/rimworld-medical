@@ -36,22 +36,22 @@ namespace MedicalExperimentation
             return CodeFor(def, p?.codePrefix ?? "RX");
         }
 
-        private string EffectText()
+        // Short, one-line effect summary (the map inspect pane clips long text, so keep it brief here).
+        private string ShortEffect()
         {
-            if (!Props.revealedDescription.NullOrEmpty()) return Props.revealedDescription;
             var recipe = ExperimentResolver.RecipeForProduct(parent.def);
-            return recipe != null && !recipe.effectSummary.NullOrEmpty() ? recipe.effectSummary.CapitalizeFirst() + "." : null;
+            return recipe != null && !recipe.effectSummary.NullOrEmpty() ? recipe.effectSummary.CapitalizeFirst() : null;
         }
 
-        public override string CompInspectStringExtra() => EffectText();
+        public override string CompInspectStringExtra() => ShortEffect();
 
         // Adds an "Effect" row to the info card's left-hand stat list (where vanilla medicines list theirs).
+        // The full effect text lives in the item description; this row shows the short summary.
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
-            var recipe = ExperimentResolver.RecipeForProduct(parent.def);
-            string summary = recipe != null && !recipe.effectSummary.NullOrEmpty()
-                ? recipe.effectSummary.CapitalizeFirst() : null;
-            string full = EffectText() ?? "ME_EffectIdentified".Translate();
+            string summary = ShortEffect();
+            string full = !Props.revealedDescription.NullOrEmpty() ? Props.revealedDescription
+                : (parent.def.description ?? "ME_EffectIdentified".Translate());
             yield return new StatDrawEntry(StatCategoryDefOf.Basics, "ME_EffectStat".Translate(),
                 summary ?? "ME_EffectIdentified".Translate(), full, 2490);
         }

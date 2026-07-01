@@ -91,18 +91,13 @@ namespace MedicalExperimentation
 
             if (recipe != null && recipe.product != null)
             {
-                // A defined combo yields generic "unidentified compound" batches, each secretly tagged with
-                // the result and the exact combo. Nothing is recorded in the ledger here: what the combo
-                // makes is only learned by administering it (that would otherwise leak at craft time).
-                int count = Math.Max(1, recipe.productCount);
-                var unkDef = ThingDef.Named("ME_UnknownCompound");
-                for (int i = 0; i < count; i++)
-                {
-                    var unk = (Thing_UnknownCompound)ThingMaker.MakeThing(unkDef);
-                    unk.resultDefName = recipe.product.defName;
-                    unk.comboKey = key;
-                    GenPlace.TryPlaceThing(unk, dropCell, map, ThingPlaceMode.Near);
-                }
+                // A defined combo yields a single generic "unidentified compound", secretly tagged with the
+                // result and the exact combo. Nothing is recorded in the ledger here: what the combo makes is
+                // only learned by administering it (that would otherwise leak at craft time).
+                var unk = (Thing_UnknownCompound)ThingMaker.MakeThing(ThingDef.Named("ME_UnknownCompound"));
+                unk.resultDefName = recipe.product.defName;
+                unk.comboKey = key;
+                GenPlace.TryPlaceThing(unk, dropCell, map, ThingPlaceMode.Near);
                 Messages.Message("ME_ExperimentSuccess".Translate(), new TargetInfo(dropCell, map), MessageTypeDefOf.PositiveEvent, false);
             }
             else
