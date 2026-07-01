@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-  <!-- Auto-generated (tools/gen_synthesis_recipes.py). Hidden until the compound is discovered. -->
+  <!-- Auto-generated (tools/gen_synthesis_recipes.py). Hidden until the compound is discovered.
+       Each compound gets a 1x recipe and a 4x bulk recipe (vanilla-style). -->
 
   <RecipeDef>
     <defName>ME_Synth_AdrenalCatalyst</defName>
@@ -14,11 +15,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_AdrenalCatalyst>4</ME_Compound_AdrenalCatalyst></products>
+    <products><ME_Compound_AdrenalCatalyst>1</ME_Compound_AdrenalCatalyst></products>
     <ingredients>
       <li><filter><thingDefs><li>MedicineIndustrial</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>WakeUp</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>MedicineIndustrial</li><li>WakeUp</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_AdrenalCatalyst_x4</defName>
+    <label>synthesize adrenal catalyst x4</label>
+    <description>Produce adrenal catalyst from its now-known formula.</description>
+    <jobString>Synthesizing adrenal catalyst.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_AdrenalCatalyst>4</ME_Compound_AdrenalCatalyst></products>
+    <ingredients>
+      <li><filter><thingDefs><li>MedicineIndustrial</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>WakeUp</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>MedicineIndustrial</li><li>WakeUp</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -33,11 +53,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_CoagulantSerum>4</ME_Compound_CoagulantSerum></products>
+    <products><ME_Compound_CoagulantSerum>1</ME_Compound_CoagulantSerum></products>
     <ingredients>
       <li><filter><thingDefs><li>MedicineHerbal</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>MedicineIndustrial</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>MedicineHerbal</li><li>MedicineIndustrial</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_CoagulantSerum_x4</defName>
+    <label>synthesize coagulant serum x4</label>
+    <description>Produce coagulant serum from its now-known formula.</description>
+    <jobString>Synthesizing coagulant serum.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_CoagulantSerum>4</ME_Compound_CoagulantSerum></products>
+    <ingredients>
+      <li><filter><thingDefs><li>MedicineHerbal</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>MedicineIndustrial</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>MedicineHerbal</li><li>MedicineIndustrial</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -52,11 +91,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_ImmunoPrimer>4</ME_Compound_ImmunoPrimer></products>
+    <products><ME_Compound_ImmunoPrimer>1</ME_Compound_ImmunoPrimer></products>
     <ingredients>
       <li><filter><thingDefs><li>MedicineUltratech</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Penoxycyline</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>MedicineUltratech</li><li>Penoxycyline</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_ImmunoPrimer_x4</defName>
+    <label>synthesize immuno-primer x4</label>
+    <description>Produce immuno-primer from its now-known formula.</description>
+    <jobString>Synthesizing immuno-primer.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_ImmunoPrimer>4</ME_Compound_ImmunoPrimer></products>
+    <ingredients>
+      <li><filter><thingDefs><li>MedicineUltratech</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Penoxycyline</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>MedicineUltratech</li><li>Penoxycyline</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -71,11 +129,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_NeuralDefragmenter>4</ME_Compound_NeuralDefragmenter></products>
+    <products><ME_Compound_NeuralDefragmenter>1</ME_Compound_NeuralDefragmenter></products>
     <ingredients>
       <li><filter><thingDefs><li>MedicineUltratech</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>MedicineUltratech</li><li>Luciferium</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_NeuralDefragmenter_x4</defName>
+    <label>synthesize neural defragmenter x4</label>
+    <description>Produce neural defragmenter from its now-known formula.</description>
+    <jobString>Synthesizing neural defragmenter.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_NeuralDefragmenter>4</ME_Compound_NeuralDefragmenter></products>
+    <ingredients>
+      <li><filter><thingDefs><li>MedicineUltratech</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>MedicineUltratech</li><li>Luciferium</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -90,11 +167,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_SomnolentDraught>4</ME_Compound_SomnolentDraught></products>
+    <products><ME_Compound_SomnolentDraught>1</ME_Compound_SomnolentDraught></products>
     <ingredients>
       <li><filter><thingDefs><li>MedicineHerbal</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Beer</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>MedicineHerbal</li><li>Beer</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_SomnolentDraught_x4</defName>
+    <label>synthesize somnolent draught x4</label>
+    <description>Produce somnolent draught from its now-known formula.</description>
+    <jobString>Synthesizing somnolent draught.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_SomnolentDraught>4</ME_Compound_SomnolentDraught></products>
+    <ingredients>
+      <li><filter><thingDefs><li>MedicineHerbal</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Beer</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>MedicineHerbal</li><li>Beer</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -109,11 +205,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_BattleStimX>4</ME_Compound_BattleStimX></products>
+    <products><ME_Compound_BattleStimX>1</ME_Compound_BattleStimX></products>
     <ingredients>
       <li><filter><thingDefs><li>GoJuice</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>WakeUp</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Yayo</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>GoJuice</li><li>WakeUp</li><li>Yayo</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_BattleStimX_x4</defName>
+    <label>synthesize battle stim x x4</label>
+    <description>Produce battle stim x from its now-known formula.</description>
+    <jobString>Synthesizing battle stim x.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_BattleStimX>4</ME_Compound_BattleStimX></products>
+    <ingredients>
+      <li><filter><thingDefs><li>GoJuice</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>WakeUp</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Yayo</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>GoJuice</li><li>WakeUp</li><li>Yayo</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -128,11 +243,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_BerserkerDraught>4</ME_Compound_BerserkerDraught></products>
+    <products><ME_Compound_BerserkerDraught>1</ME_Compound_BerserkerDraught></products>
     <ingredients>
       <li><filter><thingDefs><li>Flake</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Chemfuel</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Beer</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>Flake</li><li>Chemfuel</li><li>Beer</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_BerserkerDraught_x4</defName>
+    <label>synthesize berserker draught x4</label>
+    <description>Produce berserker draught from its now-known formula.</description>
+    <jobString>Synthesizing berserker draught.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_BerserkerDraught>4</ME_Compound_BerserkerDraught></products>
+    <ingredients>
+      <li><filter><thingDefs><li>Flake</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Chemfuel</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Beer</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>Flake</li><li>Chemfuel</li><li>Beer</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -147,11 +281,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_Stoneskin>4</ME_Compound_Stoneskin></products>
+    <products><ME_Compound_Stoneskin>1</ME_Compound_Stoneskin></products>
     <ingredients>
       <li><filter><thingDefs><li>MedicineIndustrial</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Chemfuel</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>MedicineIndustrial</li><li>Luciferium</li><li>Chemfuel</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_Stoneskin_x4</defName>
+    <label>synthesize stoneskin compound x4</label>
+    <description>Produce stoneskin compound from its now-known formula.</description>
+    <jobString>Synthesizing stoneskin compound.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_Stoneskin>4</ME_Compound_Stoneskin></products>
+    <ingredients>
+      <li><filter><thingDefs><li>MedicineIndustrial</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Chemfuel</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>MedicineIndustrial</li><li>Luciferium</li><li>Chemfuel</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -166,11 +319,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_HepatotoxinB>4</ME_Compound_HepatotoxinB></products>
+    <products><ME_Compound_HepatotoxinB>1</ME_Compound_HepatotoxinB></products>
     <ingredients>
       <li><filter><thingDefs><li>Beer</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Yayo</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Chemfuel</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>Beer</li><li>Yayo</li><li>Chemfuel</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_HepatotoxinB_x4</defName>
+    <label>synthesize hepatotoxin b x4</label>
+    <description>Produce hepatotoxin b from its now-known formula.</description>
+    <jobString>Synthesizing hepatotoxin b.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_HepatotoxinB>4</ME_Compound_HepatotoxinB></products>
+    <ingredients>
+      <li><filter><thingDefs><li>Beer</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Yayo</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Chemfuel</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>Beer</li><li>Yayo</li><li>Chemfuel</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -185,11 +357,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_SoporificMist>4</ME_Compound_SoporificMist></products>
+    <products><ME_Compound_SoporificMist>1</ME_Compound_SoporificMist></products>
     <ingredients>
       <li><filter><thingDefs><li>PsychoidLeaves</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>MedicineHerbal</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>PsychoidLeaves</li><li>MedicineHerbal</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_SoporificMist_x4</defName>
+    <label>synthesize soporific mist x4</label>
+    <description>Produce soporific mist from its now-known formula.</description>
+    <jobString>Synthesizing soporific mist.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_SoporificMist>4</ME_Compound_SoporificMist></products>
+    <ingredients>
+      <li><filter><thingDefs><li>PsychoidLeaves</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>MedicineHerbal</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>PsychoidLeaves</li><li>MedicineHerbal</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -204,10 +395,28 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_TissueRegenerant>4</ME_Compound_TissueRegenerant></products>
+    <products><ME_Compound_TissueRegenerant>1</ME_Compound_TissueRegenerant></products>
     <ingredients>
       <li><filter><thingDefs><li>MedicineUltratech</li></thingDefs></filter><count>2</count></li>
       <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>MedicineUltratech</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_TissueRegenerant_x4</defName>
+    <label>synthesize tissue regenerant x4</label>
+    <description>Produce tissue regenerant from its now-known formula.</description>
+    <jobString>Synthesizing tissue regenerant.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_TissueRegenerant>4</ME_Compound_TissueRegenerant></products>
+    <ingredients>
+      <li><filter><thingDefs><li>MedicineUltratech</li></thingDefs></filter><count>8</count></li>
+      <li><filter><thingDefs><li>Neutroamine</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>MedicineUltratech</li><li>Neutroamine</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -222,11 +431,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_NerveConductionGel>4</ME_Compound_NerveConductionGel></products>
+    <products><ME_Compound_NerveConductionGel>1</ME_Compound_NerveConductionGel></products>
     <ingredients>
       <li><filter><thingDefs><li>MedicineUltratech</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Penoxycyline</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>MedicineUltratech</li><li>Luciferium</li><li>Penoxycyline</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_NerveConductionGel_x4</defName>
+    <label>synthesize nerve conduction gel x4</label>
+    <description>Produce nerve conduction gel from its now-known formula.</description>
+    <jobString>Synthesizing nerve conduction gel.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_NerveConductionGel>4</ME_Compound_NerveConductionGel></products>
+    <ingredients>
+      <li><filter><thingDefs><li>MedicineUltratech</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Penoxycyline</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>MedicineUltratech</li><li>Luciferium</li><li>Penoxycyline</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -241,10 +469,28 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_SynapticAccelerant>4</ME_Compound_SynapticAccelerant></products>
+    <products><ME_Compound_SynapticAccelerant>1</ME_Compound_SynapticAccelerant></products>
     <ingredients>
       <li><filter><thingDefs><li>WakeUp</li></thingDefs></filter><count>2</count></li>
       <li><filter><thingDefs><li>MedicineUltratech</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>WakeUp</li><li>MedicineUltratech</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_SynapticAccelerant_x4</defName>
+    <label>synthesize synaptic accelerant x4</label>
+    <description>Produce synaptic accelerant from its now-known formula.</description>
+    <jobString>Synthesizing synaptic accelerant.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_SynapticAccelerant>4</ME_Compound_SynapticAccelerant></products>
+    <ingredients>
+      <li><filter><thingDefs><li>WakeUp</li></thingDefs></filter><count>8</count></li>
+      <li><filter><thingDefs><li>MedicineUltratech</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>WakeUp</li><li>MedicineUltratech</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -259,10 +505,28 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_SickDrug>4</ME_Compound_SickDrug></products>
+    <products><ME_Compound_SickDrug>1</ME_Compound_SickDrug></products>
     <ingredients>
       <li><filter><thingDefs><li>MedicineHerbal</li></thingDefs></filter><count>2</count></li>
       <li><filter><thingDefs><li>Chemfuel</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>MedicineHerbal</li><li>Chemfuel</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_SickDrug_x4</defName>
+    <label>synthesize failed compound x4</label>
+    <description>Produce failed compound from its now-known formula.</description>
+    <jobString>Synthesizing failed compound.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_SickDrug>4</ME_Compound_SickDrug></products>
+    <ingredients>
+      <li><filter><thingDefs><li>MedicineHerbal</li></thingDefs></filter><count>8</count></li>
+      <li><filter><thingDefs><li>Chemfuel</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>MedicineHerbal</li><li>Chemfuel</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>
@@ -277,11 +541,30 @@
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>1800</workAmount>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_LethalDrug>4</ME_Compound_LethalDrug></products>
+    <products><ME_Compound_LethalDrug>1</ME_Compound_LethalDrug></products>
     <ingredients>
       <li><filter><thingDefs><li>Chemfuel</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>Yayo</li></thingDefs></filter><count>1</count></li>
+    </ingredients>
+    <fixedIngredientFilter><thingDefs><li>Chemfuel</li><li>Luciferium</li><li>Yayo</li></thingDefs></fixedIngredientFilter>
+  </RecipeDef>
+  <RecipeDef>
+    <defName>ME_Synth_LethalDrug_x4</defName>
+    <label>synthesize fatal compound x4</label>
+    <description>Produce fatal compound from its now-known formula.</description>
+    <jobString>Synthesizing fatal compound.</jobString>
+    <workSkill>Intellectual</workSkill>
+    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
+    <effectWorking>Cook</effectWorking>
+    <soundWorking>Recipe_Drug</soundWorking>
+    <workAmount>7200</workAmount>
+    <recipeUsers><li>DrugLab</li></recipeUsers>
+    <products><ME_Compound_LethalDrug>4</ME_Compound_LethalDrug></products>
+    <ingredients>
+      <li><filter><thingDefs><li>Chemfuel</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>4</count></li>
+      <li><filter><thingDefs><li>Yayo</li></thingDefs></filter><count>4</count></li>
     </ingredients>
     <fixedIngredientFilter><thingDefs><li>Chemfuel</li><li>Luciferium</li><li>Yayo</li></thingDefs></fixedIngredientFilter>
   </RecipeDef>

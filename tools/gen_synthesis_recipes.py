@@ -27,33 +27,40 @@ COMPOUNDS = [
     ("LethalDrug", "fatal compound", [("Chemfuel", 1), ("Luciferium", 1), ("Yayo", 1)]),
 ]
 
-def recipe(suffix, label, reagents):
+def recipe(suffix, label, reagents, batch):
+    """batch = how many to make per bill (1 or 4). Ingredients and work scale with the batch,
+    matching vanilla's 'make X' / 'make X x4' pattern."""
     product = "ME_Compound_" + suffix
+    def_suffix = suffix if batch == 1 else f"{suffix}_x{batch}"
+    label_full = label if batch == 1 else f"{label} x{batch}"
+    work = 1800 * batch
     ing = "".join(
-        f"      <li><filter><thingDefs><li>{r}</li></thingDefs></filter><count>{n}</count></li>\n"
+        f"      <li><filter><thingDefs><li>{r}</li></thingDefs></filter><count>{n * batch}</count></li>\n"
         for r, n in reagents)
     fixed = "".join(f"<li>{r}</li>" for r, _ in reagents)
     return (
         f"  <RecipeDef>\n"
-        f"    <defName>ME_Synth_{suffix}</defName>\n"
-        f"    <label>synthesize {label}</label>\n"
+        f"    <defName>ME_Synth_{def_suffix}</defName>\n"
+        f"    <label>synthesize {label_full}</label>\n"
         f"    <description>Produce {label} from its now-known formula.</description>\n"
         f"    <jobString>Synthesizing {label}.</jobString>\n"
         f"    <workSkill>Intellectual</workSkill>\n"
         f"    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>\n"
         f"    <effectWorking>Cook</effectWorking>\n"
         f"    <soundWorking>Recipe_Drug</soundWorking>\n"
-        f"    <workAmount>1800</workAmount>\n"
+        f"    <workAmount>{work}</workAmount>\n"
         f"    <recipeUsers><li>DrugLab</li></recipeUsers>\n"
-        f"    <products><{product}>4</{product}></products>\n"
+        f"    <products><{product}>{batch}</{product}></products>\n"
         f"    <ingredients>\n{ing}    </ingredients>\n"
         f"    <fixedIngredientFilter><thingDefs>{fixed}</thingDefs></fixedIngredientFilter>\n"
         f"  </RecipeDef>\n")
 
 parts = ['<?xml version="1.0" encoding="utf-8"?>\n<Defs>\n\n']
-parts.append("  <!-- Auto-generated (tools/gen_synthesis_recipes.py). Hidden until the compound is discovered. -->\n\n")
+parts.append("  <!-- Auto-generated (tools/gen_synthesis_recipes.py). Hidden until the compound is discovered.\n"
+             "       Each compound gets a 1x recipe and a 4x bulk recipe (vanilla-style). -->\n\n")
 for suffix, label, reagents in COMPOUNDS:
-    parts.append(recipe(suffix, label, reagents))
+    parts.append(recipe(suffix, label, reagents, 1))
+    parts.append(recipe(suffix, label, reagents, 4))
 parts.append("\n</Defs>\n")
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)

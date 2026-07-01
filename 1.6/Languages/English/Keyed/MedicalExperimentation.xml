@@ -27,6 +27,10 @@
   <ME_Identified>Identified</ME_Identified>
   <ME_Hypothesis>Hypothesis: likely {0} (analysis {1})</ME_Hypothesis>
   <ME_Unidentified>Unidentified experimental compound. Administer it to learn what it does.</ME_Unidentified>
+  <ME_EffectStat>Effect</ME_EffectStat>
+  <ME_EffectIdentified>Identified</ME_EffectIdentified>
+  <ME_EffectUnknown>Unidentified</ME_EffectUnknown>
+  <ME_EffectUnknownDesc>This compound has not been identified. Administer it to a subject to learn what it does.</ME_EffectUnknownDesc>
 
   <!-- Messages -->
   <ME_Discovered>Compound identified: {0}. {1}</ME_Discovered>

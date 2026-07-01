@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using RimWorld;
 using Verse;
@@ -62,6 +63,31 @@ namespace MedicalExperimentation
                 return "ME_Hypothesis".Translate(guess, hyp.ToStringPercent());
             }
             return "ME_Unidentified".Translate();
+        }
+
+        // Adds an "Effect" row to the info card's left-hand stat list (where vanilla medicines list their
+        // effect), revealing the compound's effect once the colony has identified it.
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
+        {
+            var ledger = GameComponent_PharmaLedger.Instance;
+            var recipe = ExperimentResolver.RecipeForProduct(parent.def);
+            bool discovered = ledger != null && ledger.IsDiscovered(parent.def);
+
+            if (discovered)
+            {
+                string summary = recipe != null && !recipe.effectSummary.NullOrEmpty()
+                    ? recipe.effectSummary.CapitalizeFirst() : null;
+                string full = !Props.revealedDescription.NullOrEmpty()
+                    ? Props.revealedDescription
+                    : (summary != null ? summary + "." : "This compound has been identified.");
+                yield return new StatDrawEntry(StatCategoryDefOf.Basics, "ME_EffectStat".Translate(),
+                    summary ?? "ME_EffectIdentified".Translate(), full, 2490);
+            }
+            else
+            {
+                yield return new StatDrawEntry(StatCategoryDefOf.Basics, "ME_EffectStat".Translate(),
+                    "ME_EffectUnknown".Translate(), "ME_EffectUnknownDesc".Translate(), 2490);
+            }
         }
     }
 }
