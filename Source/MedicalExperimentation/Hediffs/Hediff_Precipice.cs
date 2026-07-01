@@ -8,10 +8,9 @@ namespace MedicalExperimentation
     // compound rebuilds the body, regrowing missing parts and clearing scars and old wounds. It does NOT
     // cure disease. When it finishes, the patient is left with a weeks-long Precipice Hangover.
     //
-    // Judgement call (see BUILD-LOG): the design said "every body part to 1 HP". Literally 1-HP-ing the
-    // brain/heart would guarantee death, which contradicts the chosen "mostly non-lethal" tuning, so this
-    // models the fragility as deep incapacitation (capacities near zero via the hediff stages) rather than
-    // setting vital organs to 1 HP. Easy to make literal later if desired.
+    // Fragility is modeled as a deep coma (vital capacities capped low via the hediff stages) rather than
+    // by setting every organ to 1 HP - literally 1-HP-ing the brain/heart would just guarantee death, which
+    // contradicts the non-lethal intent. Easy to make literal later if desired.
     public class Hediff_Precipice : HediffWithComps
     {
         private const int Duration = 240000;   // ~4 days
