@@ -5,13 +5,12 @@ A RimWorld 1.6 mod that turns your medical bay into a research lab. Vanilla frie
 ## What it does
 
 - **Experimentation Bench** (unlocked by the Experimental Pharmacology research, which sits after Medicine Production and Advanced Fabrication). Doctors work here.
-- **Run experiments**: pick exactly three reagents from a curated set (medicine, neutroamine, luciferium, go-juice, and more). The right combination produces an experimental compound. The wrong one wastes materials, though a skilled doctor salvages more of them.
-- **Unknown until tested**: a fresh compound shows only a code name like "experimental compound RX-4308". Administer it to a pawn to learn what it does. A skilled doctor can form a partial hypothesis first.
+- **Run experiments**: pick exactly three reagents from a curated set (medicine, neutroamine, luciferium, go-juice, and more). A defined combination produces a compound; an undefined one wastes materials, though a skilled doctor salvages more of them.
+- **Unknown until tested**: every fresh compound looks identical, an anonymous "unidentified experimental compound". The only way to learn what one does is to administer it to a subject. The ledger records what each combination turned out to be.
 - **Incompatibility**: every patient has a small permanent chance (default 2%) of reacting badly to any given compound, decided once and remembered forever.
-- **Prisoner testing**: mark a prisoner with the "experiment on" toggle in the prisoner tab and wardens will administer undiscovered compounds automatically.
+- **Prisoner testing**: mark a prisoner with the "experiment on" toggle in the prisoner tab and wardens will administer unidentified compounds automatically, or right-click a prisoner to prioritize experimenting on them.
 - **Drug refinement**: turn go-juice, wake-up, yayo, flake, and smokeleaf into Stable (safer, milder), Unstable (stronger, riskier), or Perfect (stronger and safe) grades.
 - **Precipice**: a discovered archotech-grade regenerator that rebuilds the body over several days. Regrows lost parts and clears scars, but does not cure disease, and leaves a long hangover.
-- **Unlockable surgeries**: discovering certain compounds unlocks regrow scar tissue, nerve repair, and cortical tune-up operations.
 - **Chemical dispersal unit**: a powered security device that vents a discovered toxic compound at nearby enemies.
 - **Results ledger**: the bench has a tab showing what you have discovered, what is left to find, and which combinations failed.
 

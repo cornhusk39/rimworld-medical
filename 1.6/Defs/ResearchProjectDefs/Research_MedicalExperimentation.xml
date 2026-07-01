@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-  <!-- Positioned past x=21 (the rightmost vanilla research) so the cards sit in clear space. -->
+  <!-- The mod's research sits on its own tab in the research window. -->
+  <ResearchTabDef>
+    <defName>ME_Research</defName>
+    <label>experimentation</label>
+    <generalTitle>Medical Experimentation</generalTitle>
+  </ResearchTabDef>
+
   <ResearchProjectDef>
     <defName>ME_ExperimentalPharmacology</defName>
     <label>experimental pharmacology</label>
     <description>Repurpose the colony's medical and chemical stocks into something the glitterworld pharmacopeia never sanctioned. Unlocks the experimentation bench, where doctors combine reagents into compounds of unknown effect.</description>
     <baseCost>5000</baseCost>
     <techLevel>Spacer</techLevel>
+    <tab>ME_Research</tab>
     <prerequisites>
       <li>MedicineProduction</li>
       <li>AdvancedFabrication</li>
@@ -16,8 +23,8 @@
     <requiredResearchFacilities>
       <li>MultiAnalyzer</li>
     </requiredResearchFacilities>
-    <researchViewX>23.0</researchViewX>
-    <researchViewY>2.0</researchViewY>
+    <researchViewX>1.0</researchViewX>
+    <researchViewY>1.5</researchViewY>
   </ResearchProjectDef>
 
   <!-- Gates the drug-variant recipes. Discovered by testing a refinement sample (or researched). -->
@@ -27,10 +34,11 @@
     <description>Stabilize and concentrate existing drugs into graded variants. Discovered by testing a refinement sample, or researched the long way.</description>
     <baseCost>2500</baseCost>
     <techLevel>Spacer</techLevel>
+    <tab>ME_Research</tab>
     <prerequisites>
       <li>ME_ExperimentalPharmacology</li>
     </prerequisites>
-    <researchViewX>24.5</researchViewX>
+    <researchViewX>3.0</researchViewX>
     <researchViewY>0.5</researchViewY>
   </ResearchProjectDef>
 
@@ -40,11 +48,12 @@
     <description>How to synthesize Precipice reliably. Discovered by testing Precipice, or researched the long way.</description>
     <baseCost>3000</baseCost>
     <techLevel>Spacer</techLevel>
+    <tab>ME_Research</tab>
     <prerequisites>
       <li>ME_ExperimentalPharmacology</li>
     </prerequisites>
-    <researchViewX>24.5</researchViewX>
-    <researchViewY>1.7</researchViewY>
+    <researchViewX>3.0</researchViewX>
+    <researchViewY>2.5</researchViewY>
   </ResearchProjectDef>
 
 </Defs>
