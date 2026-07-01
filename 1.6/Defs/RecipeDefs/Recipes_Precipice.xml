@@ -1,29 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Defs>
 
-  <!-- Biotech version: uses an archite capsule. Only loads when Biotech is active. -->
-  <RecipeDef MayRequire="Ludeon.RimWorld.Biotech">
-    <defName>ME_Make_Precipice_Archite</defName>
-    <label>synthesize metamorphosis (archite)</label>
-    <description>Synthesize Metamorphosis using an archite capsule.</description>
-    <jobString>Synthesizing metamorphosis.</jobString>
-    <workSkill>Intellectual</workSkill>
-    <workSpeedStat>DrugSynthesisSpeed</workSpeedStat>
-    <effectWorking>Cook</effectWorking>
-    <soundWorking>Recipe_Drug</soundWorking>
-    <workAmount>9000</workAmount>
-    <researchPrerequisite>ME_CraftPrecipice</researchPrerequisite>
-    <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_Precipice>1</ME_Compound_Precipice></products>
-    <ingredients>
-      <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>1</count></li>
-      <li><filter><thingDefs><li>ComponentSpacer</li></thingDefs></filter><count>1</count></li>
-      <li><filter><thingDefs><li>ArchiteCapsule</li></thingDefs></filter><count>1</count></li>
-    </ingredients>
-    <fixedIngredientFilter><thingDefs><li>Luciferium</li><li>ComponentSpacer</li><li>ArchiteCapsule</li></thingDefs></fixedIngredientFilter>
-  </RecipeDef>
-
-  <!-- Vanilla fallback: always available. With Biotech, both recipes exist (archite one is cheaper). -->
+  <!-- Single Drug Lab recipe for Metamorphosis (no DLC required). -->
   <RecipeDef>
     <defName>ME_Make_Precipice_Vanilla</defName>
     <label>synthesize metamorphosis</label>
