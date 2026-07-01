@@ -275,17 +275,17 @@ namespace MedicalExperimentation
                     doc.workSettings?.EnableAndInitialize();
                 }
 
-                // Two prisoners flagged for auto-experimentation. Stunned in place so a warden walks up
-                // and administers an undiscovered compound on unpause (no prison build needed for the demo).
+                // A real prison with two AWAKE prisoners, both flagged for auto-experimentation. Wardens only
+                // service secured prisoners (in a prison) — roaming ones are ignored for every duty — so this
+                // is the realistic setup. On unpause a warden fetches a compound and carries it in to administer.
+                IntVec3 prisonCenter = BuildPrison(map, c + new IntVec3(-12, 0, 0));
                 for (int i = 0; i < 2; i++)
                 {
                     Pawn pris = PawnGenerator.GeneratePawn(PawnKindDefOf.SpaceRefugee, null);
-                    GenSpawn.Spawn(pris, CellFinder.RandomClosewalkCellNear(c, map, 5), map);
+                    GenSpawn.Spawn(pris, prisonCenter + new IntVec3(i, 0, 0), map);
                     pris.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner);
                     pris.guest?.ToggleNonExclusiveInteraction(ME_DefOf.ME_AutoExperiment, true);
-                    pris.guest.interactionMode = DefDatabase<PrisonerInteractionModeDef>.GetNamed("NoInteraction");
                     if (pris.needs?.food != null) pris.needs.food.CurLevel = pris.needs.food.MaxLevel;
-                    pris.stances?.stunner?.StunFor(2000000, null, false, false);
                 }
 
                 // A maimed test subject (missing leg + permanent scars) for Precipice + the surgeries.
@@ -406,29 +406,28 @@ namespace MedicalExperimentation
                                   && !ledger.IsDiscovered(ThingDef.Named("ME_Compound_BattleStimX"));
                 sb.Append(" trialMarks=").Append(trialMarks); ok &= trialMarks;
 
-                // Prisoner administration test. prisOffered proves the warden WorkGiver naturally offers the
-                // job; the compound is placed away from both pawns so the driver must walk the warden to it,
-                // pick it up, carry it to the prisoner, and administer (the player reported it dosing instantly
-                // with no fetch). The job is then force-started so phase 1 can confirm it completes end-to-end
-                // (prisoner dosed) deterministically, without depending on need/mood timing.
-                Pawn warden = GenerateCapableColonist(map, CellFinder.RandomClosewalkCellNear(map.Center, map, 5), WorkTypeDefOf.Warden);
+                // Prisoner administration test — the REALISTIC case the player has: an awake prisoner in a
+                // real prison (secured), flagged for experimentation, with a compound in a stockpile outside.
+                // No stun, no force-start: the warden must decide on its own to fetch the compound, carry it in,
+                // and administer it. (Roaming/unsecured prisoners are ignored by wardens entirely, which is what
+                // made the old stunned open-field prisoners misleading.)
+                IntVec3 prisonCenter = BuildPrison(map, map.Center + new IntVec3(0, 0, 14));
+                Pawn warden = GenerateCapableColonist(map, prisonCenter + new IntVec3(4, 0, 0), WorkTypeDefOf.Warden);
                 SetSingleWork(warden, WorkTypeDefOf.Warden);
                 wardenRef = warden;
                 Pawn pris = PawnGenerator.GeneratePawn(PawnKindDefOf.SpaceRefugee, null);
-                GenSpawn.Spawn(pris, CellFinder.RandomClosewalkCellNear(warden.Position, map, 2), map);
+                GenSpawn.Spawn(pris, prisonCenter + new IntVec3(1, 0, 0), map);
                 pris.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner);
                 pris.guest?.ToggleNonExclusiveInteraction(ME_DefOf.ME_AutoExperiment, true);
-                pris.guest.interactionMode = DefDatabase<PrisonerInteractionModeDef>.GetNamed("NoInteraction"); // no recruit job to preempt
-                if (pris.needs?.food != null) pris.needs.food.CurLevel = pris.needs.food.MaxLevel; // no food job to preempt
-                pris.stances?.stunner?.StunFor(2000000, null, false, false); // keep them put (no cell in the spike)
+                pris.guest.interactionMode = DefDatabase<PrisonerInteractionModeDef>.GetNamed("NoInteraction");
+                if (pris.needs?.food != null) pris.needs.food.CurLevel = pris.needs.food.MaxLevel;
                 prisRef = pris;
-                // Compound placed ~10 cells away so a real fetch/carry is required.
-                SpawnStack(map, CellFinder.RandomClosewalkCellNear(warden.Position, map, 10), "ME_Compound_NeuralDefragmenter", 3);
+                // Compound in a stockpile outside the prison so a real fetch + carry-in is required.
+                SpawnStack(map, warden.Position + new IntVec3(3, 0, 0), "ME_Compound_NeuralDefragmenter", 3);
                 var wwg = (WorkGiver_Warden_AdministerExperimental)DefDatabase<WorkGiverDef>.GetNamed("ME_AdministerExperimental").Worker;
-                Job admJob = wwg.JobOnThing(warden, pris, false);
-                sb.Append(" prisOffered=").Append(admJob != null);
+                sb.Append(" prisSecure=").Append(pris.guest.PrisonerIsSecure);
+                sb.Append(" prisOffered=").Append(wwg.JobOnThing(warden, pris, false) != null);
                 sb.Append(" wardenCanWard=").Append(!warden.WorkTypeIsDisabled(WorkTypeDefOf.Warden));
-                if (admJob != null) warden.jobs.TryTakeOrderedJob(admJob, JobTag.Misc);
             }
             catch (Exception e)
             {
@@ -522,5 +521,36 @@ namespace MedicalExperimentation
         }
 
         private static bool Approx(float a, float b) => Math.Abs(a - b) < 0.001f;
+
+        // Builds a small enclosed prison (5x5 walls + a door + a prisoner bed) around c and returns the
+        // interior center. A real prison makes prisoners "secure", which is what wardens require before they
+        // will service them at all (recruit, convert, administer). Roaming/unsecured prisoners get ignored.
+        private static IntVec3 BuildPrison(Map map, IntVec3 c)
+        {
+            var wallDef = ThingDef.Named("Wall");
+            var wallStuff = GenStuff.DefaultStuffFor(wallDef);
+            var doorDef = ThingDef.Named("Door");
+            var doorStuff = GenStuff.DefaultStuffFor(doorDef);
+            IntVec3 doorCell = c + new IntVec3(2, 0, 0);
+            for (int dx = -2; dx <= 2; dx++)
+                for (int dz = -2; dz <= 2; dz++)
+                {
+                    if (Math.Max(Math.Abs(dx), Math.Abs(dz)) != 2) continue; // perimeter cells only
+                    IntVec3 cell = c + new IntVec3(dx, 0, dz);
+                    if (!cell.InBounds(map)) continue;
+                    foreach (var t in cell.GetThingList(map).ToList())
+                        if (t.def.category == ThingCategory.Building) t.Destroy();
+                    var def = cell == doorCell ? doorDef : wallDef;
+                    var stuff = cell == doorCell ? doorStuff : wallStuff;
+                    var b = GenSpawn.Spawn(ThingMaker.MakeThing(def, stuff), cell, map);
+                    b.SetFaction(Faction.OfPlayer);
+                }
+            var bed = (Building_Bed)GenSpawn.Spawn(
+                ThingMaker.MakeThing(ThingDef.Named("Bed"), ThingDef.Named("WoodLog")), c + new IntVec3(-1, 0, -1), map);
+            bed.SetFaction(Faction.OfPlayer);
+            bed.ForOwnerType = BedOwnerType.Prisoner;
+            map.regionAndRoomUpdater.RebuildAllRegionsAndRooms(); // register the room as a prison now
+            return c;
+        }
     }
 }
