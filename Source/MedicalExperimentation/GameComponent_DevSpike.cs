@@ -426,6 +426,26 @@ namespace MedicalExperimentation
                 bool gateOk = synthSyn != null && synthSyn.AvailableNow && synthAdr != null && !synthAdr.AvailableNow;
                 sb.Append(" synthGate=").Append(gateOk); ok &= gateOk;
 
+                // Vanilla-adjacent variant recipe unlocks by DISCOVERING the refinement sample (which finishes
+                // ME_DrugRefinement) - the "compound" path. (Finishing that research directly also unlocks it.)
+                var varRecipe = DefDatabase<RecipeDef>.GetNamedSilentFail("ME_Make_GoJuice_Stable");
+                bool varBefore = varRecipe != null && !varRecipe.AvailableNow;
+                MedExpMod.Settings.incompatibilityChance = 0f;
+                Pawn rp = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                GenSpawn.Spawn(rp, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
+                AdministerUnknown(rp, "ME_Exp_Refinement");
+                MedExpMod.Settings.incompatibilityChance = savedChance;
+                bool varAfter = varRecipe != null && varRecipe.AvailableNow;
+                sb.Append(" variantGate=").Append(varBefore && varAfter); ok &= varBefore && varAfter;
+
+                // Precipice recipe unlocks via ME_CraftPrecipice research - the "research" path. (Discovering
+                // Precipice also finishes that research, so the compound path unlocks it too.)
+                var precRecipe = DefDatabase<RecipeDef>.GetNamedSilentFail("ME_Make_Precipice_Vanilla");
+                bool precBefore = precRecipe != null && !precRecipe.AvailableNow;
+                Find.ResearchManager.FinishProject(DefDatabase<ResearchProjectDef>.GetNamed("ME_CraftPrecipice"));
+                bool precAfter = precRecipe != null && precRecipe.AvailableNow;
+                sb.Append(" precipiceGate=").Append(precBefore && precAfter); ok &= precBefore && precAfter;
+
                 // A human trial marks the combo done even when incompatible (BattleStimX dosed incompatibly above).
                 var bsRecipe = ExperimentResolver.RecipeForProduct(ThingDef.Named("ME_Compound_BattleStimX"));
                 bool trialMarks = ledger != null && bsRecipe != null && ledger.ComboTried(bsRecipe.ComboKey)
