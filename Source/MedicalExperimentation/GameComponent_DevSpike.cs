@@ -113,13 +113,16 @@ namespace MedicalExperimentation
                 sb.Append(" salvage=").Append(salvOk);
                 ok &= salvOk;
 
-                // Label masking
-                var compThing = ThingMaker.MakeThing(ThingDef.Named("ME_Compound_AdrenalCatalyst"));
-                var comp = compThing.TryGetComp<CompMysteryDrug>();
-                bool maskOk = comp != null && comp.TransformLabel("x").ToLower().Contains("experimental compound");
+                // Anonymity: an unknown compound's label is generic and never reveals its hidden result,
+                // while the real (identified) compound shows its true name.
+                var unkThing = MakeUnknown("ME_Exp_AdrenalCatalyst");
+                string unkLabel = unkThing.LabelCap.ToString().ToLower();
+                bool maskOk = unkLabel.Contains("unidentified") && !unkLabel.Contains("adrenal");
+                var realThing = ThingMaker.MakeThing(ThingDef.Named("ME_Compound_AdrenalCatalyst"));
+                maskOk &= realThing.LabelCap.ToString().ToLower().Contains("adrenal"); // real name, not a code
                 sb.Append(" mask=").Append(maskOk);
                 ok &= maskOk;
-                compThing.Destroy();
+                realThing.Destroy();
 
                 // Incompatibility determinism
                 var incompat = GameComponent_DrugIncompat.Instance;
@@ -369,15 +372,13 @@ namespace MedicalExperimentation
                 sb.Append(" administer=").Append(disc && eff);
                 ok &= disc && eff;
 
-                // Once identified, the item's info-card description must reveal the real effect (not stay
-                // generic). Tested on the "failed compound", which the player reported reading wrong.
+                // A real (identified) compound's info-card description shows its real effect, not the generic
+                // placeholder. Tested on the "failed compound", which the player reported reading wrong.
                 var failedDef = ThingDef.Named("ME_Compound_SickDrug");
                 var failedThing = ThingMaker.MakeThing(failedDef);
-                bool descBefore = failedThing.DescriptionFlavor == failedDef.description; // generic while unknown
-                ledger?.Discover(failedDef);
-                bool descAfter = failedThing.DescriptionFlavor != failedDef.description
+                bool descReveal = failedThing.DescriptionFlavor != failedDef.description
                     && !failedThing.DescriptionFlavor.NullOrEmpty();
-                sb.Append(" descReveal=").Append(descBefore && descAfter); ok &= descBefore && descAfter;
+                sb.Append(" descReveal=").Append(descReveal); ok &= descReveal;
 
                 // Forced incompatibility -> adverse reaction, no benefit
                 MedExpMod.Settings.incompatibilityChance = 1f;

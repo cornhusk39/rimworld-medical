@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using RimWorld;
 using Verse;
 
@@ -8,22 +7,21 @@ namespace MedicalExperimentation
     public class CompProperties_MysteryDrug : CompProperties
     {
         public string codePrefix = "RX"; // RX therapeutic, CX combat, TX toxic
-        public string revealedDescription; // the real effect text, shown only once discovered
+        public string revealedDescription; // the real effect text
 
         public CompProperties_MysteryDrug() { compClass = typeof(CompMysteryDrug); }
     }
 
-    // Masks an experimental compound's identity until the colony has discovered what it does.
-    // Identity state lives in GameComponent_PharmaLedger, keyed by the product defName.
+    // Marks a real, identified compound and carries its effect text. The mystery phase lives entirely on the
+    // generic ME_UnknownCompound item; by the time you hold a real ME_Compound_* (crafted at the Drug Lab once
+    // its combo is identified) you already know what it is, so these are never masked. This comp only tags the
+    // def for recipe gating (Patch_RecipeDef_AvailableNow) and surfaces the effect in the item's info.
     public class CompMysteryDrug : ThingComp
     {
         private CompProperties_MysteryDrug Props => (CompProperties_MysteryDrug)props;
 
-        private bool Discovered => GameComponent_PharmaLedger.Instance?.IsDiscovered(parent.def) ?? false;
-
-        // Deterministic, official-sounding code derived from the def (stable per version).
-        public string Code => CodeFor(parent.def, Props.codePrefix);
-
+        // Deterministic, official-sounding code derived from the def (stable per version). Used by the ledger /
+        // picker to label compounds the colony hasn't identified yet, not by the item itself.
         public static string CodeFor(ThingDef def, string prefix)
         {
             int h = def.shortHash;
@@ -32,62 +30,30 @@ namespace MedicalExperimentation
             return prefix + "-" + num + "-" + batch;
         }
 
-        // Code for a compound ThingDef without an instance (used by the ledger UI).
         public static string CodeFor(ThingDef def)
         {
             var p = def.GetCompProperties<CompProperties_MysteryDrug>();
             return CodeFor(def, p?.codePrefix ?? "RX");
         }
 
-        public override string TransformLabel(string label)
+        private string EffectText()
         {
-            if (Discovered) return label; // real name, e.g. "adrenal catalyst"
-            return "experimental compound " + Code;
+            if (!Props.revealedDescription.NullOrEmpty()) return Props.revealedDescription;
+            var recipe = ExperimentResolver.RecipeForProduct(parent.def);
+            return recipe != null && !recipe.effectSummary.NullOrEmpty() ? recipe.effectSummary.CapitalizeFirst() + "." : null;
         }
 
-        public override string CompInspectStringExtra()
-        {
-            var ledger = GameComponent_PharmaLedger.Instance;
-            if (ledger == null) return null;
-            if (ledger.IsDiscovered(parent.def))
-            {
-                if (!Props.revealedDescription.NullOrEmpty()) return Props.revealedDescription;
-                var recipe = ExperimentResolver.RecipeForProduct(parent.def);
-                return "ME_Identified".Translate() + (recipe?.effectSummary.NullOrEmpty() == false ? ": " + recipe.effectSummary : "");
-            }
-            float hyp = ledger.HypothesisStrength(parent.def);
-            if (hyp > 0f)
-            {
-                var recipe = ExperimentResolver.RecipeForProduct(parent.def);
-                string guess = recipe?.effectSummary.NullOrEmpty() == false ? recipe.effectSummary : "uncertain";
-                return "ME_Hypothesis".Translate(guess, hyp.ToStringPercent());
-            }
-            return "ME_Unidentified".Translate();
-        }
+        public override string CompInspectStringExtra() => EffectText();
 
-        // Adds an "Effect" row to the info card's left-hand stat list (where vanilla medicines list their
-        // effect), revealing the compound's effect once the colony has identified it.
+        // Adds an "Effect" row to the info card's left-hand stat list (where vanilla medicines list theirs).
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
-            var ledger = GameComponent_PharmaLedger.Instance;
             var recipe = ExperimentResolver.RecipeForProduct(parent.def);
-            bool discovered = ledger != null && ledger.IsDiscovered(parent.def);
-
-            if (discovered)
-            {
-                string summary = recipe != null && !recipe.effectSummary.NullOrEmpty()
-                    ? recipe.effectSummary.CapitalizeFirst() : null;
-                string full = !Props.revealedDescription.NullOrEmpty()
-                    ? Props.revealedDescription
-                    : (summary != null ? summary + "." : "This compound has been identified.");
-                yield return new StatDrawEntry(StatCategoryDefOf.Basics, "ME_EffectStat".Translate(),
-                    summary ?? "ME_EffectIdentified".Translate(), full, 2490);
-            }
-            else
-            {
-                yield return new StatDrawEntry(StatCategoryDefOf.Basics, "ME_EffectStat".Translate(),
-                    "ME_EffectUnknown".Translate(), "ME_EffectUnknownDesc".Translate(), 2490);
-            }
+            string summary = recipe != null && !recipe.effectSummary.NullOrEmpty()
+                ? recipe.effectSummary.CapitalizeFirst() : null;
+            string full = EffectText() ?? "ME_EffectIdentified".Translate();
+            yield return new StatDrawEntry(StatCategoryDefOf.Basics, "ME_EffectStat".Translate(),
+                summary ?? "ME_EffectIdentified".Translate(), full, 2490);
         }
     }
 }
