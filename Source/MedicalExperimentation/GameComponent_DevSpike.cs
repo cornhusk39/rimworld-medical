@@ -443,12 +443,18 @@ namespace MedicalExperimentation
                 bool varAfter = varRecipe != null && varRecipe.AvailableNow;
                 sb.Append(" variantGate=").Append(varBefore && varAfter); ok &= varBefore && varAfter;
 
-                // Precipice recipe unlocks via ME_CraftPrecipice research - the "research" path. (Discovering
-                // Precipice also finishes that research, so the compound path unlocks it too.)
+                // Metamorphosis COMPOUND path: discovering it must AUTO-COMPLETE its research
+                // (ME_CraftPrecipice), which unlocks the Drug Lab recipe. Start with neither the research done
+                // nor the recipe available, administer the Metamorphosis unknown, then require BOTH true.
                 var precRecipe = DefDatabase<RecipeDef>.GetNamedSilentFail("ME_Make_Precipice_Vanilla");
-                bool precBefore = precRecipe != null && !precRecipe.AvailableNow;
-                Find.ResearchManager.FinishProject(DefDatabase<ResearchProjectDef>.GetNamed("ME_CraftPrecipice"));
-                bool precAfter = precRecipe != null && precRecipe.AvailableNow;
+                var craftPrec = DefDatabase<ResearchProjectDef>.GetNamed("ME_CraftPrecipice");
+                bool precBefore = precRecipe != null && !precRecipe.AvailableNow && !craftPrec.IsFinished;
+                MedExpMod.Settings.incompatibilityChance = 0f;
+                Pawn mp = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                GenSpawn.Spawn(mp, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
+                AdministerUnknown(mp, "ME_Exp_Precipice");
+                MedExpMod.Settings.incompatibilityChance = savedChance;
+                bool precAfter = craftPrec.IsFinished && precRecipe != null && precRecipe.AvailableNow; // research auto-done + recipe live
                 sb.Append(" precipiceGate=").Append(precBefore && precAfter); ok &= precBefore && precAfter;
 
                 // A human trial marks the combo done even when incompatible (BattleStimX dosed incompatibly above).
