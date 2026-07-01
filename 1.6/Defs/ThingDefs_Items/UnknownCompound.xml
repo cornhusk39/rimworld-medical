@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- The single generic item every experiment produces. All unknown compounds share this one appearance;
+       what a given batch actually is (a real medicine or a dud) is hidden until it is administered. Kept
+       unstackable so batches never merge and hint at their identity. -->
+  <ThingDef ParentName="DrugBase">
+    <defName>ME_UnknownCompound</defName>
+    <label>unidentified experimental compound</label>
+    <description>An unidentified experimental compound produced at the experimentation bench. Every one looks alike; there is no way to tell what this batch does, or whether it is useful at all, until it is administered to a subject. Consult the experiment ledger to see what past combinations turned out to be.</description>
+    <thingClass>MedicalExperimentation.Thing_UnknownCompound</thingClass>
+    <techLevel>Spacer</techLevel>
+    <stackLimit>1</stackLimit>
+    <graphicData>
+      <texPath>Things/Item/Compound</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <color>(0.62,0.6,0.7)</color>
+      <drawSize>(0.7,0.7)</drawSize>
+    </graphicData>
+    <statBases>
+      <MarketValue>15</MarketValue>
+      <Mass>0.1</Mass>
+      <Flammability>0.7</Flammability>
+      <DeteriorationRate>2</DeteriorationRate>
+    </statBases>
+    <ingestible>
+      <foodType>Processed</foodType>
+      <drugCategory>Medical</drugCategory>
+      <baseIngestTicks>240</baseIngestTicks>
+      <ingestCommandString>Administer {0}</ingestCommandString>
+      <ingestReportString>Administering {0}.</ingestReportString>
+      <chairSearchRadius>0</chairSearchRadius>
+      <outcomeDoers>
+        <li Class="MedicalExperimentation.IngestionOutcomeDoer_UnknownResolve" />
+      </outcomeDoers>
+    </ingestible>
+    <comps>
+      <!-- Required: a Medical-category ingestible without CompProperties_Drug crashes the drug-policy sort. -->
+      <li Class="CompProperties_Drug">
+        <listOrder>1999</listOrder>
+      </li>
+    </comps>
+  </ThingDef>
+
+</Defs>

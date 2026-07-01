@@ -91,24 +91,19 @@ namespace MedicalExperimentation
 
             if (recipe != null && recipe.product != null)
             {
-                Thing product = ThingMaker.MakeThing(recipe.product);
-                product.stackCount = Math.Max(1, recipe.productCount);
-                GenPlace.TryPlaceThing(product, dropCell, map, ThingPlaceMode.Near);
-                ledger?.RecordCombo(key, recipe.product);
-
-                // The synthesizing doctor may form a partial hypothesis about an unidentified compound,
-                // scaling with Medicine skill (shown in the ledger / item tooltip until it is administered).
-                if (ledger != null && !ledger.IsDiscovered(recipe.product))
+                // A defined combo yields generic "unidentified compound" batches, each secretly tagged with
+                // the result and the exact combo. Nothing is recorded in the ledger here: what the combo
+                // makes is only learned by administering it (that would otherwise leak at craft time).
+                int count = Math.Max(1, recipe.productCount);
+                var unkDef = ThingDef.Named("ME_UnknownCompound");
+                for (int i = 0; i < count; i++)
                 {
-                    float lvl = pawn.skills?.GetSkill(SkillDefOf.Medicine)?.Level ?? 0f;
-                    if (Rand.Chance(0.04f * lvl))
-                    {
-                        float strength = lvl / 20f;
-                        ledger.RaiseHypothesis(recipe.product, strength > 1f ? 1f : strength);
-                    }
+                    var unk = (Thing_UnknownCompound)ThingMaker.MakeThing(unkDef);
+                    unk.resultDefName = recipe.product.defName;
+                    unk.comboKey = key;
+                    GenPlace.TryPlaceThing(unk, dropCell, map, ThingPlaceMode.Near);
                 }
-
-                Messages.Message("ME_ExperimentSuccess".Translate(), product, MessageTypeDefOf.PositiveEvent, false);
+                Messages.Message("ME_ExperimentSuccess".Translate(), new TargetInfo(dropCell, map), MessageTypeDefOf.PositiveEvent, false);
             }
             else
             {

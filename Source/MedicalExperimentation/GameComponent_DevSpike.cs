@@ -249,12 +249,21 @@ namespace MedicalExperimentation
                 SpawnStack(map, c, "ArchiteCapsule", 5);
                 SpawnStack(map, c, "MealSurvivalPack", 40);
 
-                // A sample of every compound so all sprites are visible and anything is administrable.
+                // A sample of every KNOWN medicine (what you craft at the Drug Lab after discovery) so all
+                // sprites are visible.
                 string[] samples = { "AdrenalCatalyst", "CoagulantSerum", "ImmunoPrimer", "NeuralDefragmenter",
                     "SomnolentDraught", "BattleStimX", "BerserkerDraught", "Stoneskin", "HepatotoxinB",
                     "SoporificMist", "TissueRegenerant", "NerveConductionGel", "SynapticAccelerant",
                     "Precipice", "SickDrug", "LethalDrug", "InertDrug" };
                 foreach (var s in samples) SpawnStack(map, c, "ME_Compound_" + s, 4);
+
+                // A batch of UNKNOWN compounds (all identical-looking) with mixed hidden results, so the
+                // administer-to-identify loop can be tested. A good one, a dud, and a lethal one.
+                string[] unknownRecipes = { "ME_Exp_AdrenalCatalyst", "ME_Exp_ImmunoPrimer", "ME_Exp_Precipice",
+                    "ME_Exp_Dummy_Sick_001", "ME_Exp_Dummy_Kill_001", "ME_Exp_Dummy_Inert_001" };
+                foreach (var r in unknownRecipes)
+                    for (int i = 0; i < 2; i++)
+                        GenPlace.TryPlaceThing(MakeUnknown(r), CellFinder.RandomClosewalkCellNear(c, map, 3), map, ThingPlaceMode.Near);
 
                 // Queue a FRESH (undiscovered) experiment so hauling + production is visible on unpause.
                 var coag = new List<ReagentCount>
@@ -349,12 +358,12 @@ namespace MedicalExperimentation
                 var ledger = GameComponent_PharmaLedger.Instance;
                 float savedChance = MedExpMod.Settings.incompatibilityChance;
 
-                // Administer a compound -> effect applied + identified colony-wide
+                // Administer an UNKNOWN compound -> resolves to its effect + identified colony-wide.
                 MedExpMod.Settings.incompatibilityChance = 0f;
                 Pawn p1 = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
                 GenSpawn.Spawn(p1, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
                 var syn = ThingDef.Named("ME_Compound_SynapticAccelerant");
-                Administer(p1, syn);
+                AdministerUnknown(p1, "ME_Exp_SynapticAccelerant");
                 bool disc = ledger != null && ledger.IsDiscovered(syn);
                 bool eff = p1.health.hediffSet.HasHediff(HediffDef.Named("ME_Hediff_Synaptic"));
                 sb.Append(" administer=").Append(disc && eff);
@@ -374,7 +383,7 @@ namespace MedicalExperimentation
                 MedExpMod.Settings.incompatibilityChance = 1f;
                 Pawn p2 = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
                 GenSpawn.Spawn(p2, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
-                Administer(p2, ThingDef.Named("ME_Compound_BattleStimX"));
+                AdministerUnknown(p2, "ME_Exp_BattleStimX");
                 bool adverse = p2.health.hediffSet.HasHediff(HediffDef.Named("ME_AdverseReaction"));
                 sb.Append(" adverse=").Append(adverse); ok &= adverse;
                 MedExpMod.Settings.incompatibilityChance = savedChance;
@@ -422,8 +431,10 @@ namespace MedicalExperimentation
                 pris.guest.interactionMode = DefDatabase<PrisonerInteractionModeDef>.GetNamed("NoInteraction");
                 if (pris.needs?.food != null) pris.needs.food.CurLevel = pris.needs.food.MaxLevel;
                 prisRef = pris;
-                // Compound in a stockpile outside the prison so a real fetch + carry-in is required.
-                SpawnStack(map, warden.Position + new IntVec3(3, 0, 0), "ME_Compound_NeuralDefragmenter", 3);
+                // Unknown compounds in a stockpile outside the prison so a real fetch + carry-in is required.
+                for (int i = 0; i < 3; i++)
+                    GenPlace.TryPlaceThing(MakeUnknown("ME_Exp_NeuralDefragmenter"),
+                        CellFinder.RandomClosewalkCellNear(warden.Position + new IntVec3(3, 0, 0), map, 2), map, ThingPlaceMode.Near);
                 var wwg = (WorkGiver_Warden_AdministerExperimental)DefDatabase<WorkGiverDef>.GetNamed("ME_AdministerExperimental").Worker;
                 sb.Append(" prisSecure=").Append(pris.guest.PrisonerIsSecure);
                 sb.Append(" prisOffered=").Append(wwg.JobOnThing(warden, pris, false) != null);
@@ -437,12 +448,23 @@ namespace MedicalExperimentation
             return ok;
         }
 
-        private static void Administer(Pawn pawn, ThingDef compound)
+        // Build a generic unknown compound tagged to resolve into a given experiment recipe's result.
+        private static Thing_UnknownCompound MakeUnknown(string recipeDefName)
         {
-            Thing t = ThingMaker.MakeThing(compound);
-            if (compound.ingestible?.outcomeDoers != null)
-                foreach (var doer in compound.ingestible.outcomeDoers)
-                    doer.DoIngestionOutcome(pawn, t, 1);
+            var recipe = DefDatabase<ExperimentRecipeDef>.GetNamed(recipeDefName);
+            var unk = (Thing_UnknownCompound)ThingMaker.MakeThing(ThingDef.Named("ME_UnknownCompound"));
+            unk.resultDefName = recipe.product.defName;
+            unk.comboKey = recipe.ComboKey;
+            return unk;
+        }
+
+        // Administer an unknown compound to a pawn through its real ingestion path (resolves + identifies).
+        private static void AdministerUnknown(Pawn pawn, string recipeDefName)
+        {
+            var unk = MakeUnknown(recipeDefName);
+            if (unk.def.ingestible?.outcomeDoers != null)
+                foreach (var doer in unk.def.ingestible.outcomeDoers)
+                    doer.DoIngestionOutcome(pawn, unk, 1);
         }
 
         private void Phase1_AwaitProduct(Map map)

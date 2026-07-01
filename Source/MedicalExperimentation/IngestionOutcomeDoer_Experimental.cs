@@ -3,9 +3,13 @@ using Verse;
 
 namespace MedicalExperimentation
 {
-    // Applies an experimental compound's real effect when administered, reveals its identity to the colony,
-    // and unlocks any surgery tied to it. If the patient is incompatible with this compound (permanent ~2%
-    // per pair), they suffer an adverse reaction instead and the compound is NOT identified from that test.
+    // Applies a compound's real effect when administered, reveals its identity to the colony, and unlocks any
+    // research tied to it. If the patient is incompatible with this compound (permanent ~2% per pair), they
+    // suffer an adverse reaction instead and the compound is NOT identified from that test.
+    //
+    // This lives on the real (identified) compound defs so a known, Drug-Lab-crafted dose still applies its
+    // effect. The mystery phase is handled by ME_UnknownCompound, which routes through the shared Resolve()
+    // below with the actual combo the player mixed.
     public class IngestionOutcomeDoer_Experimental : IngestionOutcomeDoer
     {
         public HediffDef hediffDef;
@@ -16,25 +20,34 @@ namespace MedicalExperimentation
         {
             if (pawn?.health == null || ingested == null) return;
             ThingDef compound = ingested.def;
+            var recipe = ExperimentResolver.RecipeForProduct(compound);
+            Resolve(pawn, compound, recipe?.ComboKey, hediffDef, severity, adverseSeverity);
+        }
+
+        // Shared resolution: incompatibility check, record the exact combo tried, apply the effect (or an
+        // adverse reaction), and identify the compound colony-wide. comboKey may be null (effect only).
+        public static void Resolve(Pawn pawn, ThingDef compound, string comboKey, HediffDef effect,
+            float severity, float adverseSeverity)
+        {
+            if (pawn?.health == null || compound == null) return;
 
             var incompat = GameComponent_DrugIncompat.Instance;
             bool incompatible = incompat != null && incompat.IsIncompatible(pawn, compound);
 
             // A human trial counts as completing the experiment regardless of outcome, so the bench will
-            // not re-queue this combo (covers compounds obtained off the bench too).
-            MarkComboTried(compound);
+            // not re-queue this combo. Record the actual combo the player mixed.
+            var ledger = GameComponent_PharmaLedger.Instance;
+            if (ledger != null && !comboKey.NullOrEmpty() && !ledger.ComboTried(comboKey))
+                ledger.RecordCombo(comboKey, compound);
 
             if (incompatible)
             {
-                ApplyAdverse(pawn, compound);
+                ApplyAdverse(pawn, compound, adverseSeverity);
                 return; // no benefit, no identification from a botched test
             }
 
-            // Normal effect.
-            if (hediffDef != null) ApplyEffect(pawn, hediffDef, severity);
+            if (effect != null) ApplyEffect(pawn, effect, severity);
 
-            // Reveal identity colony-wide.
-            var ledger = GameComponent_PharmaLedger.Instance;
             if (ledger != null && ledger.Discover(compound))
             {
                 var recipe = ExperimentResolver.RecipeForProduct(compound);
@@ -70,23 +83,14 @@ namespace MedicalExperimentation
             }
         }
 
-        private static void MarkComboTried(ThingDef compound)
-        {
-            var ledger = GameComponent_PharmaLedger.Instance;
-            var recipe = ExperimentResolver.RecipeForProduct(compound);
-            if (ledger != null && recipe != null && !ledger.ComboTried(recipe.ComboKey))
-                ledger.RecordCombo(recipe.ComboKey, compound);
-        }
-
-        private void ApplyAdverse(Pawn pawn, ThingDef compound)
+        private static void ApplyAdverse(Pawn pawn, ThingDef compound, float adverseSeverity)
         {
             HediffDef adverseDef = DefDatabase<HediffDef>.GetNamedSilentFail("ME_AdverseReaction");
             if (adverseDef != null)
             {
                 Hediff h = HediffMaker.MakeHediff(adverseDef, pawn);
                 float sev = adverseSeverity;
-                // mod setting can allow harsher reactions
-                sev += (MedExpMod.Settings?.adverseLethalityCap ?? 0f) * 0.5f;
+                sev += (MedExpMod.Settings?.adverseLethalityCap ?? 0f) * 0.5f; // mod setting can allow harsher reactions
                 h.Severity = sev;
                 pawn.health.AddHediff(h);
             }
