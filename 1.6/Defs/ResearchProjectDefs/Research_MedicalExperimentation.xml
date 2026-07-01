@@ -12,7 +12,7 @@
     <defName>ME_ExperimentalPharmacology</defName>
     <label>experimental pharmacology</label>
     <description>Repurpose the colony's medical and chemical stocks into something the glitterworld pharmacopeia never sanctioned. Unlocks the experimentation bench, where doctors combine reagents into compounds of unknown effect.</description>
-    <baseCost>5000</baseCost>
+    <baseCost>750</baseCost>
     <techLevel>Spacer</techLevel>
     <tab>ME_Research</tab>
     <prerequisites>
@@ -32,7 +32,7 @@
     <defName>ME_DrugRefinement</defName>
     <label>drug refinement</label>
     <description>Stabilize and concentrate existing drugs into graded variants. Discovered by testing a refinement sample, or researched the long way.</description>
-    <baseCost>2500</baseCost>
+    <baseCost>8000</baseCost>
     <techLevel>Spacer</techLevel>
     <tab>ME_Research</tab>
     <prerequisites>
@@ -46,7 +46,7 @@
     <defName>ME_CraftPrecipice</defName>
     <label>precipice synthesis</label>
     <description>How to synthesize Precipice reliably. Discovered by testing Precipice, or researched the long way.</description>
-    <baseCost>3000</baseCost>
+    <baseCost>5000</baseCost>
     <techLevel>Spacer</techLevel>
     <tab>ME_Research</tab>
     <prerequisites>
