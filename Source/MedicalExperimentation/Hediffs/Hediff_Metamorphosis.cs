@@ -17,12 +17,18 @@ namespace MedicalExperimentation
         private const int HealInterval = 20000; // heal one thing roughly twice a day
         private bool completed;
 
-        public override void Tick()
+        // RimWorld 1.6 moved all hediff ticking to TickInterval(delta); Hediff.Tick() is now an empty stub,
+        // so overriding it would silently do nothing (the coma would apply but never heal or end). base
+        // .TickInterval advances ageTicks by delta; delta can batch multiple ticks, so heal once per
+        // HealInterval boundary actually crossed rather than testing an exact modulo that a jump could skip.
+        public override void TickInterval(int delta)
         {
-            base.Tick();
+            base.TickInterval(delta);
             if (completed || pawn == null) return;
 
-            if (ageTicks > 0 && ageTicks % HealInterval == 0)
+            int before = System.Math.Max(0, ageTicks - delta);
+            int crossings = (ageTicks / HealInterval) - (before / HealInterval);
+            for (int i = 0; i < crossings; i++)
                 HealOne();
 
             if (ageTicks >= Duration)

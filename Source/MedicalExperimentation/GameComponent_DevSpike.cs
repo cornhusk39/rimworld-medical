@@ -30,6 +30,7 @@ namespace MedicalExperimentation
         private Pawn pris2Ref;
         private bool probePrisOffered;
         private bool probeForcedExp;
+        private Thing dispersalProbe;
 
         // Retryable, latching versions of the "does the warden work giver offer the job?" probes.
         // A one-shot probe right after spawning the prison was flaky (freshly rebuilt regions).
@@ -162,6 +163,7 @@ namespace MedicalExperimentation
             }
 
             ok &= FeatureChecks(map, sb);
+            ok &= ExtendedChecks(map, sb);
 
             logicPass = ok && missing.Count == 0;
             logicDetail = (missing.Count == 0 ? "none" : string.Join(",", missing)) + sb;
@@ -217,7 +219,7 @@ namespace MedicalExperimentation
                 logicDetail += " assignable=" + (wg.JobOnThing(doctor, bench, false) != null);
                 logicDetail += " docCanDoctor=" + (!doctor.WorkTypeIsDisabled(WorkTypeDefOf.Doctor));
 
-                deadlineTick = Find.TickManager.TicksGame + 40000;
+                deadlineTick = Find.TickManager.TicksGame + 80000; // room for both the e2e and dud crafts + a warden dose
                 Find.TickManager.CurTimeSpeed = TimeSpeed.Superfast;
                 logicDetail += " naturalAssign";
             }
@@ -455,7 +457,7 @@ namespace MedicalExperimentation
                 sb.Append(" metamorphosisNeed=").Append(cleanNoNeed && maimedHasNeed); ok &= cleanNoNeed && maimedHasNeed;
 
                 // Dispersal unit spawns + its gas/sound emit path runs without throwing
-                var disp = GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ChemicalDispersal")),
+                var disp = dispersalProbe = GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ChemicalDispersal")),
                     CellFinder.RandomClosewalkCellNear(map.Center, map, 8), map);
                 sb.Append(" dispersal=").Append(disp.Spawned); ok &= disp.Spawned;
                 ledger?.Discover(ThingDef.Named("ME_Compound_HepatotoxinB"));
@@ -561,6 +563,194 @@ namespace MedicalExperimentation
             return ok;
         }
 
+        // Extended full-function sweep: everything FeatureChecks doesn't already cover, run live in-game.
+        private bool ExtendedChecks(Map map, StringBuilder sb)
+        {
+            bool ok = true;
+            var ledger = GameComponent_PharmaLedger.Instance;
+            float savedChance = MedExpMod.Settings.incompatibilityChance;
+            bool savedFF = MedExpMod.Settings.dispersalFriendlyFire;
+            bool savedPrisExp = MedExpMod.Settings.enablePrisonerExperimentation;
+            MedExpMod.Settings.incompatibilityChance = 0f;
+
+            Pawn NewColonist()
+            {
+                Pawn p = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                GenSpawn.Spawn(p, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
+                return p;
+            }
+
+            try
+            {
+                // Neural Defragmenter: erases the worst bad memory and leaves permanent neural scarring.
+                Pawn pDefrag = NewColonist();
+                var badThought = DefDatabase<ThoughtDef>.GetNamedSilentFail("ObservedLayingCorpse");
+                bool defragOk = true;
+                if (badThought != null && pDefrag.needs?.mood?.thoughts?.memories != null)
+                {
+                    // Clear any pre-existing memories first: the defragmenter erases the WORST one, and a fresh
+                    // colonist can spawn with a memory more negative than ours, which would make this test flaky.
+                    pDefrag.needs.mood.thoughts.memories.Memories.Clear();
+                    pDefrag.needs.mood.thoughts.memories.TryGainMemory(badThought);
+                    bool hadBad = pDefrag.needs.mood.thoughts.memories.Memories.Any(m => m.MoodOffset() < 0f);
+                    AdministerUnknown(pDefrag, "ME_Exp_NeuralDefragmenter");
+                    defragOk = hadBad
+                        && !pDefrag.needs.mood.thoughts.memories.Memories.Any(m => m.def == badThought)
+                        && pDefrag.health.hediffSet.HasHediff(HediffDef.Named("ME_Hediff_NeuralScar"));
+                }
+                sb.Append(" defrag=").Append(defragOk); ok &= defragOk;
+
+                // Somnolent Draught: restores rest to full.
+                Pawn pSleep = NewColonist();
+                bool somnOk = true;
+                if (pSleep.needs?.rest != null)
+                {
+                    pSleep.needs.rest.CurLevel = 0.1f;
+                    AdministerUnknown(pSleep, "ME_Exp_SomnolentDraught");
+                    somnOk = pSleep.needs.rest.CurLevel > 0.95f;
+                }
+                sb.Append(" somnolent=").Append(somnOk); ok &= somnOk;
+
+                // Dud product resolves like any compound: sickness effect + identification + combo recorded.
+                Pawn pDud = NewColonist();
+                AdministerUnknown(pDud, "ME_Exp_Dummy_Sick_001");
+                var sickRecipe = DefDatabase<ExperimentRecipeDef>.GetNamed("ME_Exp_Dummy_Sick_001");
+                bool dudResolve = pDud.health.hediffSet.HasHediff(HediffDef.Named("ME_Hediff_ExpSickness"))
+                    && ledger.IsDiscovered(ThingDef.Named("ME_Compound_SickDrug"))
+                    && ledger.ComboTried(sickRecipe.ComboKey);
+                sb.Append(" dudResolve=").Append(dudResolve); ok &= dudResolve;
+
+                // ApplyEffect stacks severity onto an existing hediff (dispersal/toxin accumulation).
+                Pawn pStack = NewColonist();
+                var advDef = HediffDef.Named("ME_AdverseReaction");
+                IngestionOutcomeDoer_Experimental.ApplyEffect(pStack, advDef, 0.3f);
+                IngestionOutcomeDoer_Experimental.ApplyEffect(pStack, advDef, 0.3f);
+                float sev = pStack.health.hediffSet.GetFirstHediffOfDef(advDef)?.Severity ?? 0f;
+                bool stackOk = sev > 0.55f && sev < 0.7f;
+                sb.Append(" stack=").Append(stackOk); ok &= stackOk;
+
+                // Full Metamorphosis cycle, accelerated: coma regrows a missing leg and clears a permanent
+                // scar, then ends in the hangover with the pawn alive.
+                Pawn pMeta = NewColonist();
+                var legDef = DefDatabase<BodyPartDef>.GetNamedSilentFail("Leg");
+                var leg = pMeta.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def == legDef);
+                if (leg != null) pMeta.health.AddHediff(HediffDef.Named("MissingBodyPart"), leg);
+                var scarPart = pMeta.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def.defName == "Torso");
+                if (scarPart != null)
+                {
+                    var cut = (Hediff_Injury)HediffMaker.MakeHediff(HediffDefOf.Cut, pMeta, scarPart);
+                    cut.Severity = 3f;
+                    var perm = cut.TryGetComp<HediffComp_GetsPermanent>();
+                    if (perm != null) perm.IsPermanent = true;
+                    pMeta.health.AddHediff(cut, scarPart);
+                }
+                var metaDef = HediffDef.Named("ME_Hediff_Metamorphosis");
+                var metaHediff = pMeta.health.AddHediff(metaDef);
+                // Drive it the way the 1.6 engine does - TickInterval, in batches - so this validates the
+                // real tick path, not the dead Tick() stub. 1050 * 250 = 262500 > the 240000 duration.
+                for (int i = 0; i < 1050 && pMeta.health.hediffSet.HasHediff(metaDef); i++)
+                    metaHediff.TickInterval(250);
+                bool metaAlive = !pMeta.Dead;
+                bool metaLimb = !pMeta.health.hediffSet.hediffs.OfType<Hediff_MissingPart>().Any();
+                bool metaScar = !pMeta.health.hediffSet.hediffs.Any(h => h.IsPermanent());
+                bool metaEnded = !pMeta.health.hediffSet.HasHediff(metaDef);
+                bool metaHang = pMeta.health.hediffSet.HasHediff(HediffDef.Named("ME_Hediff_MetamorphosisHangover"));
+                bool metaCycle = metaAlive && metaLimb && metaScar && metaEnded && metaHang;
+                if (!metaCycle) sb.Append(" [meta alive=").Append(metaAlive).Append(" limb=").Append(metaLimb)
+                    .Append(" scar=").Append(metaScar).Append(" ended=").Append(metaEnded).Append(" hang=").Append(metaHang).Append("]");
+                sb.Append(" metaCycle=").Append(metaCycle); ok &= metaCycle;
+
+                // The "no need" confirmation actually intercepts a forced ingest on a healthy pawn (dialog
+                // shown, job blocked), and does NOT intercept for a pawn with something to heal.
+                Pawn pHealthy = NewColonist();
+                foreach (var h in pHealthy.health.hediffSet.hediffs.ToList()) pHealthy.health.RemoveHediff(h);
+                Thing metaItem = GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_Compound_Metamorphosis")),
+                    pHealthy.Position, map);
+                Job ingest = JobMaker.MakeJob(JobDefOf.Ingest, metaItem);
+                ingest.count = 1;
+                ingest.playerForced = true;
+                pHealthy.jobs.StartJob(ingest, JobCondition.InterruptForced);
+                bool dlgShown = Find.WindowStack.Windows.OfType<Dialog_MessageBox>().Any();
+                bool jobBlocked = pHealthy.CurJobDef != JobDefOf.Ingest;
+                foreach (var dm in Find.WindowStack.Windows.OfType<Dialog_MessageBox>().ToList())
+                    dm.Close(false);
+                Pawn pMaimed = NewColonist();
+                var leg2 = pMaimed.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def == legDef);
+                if (leg2 != null) pMaimed.health.AddHediff(HediffDef.Named("MissingBodyPart"), leg2);
+                Job ingest2 = JobMaker.MakeJob(JobDefOf.Ingest, metaItem);
+                ingest2.count = 1;
+                ingest2.playerForced = true;
+                pMaimed.jobs.StartJob(ingest2, JobCondition.InterruptForced);
+                bool passThrough = pMaimed.CurJobDef == JobDefOf.Ingest
+                    && !Find.WindowStack.Windows.OfType<Dialog_MessageBox>().Any();
+                pMaimed.jobs.EndCurrentJob(JobCondition.InterruptForced, false);
+                if (!metaItem.Destroyed) metaItem.Destroy();
+                bool confirmDlg = dlgShown && jobBlocked && passThrough;
+                sb.Append(" confirmDlg=").Append(confirmDlg); ok &= confirmDlg;
+
+                // Warden gating rules on the unflagged prisoner (forced path): permanent neural scarring must
+                // NOT block; a transient effect MUST; the mod setting must disable the job entirely.
+                var wwg = (WorkGiver_Warden_AdministerExperimental)DefDatabase<WorkGiverDef>.GetNamed("ME_AdministerExperimental").Worker;
+                bool scarGate = true, prisSetting = true;
+                if (wardenRef != null && pris2Ref != null)
+                {
+                    var scar = pris2Ref.health.AddHediff(HediffDef.Named("ME_Hediff_NeuralScar"));
+                    bool scarAllows = wwg.JobOnThing(wardenRef, pris2Ref, true) != null;
+                    var transient = pris2Ref.health.AddHediff(HediffDef.Named("ME_Hediff_ImmunoPrimer"));
+                    bool transientBlocks = wwg.JobOnThing(wardenRef, pris2Ref, true) == null;
+                    pris2Ref.health.RemoveHediff(transient);
+                    scarGate = scarAllows && transientBlocks;
+                    MedExpMod.Settings.enablePrisonerExperimentation = false;
+                    prisSetting = wwg.JobOnThing(wardenRef, pris2Ref, true) == null;
+                    MedExpMod.Settings.enablePrisonerExperimentation = savedPrisExp;
+                }
+                sb.Append(" scarGate=").Append(scarGate); ok &= scarGate;
+                sb.Append(" prisSetting=").Append(prisSetting); ok &= prisSetting;
+
+                // Dispersal friendly-fire OFF spares colonists in the cloud while still hitting hostiles.
+                bool ffGate = true;
+                if (dispersalProbe is Building_ChemicalDispersal dispUnit)
+                {
+                    var enemyFac = Find.FactionManager.AllFactions.FirstOrDefault(f => !f.IsPlayer && !f.def.hidden && f.HostileTo(Faction.OfPlayer));
+                    if (enemyFac != null)
+                    {
+                        Pawn friendly = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                        GenSpawn.Spawn(friendly, dispUnit.Position + new IntVec3(1, 0, 0), map);
+                        Pawn foe = PawnGenerator.GeneratePawn(DefDatabase<PawnKindDef>.GetNamedSilentFail("Pirate") ?? PawnKindDefOf.Colonist, enemyFac);
+                        GenSpawn.Spawn(foe, dispUnit.Position + new IntVec3(-1, 0, 0), map);
+                        foe.stances?.stunner?.StunFor(60000, null, false, false);
+                        MedExpMod.Settings.dispersalFriendlyFire = false;
+                        dispUnit.DebugFireNow();
+                        MedExpMod.Settings.dispersalFriendlyFire = savedFF;
+                        ffGate = !friendly.health.hediffSet.HasHediff(HediffDefOf.ToxicBuildup)
+                            && foe.health.hediffSet.HasHediff(HediffDefOf.ToxicBuildup);
+                    }
+                }
+                sb.Append(" ffGate=").Append(ffGate); ok &= ffGate;
+
+                // Drug variants apply their scaled effect (unstable go-juice = strong high).
+                Pawn pVar = NewColonist();
+                var uj = ThingDef.Named("ME_GoJuice_Unstable");
+                Thing ujThing = ThingMaker.MakeThing(uj);
+                foreach (var doer in uj.ingestible.outcomeDoers) doer.DoIngestionOutcome(pVar, ujThing, 1);
+                var high = pVar.health.hediffSet.GetFirstHediffOfDef(HediffDef.Named("GoJuiceHigh"));
+                bool variantDose = high != null && high.Severity > 0.7f;
+                sb.Append(" variantDose=").Append(variantDose); ok &= variantDose;
+            }
+            catch (Exception e)
+            {
+                sb.Append(" EXT_EX=").Append(e.Message);
+                ok = false;
+            }
+            finally
+            {
+                MedExpMod.Settings.incompatibilityChance = savedChance;
+                MedExpMod.Settings.dispersalFriendlyFire = savedFF;
+                MedExpMod.Settings.enablePrisonerExperimentation = savedPrisExp;
+            }
+            return ok;
+        }
+
         // Build a generic unknown compound tagged to resolve into a given experiment recipe's result.
         private static Thing_UnknownCompound MakeUnknown(string recipeDefName)
         {
@@ -626,7 +816,9 @@ namespace MedicalExperimentation
             phase = 2;
             // prisDosed (a live natural dose) supersedes the offer probe for the flagged prisoner.
             bool prisOfferedOk = probePrisOffered || prisDosedSeen;
-            bool pass = logicPass && prisDosedSeen && prisOfferedOk && probeForcedExp;
+            // The live dud RESOLVE branch is covered deterministically by dudResolve; expProduced proves the
+            // live gather->craft pipeline. Gating on a second live craft was timing-fragile, so it's dropped.
+            bool pass = logicPass && prisDosedSeen && prisOfferedOk && probeForcedExp && expProduced;
             Log.Error($"[MESpike] RESULT pass={pass} logic={logicPass} sawExpJob={sawExpJob} expProduced={expProduced} sawPrisJob={sawPrisJob} prisDosed={prisDosedSeen} prisOffered={prisOfferedOk} forcedExp={probeForcedExp} detail=[{logicDetail}]");
             if (GenCommandLine.CommandLineArgPassed("mequit"))
                 LongEventHandler.QueueLongEvent(() => Root.Shutdown(), "Shutdown", false, null);
