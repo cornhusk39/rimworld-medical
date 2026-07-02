@@ -16,6 +16,8 @@ namespace MedicalExperimentation
     {
         private static readonly bool Active = GenCommandLine.CommandLineArgPassed("mespike");
         private static readonly bool SandboxActive = GenCommandLine.CommandLineArgPassed("mesandbox");
+        private static readonly bool MatrixActive = GenCommandLine.CommandLineArgPassed("medrugmatrix");
+        private bool matrixDone;
         private bool sandboxDone;
         private Building benchRef;
         private Building dispersalRef;
@@ -57,9 +59,21 @@ namespace MedicalExperimentation
 
         public override void GameComponentUpdate()
         {
-            if (!Active && !SandboxActive) return;
+            if (!Active && !SandboxActive && !MatrixActive) return;
             Map map = Find.CurrentMap;
             if (map == null) return;
+
+            if (MatrixActive)
+            {
+                if (matrixDone) return;
+                frames++;
+                if (frames < 120) return;
+                RunDrugMatrix(map);
+                matrixDone = true;
+                if (GenCommandLine.CommandLineArgPassed("mequit"))
+                    LongEventHandler.QueueLongEvent(() => Root.Shutdown(), "Shutdown", false, null);
+                return;
+            }
 
             if (SandboxActive)
             {
@@ -561,6 +575,145 @@ namespace MedicalExperimentation
                 ok = false;
             }
             return ok;
+        }
+
+        // Drug-safety matrix: administer every real compound to a pawn in each pathological state and report
+        // deaths/downs vs expectation. The concern is compounds whose hediffs OFFSET Consciousness downward
+        // (ImmunoPrimer, NeuralDefrag, Somnolent, ExpSickness, the hangover) - stacked on a pawn already near
+        // zero Consciousness (missing lung, extreme blood loss), they can push it <=0, which RimWorld treats
+        // as death. This is exactly the class of bug that killed pawns with Precipice/Metamorphosis.
+        private void RunDrugMatrix(Map map)
+        {
+            // Every real compound + the intended (hediff, severity) read straight off its outcome doer.
+            var compounds = DefDatabase<ThingDef>.AllDefs
+                .Where(d => d.defName.StartsWith("ME_Compound_")
+                    && d.ingestible?.outcomeDoers?.OfType<IngestionOutcomeDoer_Experimental>().Any() == true)
+                .OrderBy(d => d.defName).ToList();
+
+            // Conditions: name -> mutator that puts a fresh pawn into that pathological state.
+            var conditions = new List<(string name, Action<Pawn> apply)>
+            {
+                ("healthy", p => {}),
+                ("lowHpAllOver", p => DamageAllParts(p, 0.30f)),
+                ("extremeBloodLoss", p => AddSev(p, HediffDefOf.BloodLoss, 0.88f)),
+                ("cancer", p => AddOnRandomPart(p, "Carcinoma")),
+                ("pregnant", p => AddSev(p, DefDatabase<HediffDef>.GetNamedSilentFail("PregnantHuman"), 0.6f)),
+                ("missingLung", p => RemoveOnePart(p, "Lung")),
+                ("anesthetized", p => AddSev(p, HediffDef.Named("Anesthetic"), 1f)),
+                ("malnutrition", p => AddSev(p, DefDatabase<HediffDef>.GetNamedSilentFail("Malnutrition"), 0.9f)),
+                ("nearLethalToxic", p => AddSev(p, HediffDef.Named("ToxicBuildup"), 0.9f)),
+                ("frailFlu", p => AddSev(p, HediffDef.Named("Flu"), 0.9f)),
+            };
+
+            int deaths = 0, unexpected = 0;
+            var lines = new List<string>();
+            foreach (var comp in compounds)
+            {
+                var doer = comp.ingestible.outcomeDoers.OfType<IngestionOutcomeDoer_Experimental>().First();
+                bool lethalByDesign = comp.defName == "ME_Compound_LethalDrug";
+                foreach (var (cname, apply) in conditions)
+                {
+                    Pawn p = null;
+                    try
+                    {
+                        p = MakePawn(map);
+                        // Female + adult so pregnancy is valid.
+                        apply(p);
+                        if (p.Dead) { lines.Add($"{comp.defName}/{cname}: pawn already dead from CONDITION setup (skipped)"); continue; }
+                        float consBefore = p.health.capacities.GetLevel(PawnCapacityDefOf.Consciousness);
+
+                        // Administer exactly what a compatible dose applies (bypassing the ~2% incompat roll so
+                        // we test the intended effect). Adding the hediff fires its OnAddEffects comp too.
+                        if (doer.hediffDef != null)
+                            IngestionOutcomeDoer_Experimental.ApplyEffect(p, doer.hediffDef, doer.severity);
+
+                        bool died = p.Dead;
+                        bool downed = !died && p.Downed;
+                        if (died)
+                        {
+                            deaths++;
+                            bool expected = lethalByDesign
+                                || (comp.defName == "ME_Compound_HepatotoxinB" && cname == "nearLethalToxic");
+                            if (!expected) unexpected++;
+                            lines.Add($"{comp.defName}/{cname}: DIED consBefore={consBefore:0.00} {(expected ? "(expected)" : "*** UNEXPECTED ***")}");
+                        }
+                        else if (downed && !lethalByDesign)
+                        {
+                            lines.Add($"{comp.defName}/{cname}: downed (alive) consBefore={consBefore:0.00}");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        lines.Add($"{comp.defName}/{cname}: EXCEPTION {e.GetType().Name} {e.Message}");
+                        unexpected++;
+                    }
+                    finally
+                    {
+                        if (p != null && !p.Destroyed) p.Destroy();
+                    }
+                }
+            }
+
+            Log.Error($"[MEDrug] MATRIX compounds={compounds.Count} conditions={conditions.Count} deaths={deaths} unexpected={unexpected}");
+            foreach (var l in lines) Log.Error("[MEDrug] " + l);
+            Log.Error("[MEDrug] DONE");
+        }
+
+        private Pawn MakePawn(Map map)
+        {
+            var req = new PawnGenerationRequest(PawnKindDefOf.Colonist, Faction.OfPlayer,
+                PawnGenerationContext.NonPlayer, fixedGender: Gender.Female,
+                allowDowned: false, forceGenerateNewPawn: true);
+            Pawn p = PawnGenerator.GeneratePawn(req);
+            GenSpawn.Spawn(p, CellFinder.RandomClosewalkCellNear(map.Center, map, 8), map);
+            return p;
+        }
+
+        private static void AddSev(Pawn p, HediffDef def, float sev)
+        {
+            if (def == null) return;
+            Hediff h = HediffMaker.MakeHediff(def, p);
+            h.Severity = sev;
+            p.health.AddHediff(h);
+        }
+
+        private static void AddOnRandomPart(Pawn p, string defName)
+        {
+            var def = DefDatabase<HediffDef>.GetNamedSilentFail(defName);
+            if (def == null) return;
+            var part = p.health.hediffSet.GetNotMissingParts()
+                .FirstOrDefault(pp => pp.def.defName == "Torso" || pp.def.tags.Contains(BodyPartTagDefOf.BloodPumpingSource));
+            p.health.AddHediff(HediffMaker.MakeHediff(def, p), part ?? p.health.hediffSet.GetNotMissingParts().First());
+        }
+
+        private static void RemoveOnePart(Pawn p, string partDefName)
+        {
+            var part = p.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def.defName == partDefName);
+            if (part != null) p.health.AddHediff(HediffDef.Named("MissingBodyPart"), part);
+        }
+
+        // Model a badly-wounded-but-alive patient: put moderate bruises on the extremities only (skip head,
+        // neck, torso and any vital-capacity part), stopping as soon as overall health is low. Bruises don't
+        // bleed, so this drives SummaryHealthPercent down without the pawn bleeding out or losing a vital part.
+        private static void DamageAllParts(Pawn p, float targetHealthPct)
+        {
+            var vitalTags = new[] { BodyPartTagDefOf.ConsciousnessSource, BodyPartTagDefOf.BloodPumpingSource,
+                BodyPartTagDefOf.BreathingSource, BodyPartTagDefOf.BloodFiltrationKidney,
+                BodyPartTagDefOf.BloodFiltrationLiver };
+            var bruise = HediffDef.Named("Bruise");
+            foreach (var part in p.health.hediffSet.GetNotMissingParts()
+                .Where(pp => pp.depth == BodyPartDepth.Outside)
+                .OrderByDescending(pp => pp.def.GetMaxHealth(p)).ToList())
+            {
+                if (p.Dead || p.health.summaryHealth.SummaryHealthPercent <= targetHealthPct) return;
+                string dn = part.def.defName;
+                if (dn == "Head" || dn == "Neck" || dn == "Torso") continue;
+                if (part.def.tags != null && part.def.tags.Any(t => vitalTags.Contains(t))) continue;
+                float max = part.def.GetMaxHealth(p);
+                var inj = (Hediff_Injury)HediffMaker.MakeHediff(bruise, p, part);
+                inj.Severity = System.Math.Max(1f, max - 2f); // heavy but leaves the part intact
+                p.health.AddHediff(inj, part);
+            }
         }
 
         // Extended full-function sweep: everything FeatureChecks doesn't already cover, run live in-game.
