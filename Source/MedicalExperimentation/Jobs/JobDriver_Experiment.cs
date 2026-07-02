@@ -14,6 +14,7 @@ namespace MedicalExperimentation
     {
         private const int WorkAmount = 2200;
         private Dictionary<ThingDef, int> gathered = new Dictionary<ThingDef, int>();
+        private bool resolved;
 
         private Building_ExperimentationBench Bench => job.targetA.Thing as Building_ExperimentationBench;
 
@@ -28,6 +29,29 @@ namespace MedicalExperimentation
         {
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             this.FailOnBurningImmobile(TargetIndex.A);
+
+            // Deposited reagents are destroyed as they arrive (tallied in `gathered`). If the job ends
+            // before the experiment resolves (drafted, downed, bench lost), refund them so an interrupted
+            // experiment doesn't silently eat a full reagent set while the order stays queued.
+            AddFinishAction(condition =>
+            {
+                if (resolved || gathered.Count == 0 || pawn?.Map == null) return;
+                IntVec3 at = pawn.Spawned ? pawn.Position
+                    : (job.targetA.Thing?.Spawned == true ? job.targetA.Thing.Position : IntVec3.Invalid);
+                if (!at.IsValid) return;
+                foreach (var kv in gathered)
+                {
+                    int remaining = kv.Value;
+                    while (remaining > 0)
+                    {
+                        Thing back = ThingMaker.MakeThing(kv.Key);
+                        back.stackCount = Math.Min(remaining, kv.Key.stackLimit);
+                        remaining -= back.stackCount;
+                        GenPlace.TryPlaceThing(back, at, pawn.Map, ThingPlaceMode.Near);
+                    }
+                }
+                gathered.Clear();
+            });
 
             Toil doWork = ToilMaker.MakeToil("ME_work");
             doWork.defaultCompleteMode = ToilCompleteMode.Delay;
@@ -78,6 +102,7 @@ namespace MedicalExperimentation
         {
             Building_ExperimentationBench bench = Bench;
             if (bench == null) return;
+            resolved = true; // reagents are spent from here on; no refund
             Map map = pawn.Map;
 
             var defs = new List<ThingDef>();
@@ -124,6 +149,7 @@ namespace MedicalExperimentation
         {
             base.ExposeData();
             Scribe_Collections.Look(ref gathered, "ME_gathered", LookMode.Def, LookMode.Value);
+            Scribe_Values.Look(ref resolved, "ME_resolved", false);
             if (Scribe.mode == LoadSaveMode.PostLoadInit && gathered == null)
                 gathered = new Dictionary<ThingDef, int>();
         }

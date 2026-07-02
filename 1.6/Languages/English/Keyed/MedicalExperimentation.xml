@@ -71,8 +71,6 @@
   <!-- Settings -->
   <ME_Setting_Incompat>Incompatibility chance per patient per compound: {0}</ME_Setting_Incompat>
   <ME_Setting_AdverseLethality>Adverse reaction severity bonus: {0}</ME_Setting_AdverseLethality>
-  <ME_Setting_AutoTake>Colonists may take unidentified compounds from drug policies</ME_Setting_AutoTake>
-  <ME_Setting_AutoTake_Desc>Off by default, so unidentified compounds are only administered deliberately.</ME_Setting_AutoTake_Desc>
   <ME_Setting_PrisonerExp>Enable marking prisoners for automatic experimentation</ME_Setting_PrisonerExp>
   <ME_Setting_FriendlyFire>Dispersal units affect everyone in the cloud</ME_Setting_FriendlyFire>
   <ME_Setting_FriendlyFire_Desc>Chemicals do not discriminate. Turn off to spare your own pawns.</ME_Setting_FriendlyFire_Desc>

@@ -62,7 +62,9 @@ def recipe(defname, product, count, summary, combo):
         f"    <defName>{defname}</defName>\n"
         f"    <product>{product}</product>\n"
         f"    <productCount>{count}</productCount>\n"
-        f"    <toxic>true</toxic>\n"
+        # NOT toxic: the flag means "weaponizable via the chemical dispersal unit" (Hepatotoxin B /
+        # Soporific Mist). Marking dummies toxic let a discovered 'fatal compound' (killPawn hediff)
+        # be loaded into dispersals as an instant-kill AOE, and 'inert' wasted doses.
         f"    <effectSummary>{summary}</effectSummary>\n"
         f"    <reagents>\n{lines}    </reagents>\n"
         f"  </MedicalExperimentation.ExperimentRecipeDef>\n")

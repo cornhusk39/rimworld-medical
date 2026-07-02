@@ -37,8 +37,11 @@ namespace MedicalExperimentation
         {
             var hs = p.health?.hediffSet;
             if (hs == null) return false;
-            return hs.hediffs.Any(h => h.def.defName == "ME_AdverseReaction"
-                                       || h.def.defName.StartsWith("ME_Hediff_"));
+            // Permanent leftovers (e.g. neural scarring) must not block: they never go away, so counting
+            // them would exclude the prisoner from experimentation forever. Only transient effects gate.
+            return hs.hediffs.Any(h => (h.def.defName == "ME_AdverseReaction"
+                                        || h.def.defName.StartsWith("ME_Hediff_"))
+                                       && h.def.defName != "ME_Hediff_NeuralScar");
         }
     }
 }

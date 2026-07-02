@@ -63,6 +63,7 @@ namespace MedicalExperimentation
             if (powerComp != null && !powerComp.PowerOn) return;
             ThingDef compound = SelectedCompound;
             if (compound == null) return;
+            if (EffectHediffOf(compound) == null) return; // never consume doses of a compound with no effect
 
             bool hostileNear = Map.mapPawns.AllPawnsSpawned.Any(p =>
                 p.HostileTo(Faction.OfPlayer) && !p.Downed && !p.Dead

@@ -7,7 +7,6 @@
     <defName>ME_Exp_Dummy_Sick_001</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>3</count></li>
@@ -17,7 +16,6 @@
     <defName>ME_Exp_Dummy_Sick_002</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -28,7 +26,6 @@
     <defName>ME_Exp_Dummy_Sick_003</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -39,7 +36,6 @@
     <defName>ME_Exp_Dummy_Sick_004</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -50,7 +46,6 @@
     <defName>ME_Exp_Dummy_Sick_005</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -61,7 +56,6 @@
     <defName>ME_Exp_Dummy_Sick_006</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -72,7 +66,6 @@
     <defName>ME_Exp_Dummy_Sick_007</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -83,7 +76,6 @@
     <defName>ME_Exp_Dummy_Sick_008</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -94,7 +86,6 @@
     <defName>ME_Exp_Dummy_Sick_009</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -105,7 +96,6 @@
     <defName>ME_Exp_Dummy_Sick_010</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -116,7 +106,6 @@
     <defName>ME_Exp_Dummy_Sick_011</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -127,7 +116,6 @@
     <defName>ME_Exp_Dummy_Sick_012</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -138,7 +126,6 @@
     <defName>ME_Exp_Dummy_Sick_013</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -149,7 +136,6 @@
     <defName>ME_Exp_Dummy_Sick_014</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -160,7 +146,6 @@
     <defName>ME_Exp_Dummy_Sick_015</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>2</count></li>
@@ -171,7 +156,6 @@
     <defName>ME_Exp_Dummy_Sick_016</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -182,7 +166,6 @@
     <defName>ME_Exp_Dummy_Sick_017</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -194,7 +177,6 @@
     <defName>ME_Exp_Dummy_Sick_018</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -206,7 +188,6 @@
     <defName>ME_Exp_Dummy_Sick_019</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -218,7 +199,6 @@
     <defName>ME_Exp_Dummy_Sick_020</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -230,7 +210,6 @@
     <defName>ME_Exp_Dummy_Sick_021</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -242,7 +221,6 @@
     <defName>ME_Exp_Dummy_Sick_022</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -254,7 +232,6 @@
     <defName>ME_Exp_Dummy_Sick_023</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -266,7 +243,6 @@
     <defName>ME_Exp_Dummy_Sick_024</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -278,7 +254,6 @@
     <defName>ME_Exp_Dummy_Sick_025</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -290,7 +265,6 @@
     <defName>ME_Exp_Dummy_Sick_026</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -302,7 +276,6 @@
     <defName>ME_Exp_Dummy_Sick_027</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -314,7 +287,6 @@
     <defName>ME_Exp_Dummy_Sick_028</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -326,7 +298,6 @@
     <defName>ME_Exp_Dummy_Sick_029</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -337,7 +308,6 @@
     <defName>ME_Exp_Dummy_Sick_030</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -349,7 +319,6 @@
     <defName>ME_Exp_Dummy_Sick_031</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -361,7 +330,6 @@
     <defName>ME_Exp_Dummy_Sick_032</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -373,7 +341,6 @@
     <defName>ME_Exp_Dummy_Sick_033</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -385,7 +352,6 @@
     <defName>ME_Exp_Dummy_Sick_034</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -397,7 +363,6 @@
     <defName>ME_Exp_Dummy_Sick_035</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -409,7 +374,6 @@
     <defName>ME_Exp_Dummy_Sick_036</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -421,7 +385,6 @@
     <defName>ME_Exp_Dummy_Sick_037</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -433,7 +396,6 @@
     <defName>ME_Exp_Dummy_Sick_038</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -445,7 +407,6 @@
     <defName>ME_Exp_Dummy_Sick_039</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -457,7 +418,6 @@
     <defName>ME_Exp_Dummy_Sick_040</defName>
     <product>ME_Compound_SickDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a compound that just sickens</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -469,7 +429,6 @@
     <defName>ME_Exp_Dummy_Kill_001</defName>
     <product>ME_Compound_LethalDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a lethal compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -481,7 +440,6 @@
     <defName>ME_Exp_Dummy_Kill_002</defName>
     <product>ME_Compound_LethalDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a lethal compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -492,7 +450,6 @@
     <defName>ME_Exp_Dummy_Kill_003</defName>
     <product>ME_Compound_LethalDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a lethal compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -504,7 +461,6 @@
     <defName>ME_Exp_Dummy_Kill_004</defName>
     <product>ME_Compound_LethalDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a lethal compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -516,7 +472,6 @@
     <defName>ME_Exp_Dummy_Kill_005</defName>
     <product>ME_Compound_LethalDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a lethal compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -528,7 +483,6 @@
     <defName>ME_Exp_Dummy_Kill_006</defName>
     <product>ME_Compound_LethalDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a lethal compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -540,7 +494,6 @@
     <defName>ME_Exp_Dummy_Kill_007</defName>
     <product>ME_Compound_LethalDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a lethal compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -552,7 +505,6 @@
     <defName>ME_Exp_Dummy_Kill_008</defName>
     <product>ME_Compound_LethalDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a lethal compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -564,7 +516,6 @@
     <defName>ME_Exp_Dummy_Kill_009</defName>
     <product>ME_Compound_LethalDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a lethal compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -576,7 +527,6 @@
     <defName>ME_Exp_Dummy_Kill_010</defName>
     <product>ME_Compound_LethalDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>a lethal compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -588,7 +538,6 @@
     <defName>ME_Exp_Dummy_Inert_001</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -600,7 +549,6 @@
     <defName>ME_Exp_Dummy_Inert_002</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -611,7 +559,6 @@
     <defName>ME_Exp_Dummy_Inert_003</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -623,7 +570,6 @@
     <defName>ME_Exp_Dummy_Inert_004</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -635,7 +581,6 @@
     <defName>ME_Exp_Dummy_Inert_005</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -647,7 +592,6 @@
     <defName>ME_Exp_Dummy_Inert_006</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -659,7 +603,6 @@
     <defName>ME_Exp_Dummy_Inert_007</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -671,7 +614,6 @@
     <defName>ME_Exp_Dummy_Inert_008</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -683,7 +625,6 @@
     <defName>ME_Exp_Dummy_Inert_009</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -695,7 +636,6 @@
     <defName>ME_Exp_Dummy_Inert_010</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -707,7 +647,6 @@
     <defName>ME_Exp_Dummy_Inert_011</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -719,7 +658,6 @@
     <defName>ME_Exp_Dummy_Inert_012</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -731,7 +669,6 @@
     <defName>ME_Exp_Dummy_Inert_013</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -742,7 +679,6 @@
     <defName>ME_Exp_Dummy_Inert_014</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -754,7 +690,6 @@
     <defName>ME_Exp_Dummy_Inert_015</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -766,7 +701,6 @@
     <defName>ME_Exp_Dummy_Inert_016</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -778,7 +712,6 @@
     <defName>ME_Exp_Dummy_Inert_017</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -790,7 +723,6 @@
     <defName>ME_Exp_Dummy_Inert_018</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -802,7 +734,6 @@
     <defName>ME_Exp_Dummy_Inert_019</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>
@@ -814,7 +745,6 @@
     <defName>ME_Exp_Dummy_Inert_020</defName>
     <product>ME_Compound_InertDrug</product>
     <productCount>3</productCount>
-    <toxic>true</toxic>
     <effectSummary>an inert compound</effectSummary>
     <reagents>
       <li><thingDef>MedicineHerbal</thingDef><count>1</count></li>

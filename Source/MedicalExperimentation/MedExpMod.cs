@@ -9,7 +9,6 @@ namespace MedicalExperimentation
     {
         public float incompatibilityChance = 0.02f;
         public float adverseLethalityCap = 0.0f;        // 0 = never lethal; up to 1 allows worst outcomes
-        public bool colonistsAutoTakeUnidentified = false;
         public bool enablePrisonerExperimentation = true;
         public bool dispersalFriendlyFire = true;
 
@@ -18,7 +17,6 @@ namespace MedicalExperimentation
             base.ExposeData();
             Scribe_Values.Look(ref incompatibilityChance, "incompatibilityChance", 0.02f);
             Scribe_Values.Look(ref adverseLethalityCap, "adverseLethalityCap", 0.0f);
-            Scribe_Values.Look(ref colonistsAutoTakeUnidentified, "colonistsAutoTakeUnidentified", false);
             Scribe_Values.Look(ref enablePrisonerExperimentation, "enablePrisonerExperimentation", true);
             Scribe_Values.Look(ref dispersalFriendlyFire, "dispersalFriendlyFire", true);
         }
@@ -45,7 +43,6 @@ namespace MedicalExperimentation
             Settings.incompatibilityChance = l.Slider(Settings.incompatibilityChance, 0f, 0.25f);
             l.Label("ME_Setting_AdverseLethality".Translate(Settings.adverseLethalityCap.ToStringPercent()));
             Settings.adverseLethalityCap = l.Slider(Settings.adverseLethalityCap, 0f, 1f);
-            l.CheckboxLabeled("ME_Setting_AutoTake".Translate(), ref Settings.colonistsAutoTakeUnidentified, "ME_Setting_AutoTake_Desc".Translate());
             l.CheckboxLabeled("ME_Setting_PrisonerExp".Translate(), ref Settings.enablePrisonerExperimentation);
             l.CheckboxLabeled("ME_Setting_FriendlyFire".Translate(), ref Settings.dispersalFriendlyFire, "ME_Setting_FriendlyFire_Desc".Translate());
             l.End();

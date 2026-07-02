@@ -48,8 +48,9 @@ namespace MedicalExperimentation
             }
             else if (newJob.def == JobDefOf.FeedPatient)
             {
-                drug = newJob.targetB.Thing;
-                ingester = newJob.targetA.Thing as Pawn;
+                // Vanilla FeedPatient layout: TargetA = the food/drug, TargetB = the patient.
+                drug = newJob.targetA.Thing;
+                ingester = newJob.targetB.Thing as Pawn;
             }
             else return true;
 
