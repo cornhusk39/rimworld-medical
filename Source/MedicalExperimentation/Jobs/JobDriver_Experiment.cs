@@ -7,16 +7,26 @@ using Verse.AI;
 
 namespace MedicalExperimentation
 {
-    // Pawn hauls the exact chosen reagents to the bench one at a time, then works and resolves the outcome:
-    // a correct combo always produces its compound; a wrong one runs the Medicine-skill-scaled salvage roll.
-    // Hauled reagents are tallied in `gathered` (saved), so a mid-job save/load is safe.
+    // Pawn hauls the order's still-missing reagents to the bench one at a time, then works and resolves.
+    // Delivery progress lives on the ExperimentOrder (job.count = order id), so an interrupted job resumes
+    // where it left off instead of re-gathering, and the experiment can never resolve with a partial set:
+    // if the pawn loses what it was carrying (e.g. dropped it to vomit), the job ends and a fresh job
+    // fetches only what is still missing.
     public class JobDriver_Experiment : JobDriver
     {
         private const int WorkAmount = 2200;
-        private Dictionary<ThingDef, int> gathered = new Dictionary<ThingDef, int>();
-        private bool resolved;
+        private int orderId = -1;
 
         private Building_ExperimentationBench Bench => job.targetA.Thing as Building_ExperimentationBench;
+        private ExperimentOrder Order => Bench?.GetOrder(orderId);
+
+        // The work giver passes the order id in job.count, but ExtractNextTargetFromQueue overwrites
+        // job.count with each hauled stack's count - so capture the id once at job start.
+        public override void Notify_Starting()
+        {
+            base.Notify_Starting();
+            if (orderId < 0) orderId = job.count;
+        }
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
@@ -25,33 +35,17 @@ namespace MedicalExperimentation
             return true;
         }
 
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Values.Look(ref orderId, "ME_orderId", -1);
+        }
+
         public override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
             this.FailOnBurningImmobile(TargetIndex.A);
-
-            // Deposited reagents are destroyed as they arrive (tallied in `gathered`). If the job ends
-            // before the experiment resolves (drafted, downed, bench lost), refund them so an interrupted
-            // experiment doesn't silently eat a full reagent set while the order stays queued.
-            AddFinishAction(condition =>
-            {
-                if (resolved || gathered.Count == 0 || pawn?.Map == null) return;
-                IntVec3 at = pawn.Spawned ? pawn.Position
-                    : (job.targetA.Thing?.Spawned == true ? job.targetA.Thing.Position : IntVec3.Invalid);
-                if (!at.IsValid) return;
-                foreach (var kv in gathered)
-                {
-                    int remaining = kv.Value;
-                    while (remaining > 0)
-                    {
-                        Thing back = ThingMaker.MakeThing(kv.Key);
-                        back.stackCount = Math.Min(remaining, kv.Key.stackLimit);
-                        remaining -= back.stackCount;
-                        GenPlace.TryPlaceThing(back, at, pawn.Map, ThingPlaceMode.Near);
-                    }
-                }
-                gathered.Clear();
-            });
+            this.FailOn(() => Order == null); // order removed while working
 
             Toil doWork = ToilMaker.MakeToil("ME_work");
             doWork.defaultCompleteMode = ToilCompleteMode.Delay;
@@ -66,7 +60,7 @@ namespace MedicalExperimentation
             };
             doWork.FailOnCannotTouch(TargetIndex.A, PathEndMode.InteractionCell);
 
-            // Haul each chosen reagent to the bench, then work.
+            // Haul each still-missing reagent to the bench, then work.
             yield return Toils_Jump.JumpIf(doWork, () => job.GetTargetQueue(TargetIndex.B).NullOrEmpty());
 
             Toil extract = Toils_JobTransforms.ExtractNextTargetFromQueue(TargetIndex.B);
@@ -81,14 +75,28 @@ namespace MedicalExperimentation
             deposit.initAction = delegate
             {
                 Thing carried = pawn.carryTracker.CarriedThing;
-                if (carried != null && !carried.Destroyed)
+                if (carried == null || carried.Destroyed)
                 {
-                    gathered[carried.def] = (gathered.TryGetValue(carried.def, out int n) ? n : 0) + carried.stackCount;
-                    carried.Destroy();
+                    // Lost the load mid-haul (e.g. dropped it to vomit). Resuming here would craft with a
+                    // partial set, so end the job; the work giver re-issues one for what's still missing.
+                    EndJobWith(JobCondition.Incompletable);
+                    return;
                 }
+                Order?.Deliver(carried.def, carried.stackCount);
+                carried.Destroy();
             };
             yield return deposit;
             yield return Toils_Jump.JumpIf(extract, () => !job.GetTargetQueue(TargetIndex.B).NullOrEmpty());
+
+            // Never craft with a partial set: if the order still isn't fully delivered (some haul failed
+            // along the way), end and let a fresh job fetch the remainder.
+            Toil gate = ToilMaker.MakeToil("ME_completeGate");
+            gate.initAction = delegate
+            {
+                if (Order == null || !Order.IsComplete)
+                    EndJobWith(JobCondition.Incompletable);
+            };
+            yield return gate;
 
             yield return doWork;
 
@@ -101,15 +109,12 @@ namespace MedicalExperimentation
         private void Resolve()
         {
             Building_ExperimentationBench bench = Bench;
-            if (bench == null) return;
-            resolved = true; // reagents are spent from here on; no refund
+            ExperimentOrder order = Order;
+            if (bench == null || order == null || !order.IsComplete) return;
             Map map = pawn.Map;
 
-            var defs = new List<ThingDef>();
-            foreach (var kv in gathered)
-                for (int i = 0; i < kv.Value; i++) defs.Add(kv.Key);
-
-            string key = ExperimentRecipeDef.MakeKey(defs);
+            // The key comes from the order's recipe (the delivered set equals it by the gate above).
+            string key = order.ComboKey;
             var ledger = GameComponent_PharmaLedger.Instance;
             ExperimentRecipeDef recipe = ExperimentResolver.ResolveByKey(key);
             IntVec3 dropCell = bench.InteractionCell.IsValid ? bench.InteractionCell : bench.Position;
@@ -131,6 +136,9 @@ namespace MedicalExperimentation
             {
                 float lvl = pawn.skills?.GetSkill(SkillDefOf.Medicine)?.Level ?? 0f;
                 int salvaged = ExperimentResolver.RollSalvage(lvl);
+                var defs = new List<ThingDef>();
+                foreach (var rc in order.reagents)
+                    for (int i = 0; i < rc.count && rc.thingDef != null; i++) defs.Add(rc.thingDef);
                 defs.Shuffle();
                 for (int i = 0; i < salvaged && i < defs.Count; i++)
                 {
@@ -142,16 +150,7 @@ namespace MedicalExperimentation
                 Messages.Message("ME_ExperimentFail".Translate(salvaged), bench, MessageTypeDefOf.NeutralEvent, false);
             }
 
-            bench.NotifyOrderCompleted(key);
-        }
-
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Collections.Look(ref gathered, "ME_gathered", LookMode.Def, LookMode.Value);
-            Scribe_Values.Look(ref resolved, "ME_resolved", false);
-            if (Scribe.mode == LoadSaveMode.PostLoadInit && gathered == null)
-                gathered = new Dictionary<ThingDef, int>();
+            bench.NotifyOrderCompleted(order);
         }
     }
 }

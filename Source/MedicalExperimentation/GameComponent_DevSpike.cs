@@ -25,6 +25,25 @@ namespace MedicalExperimentation
         private Pawn wardenRef;
         private bool sawExpJob;
         private bool sawPrisJob;
+        private string e2eComboKey;
+        private bool expProduced;
+        private Pawn pris2Ref;
+        private bool probePrisOffered;
+        private bool probeForcedExp;
+
+        // Retryable, latching versions of the "does the warden work giver offer the job?" probes.
+        // A one-shot probe right after spawning the prison was flaky (freshly rebuilt regions).
+        private void ProbePrisonerOffers()
+        {
+            if (wardenRef == null) return;
+            var wwg = (WorkGiver_Warden_AdministerExperimental)DefDatabase<WorkGiverDef>.GetNamed("ME_AdministerExperimental").Worker;
+            if (!probePrisOffered && prisRef != null)
+                probePrisOffered = wwg.JobOnThing(wardenRef, prisRef, false) != null;
+            if (!probeForcedExp && pris2Ref != null)
+                probeForcedExp = wwg.def.directOrderable
+                    && wwg.JobOnThing(wardenRef, pris2Ref, true) != null
+                    && wwg.JobOnThing(wardenRef, pris2Ref, false) == null; // auto path skips the unflagged one
+        }
         private int frames;
         private int phase;
         private int deadlineTick;
@@ -168,7 +187,25 @@ namespace MedicalExperimentation
                     new ReagentCount(ThingDef.Named("WakeUp"), 1),
                     new ReagentCount(ThingDef.Named("Neutroamine"), 1),
                 };
-                bench.AddOrder(new ExperimentOrder(reagents, false));
+                var e2eOrder = new ExperimentOrder(reagents, false);
+                bench.AddOrder(e2eOrder);
+                e2eComboKey = e2eOrder.ComboKey;
+
+                // Order-persistent delivery accounting (interrupt-resume regression): partial deliveries
+                // reduce the remainder, don't complete the order, and complete once the set is full.
+                var probe = new ExperimentOrder(new List<ReagentCount>
+                {
+                    new ReagentCount(ThingDef.Named("MedicineHerbal"), 2),
+                    new ReagentCount(ThingDef.Named("Neutroamine"), 1),
+                }, false);
+                probe.Deliver(ThingDef.Named("MedicineHerbal"), 1);
+                bool resumeOk = probe.RemainingOf(ThingDef.Named("MedicineHerbal")) == 1
+                    && probe.RemainingOf(ThingDef.Named("Neutroamine")) == 1 && !probe.IsComplete;
+                probe.Deliver(ThingDef.Named("MedicineHerbal"), 1);
+                probe.Deliver(ThingDef.Named("Neutroamine"), 1);
+                resumeOk &= probe.IsComplete && probe.DeliveredTotal == 3;
+                logicDetail += " orderResume=" + resumeOk;
+                logicPass &= resumeOk;
 
                 // NATURAL assignment test: a dedicated doctor (only Doctor work) with nothing else to do.
                 // No force-start: if the work scanner doesn't pick up the experiment, that's the real bug.
@@ -482,7 +519,10 @@ namespace MedicalExperimentation
                 // and administer it. (Roaming/unsecured prisoners are ignored by wardens entirely, which is what
                 // made the old stunned open-field prisoners misleading.)
                 IntVec3 prisonCenter = BuildPrison(map, map.Center + new IntVec3(0, 0, 14));
-                Pawn warden = GenerateCapableColonist(map, prisonCenter + new IntVec3(4, 0, 0), WorkTypeDefOf.Warden);
+                IntVec3 wardenSpot = prisonCenter + new IntVec3(4, 0, 0);
+                if (!wardenSpot.Standable(map))
+                    CellFinder.TryFindRandomCellNear(wardenSpot, map, 6, cc => cc.Standable(map), out wardenSpot);
+                Pawn warden = GenerateCapableColonist(map, wardenSpot, WorkTypeDefOf.Warden);
                 SetSingleWork(warden, WorkTypeDefOf.Warden);
                 wardenRef = warden;
                 Pawn pris = PawnGenerator.GeneratePawn(PawnKindDefOf.SpaceRefugee, null);
@@ -499,20 +539,19 @@ namespace MedicalExperimentation
                 for (int i = 0; i < 3; i++)
                     GenPlace.TryPlaceThing(MakeUnknown("ME_Exp_NeuralDefragmenter"),
                         CellFinder.RandomClosewalkCellNear(warden.Position + new IntVec3(3, 0, 0), map, 2), map, ThingPlaceMode.Near);
-                var wwg = (WorkGiver_Warden_AdministerExperimental)DefDatabase<WorkGiverDef>.GetNamed("ME_AdministerExperimental").Worker;
                 sb.Append(" prisSecure=").Append(pris.guest.PrisonerIsSecure);
-                sb.Append(" prisOffered=").Append(wwg.JobOnThing(warden, pris, false) != null);
                 sb.Append(" wardenCanWard=").Append(!warden.WorkTypeIsDisabled(WorkTypeDefOf.Warden));
 
-                // Right-click "Prioritize experimenting on": a forced order is offered even for an UNFLAGGED
-                // prisoner (the auto job needs the flag; the manual order does not).
+                // The prisoner-offer probes are RETRIED each Phase-1 update and latched (see ProbePrisonerOffers):
+                // sampling them exactly once here was flaky, since regions have only just been rebuilt after the
+                // prison walls spawned. Their latched results are folded into the verdict at Finish.
                 Pawn pris2 = PawnGenerator.GeneratePawn(PawnKindDefOf.SpaceRefugee, null);
                 GenSpawn.Spawn(pris2, prisonCenter + new IntVec3(-1, 0, 0), map);
                 pris2.guest?.SetGuestStatus(Faction.OfPlayer, GuestStatus.Prisoner); // NOT flagged
-                bool forcedOffered = wwg.def.directOrderable
-                    && wwg.JobOnThing(warden, pris2, true) != null
-                    && wwg.JobOnThing(warden, pris2, false) == null; // auto path correctly skips the unflagged one
-                sb.Append(" forcedExp=").Append(forcedOffered); ok &= forcedOffered;
+                if (maintainOnly != null) pris2.guest.interactionMode = maintainOnly;
+                if (pris2.needs?.food != null) pris2.needs.food.CurLevel = pris2.needs.food.MaxLevel;
+                pris2Ref = pris2;
+                ProbePrisonerOffers();
             }
             catch (Exception e)
             {
@@ -554,6 +593,11 @@ namespace MedicalExperimentation
             // Track natural ASSIGNMENT (the decisive signal): did each pawn ever start its job?
             if (doctorRef != null && doctorRef.CurJobDef == ME_JobDefOf.ME_RunExperiment) sawExpJob = true;
             if (wardenRef != null && wardenRef.CurJobDef == ME_JobDefOf.ME_AdministerExperimental) sawPrisJob = true;
+            // Did the queued e2e experiment actually produce its unknown compound? (informational)
+            if (!expProduced && e2eComboKey != null)
+                expProduced = map.listerThings.ThingsOfDef(ThingDef.Named("ME_UnknownCompound"))
+                    .Any(t => (t as Thing_UnknownCompound)?.comboKey == e2eComboKey);
+            ProbePrisonerOffers();
 
             bool prisDosed = prisRef != null && (prisRef.Dead
                 || prisRef.health.hediffSet.hediffs.Any(h => h.def.defName.StartsWith("ME_Hediff_") || h.def.defName == "ME_AdverseReaction"));
@@ -561,7 +605,9 @@ namespace MedicalExperimentation
 
             // The prisoner actually receiving a dose is the decisive signal: it proves the warden fetched,
             // carried, and administered the compound end-to-end (not the instant no-carry dose the player saw).
-            if (prisDosed)
+            // Also wait for the queued experiment to produce its compound (proves the full gather->craft
+            // pipeline) - the deadline below is the fallback if the doctor dawdles.
+            if (prisDosed && expProduced)
             {
                 Finish(true);
             }
@@ -578,8 +624,10 @@ namespace MedicalExperimentation
             if (finished) return;
             finished = true;
             phase = 2;
-            bool pass = logicPass && prisDosedSeen;
-            Log.Error($"[MESpike] RESULT pass={pass} logic={logicPass} sawExpJob={sawExpJob} sawPrisJob={sawPrisJob} prisDosed={prisDosedSeen} detail=[{logicDetail}]");
+            // prisDosed (a live natural dose) supersedes the offer probe for the flagged prisoner.
+            bool prisOfferedOk = probePrisOffered || prisDosedSeen;
+            bool pass = logicPass && prisDosedSeen && prisOfferedOk && probeForcedExp;
+            Log.Error($"[MESpike] RESULT pass={pass} logic={logicPass} sawExpJob={sawExpJob} expProduced={expProduced} sawPrisJob={sawPrisJob} prisDosed={prisDosedSeen} prisOffered={prisOfferedOk} forcedExp={probeForcedExp} detail=[{logicDetail}]");
             if (GenCommandLine.CommandLineArgPassed("mequit"))
                 LongEventHandler.QueueLongEvent(() => Root.Shutdown(), "Shutdown", false, null);
         }
@@ -628,14 +676,28 @@ namespace MedicalExperimentation
             var doorDef = ThingDef.Named("Door");
             var doorStuff = GenStuff.DefaultStuffFor(doorDef);
             IntVec3 doorCell = c + new IntVec3(2, 0, 0);
+            // Clear EVERY cell of the footprint first (rocks are buildings too) and make the terrain
+            // walkable. A fixed offset from map center can land on an outcrop; spawning pawns onto
+            // unwalkable interior cells teleports them out of the room, which breaks "prisoner is secure"
+            // and even NPEs vanilla's escape logic. The 3x3 interior must be genuinely standable.
+            for (int dx = -2; dx <= 2; dx++)
+                for (int dz = -2; dz <= 2; dz++)
+                {
+                    IntVec3 cell = c + new IntVec3(dx, 0, dz);
+                    if (!cell.InBounds(map)) continue;
+                    foreach (var t in cell.GetThingList(map).ToList())
+                        if (t.def.category == ThingCategory.Building || t.def.mineable) t.Destroy();
+                    if (!cell.GetTerrain(map).affordances.Contains(TerrainAffordanceDefOf.Heavy))
+                        map.terrainGrid.SetTerrain(cell, TerrainDefOf.PavedTile);
+                    if (map.roofGrid.RoofAt(cell)?.isThickRoof == true)
+                        map.roofGrid.SetRoof(cell, null); // no collapse hazard over the cleared cells
+                }
             for (int dx = -2; dx <= 2; dx++)
                 for (int dz = -2; dz <= 2; dz++)
                 {
                     if (Math.Max(Math.Abs(dx), Math.Abs(dz)) != 2) continue; // perimeter cells only
                     IntVec3 cell = c + new IntVec3(dx, 0, dz);
                     if (!cell.InBounds(map)) continue;
-                    foreach (var t in cell.GetThingList(map).ToList())
-                        if (t.def.category == ThingCategory.Building) t.Destroy();
                     var def = cell == doorCell ? doorDef : wallDef;
                     var stuff = cell == doorCell ? doorStuff : wallStuff;
                     var b = GenSpawn.Spawn(ThingMaker.MakeThing(def, stuff), cell, map);

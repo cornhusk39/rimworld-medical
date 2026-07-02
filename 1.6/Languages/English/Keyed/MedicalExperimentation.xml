@@ -14,6 +14,7 @@
   <ME_ComboAttempted>Already made: you have a batch of this compound, still unidentified. Administer it before making more.</ME_ComboAttempted>
   <ME_ComboMade>Tried before: this combination made {0}.</ME_ComboMade>
   <ME_QueuedExperiments>Queued experiments: {0}</ME_QueuedExperiments>
+  <ME_ReagentsDelivered>Reagents delivered: {0} / {1}</ME_ReagentsDelivered>
 
   <!-- Picker dialog -->
   <ME_PickHint>Choose exactly three reagents. Repeats are allowed.</ME_PickHint>

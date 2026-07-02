@@ -13,9 +13,12 @@ namespace MedicalExperimentation
     {
         private List<ExperimentOrder> orders = new List<ExperimentOrder>();
         private bool autoExperiment;
+        private int nextOrderId;
 
         public List<ExperimentOrder> Orders => orders;
         public bool HasOrders => orders != null && orders.Count > 0;
+
+        public ExperimentOrder GetOrder(int id) => orders.FirstOrDefault(o => o.id == id);
 
         public override void TickRare()
         {
@@ -28,19 +31,40 @@ namespace MedicalExperimentation
 
         public void AddOrder(ExperimentOrder order)
         {
+            if (order.id < 0) order.id = nextOrderId++;
             orders.Add(order);
         }
 
+        // Removing an order refunds any reagents already delivered to it, so cancellation never eats them.
         public void RemoveOrder(ExperimentOrder order)
         {
+            RefundDelivered(order);
             orders.Remove(order);
         }
 
-        // Remove the first non-repeat order matching this combo (called when an experiment completes).
-        public void NotifyOrderCompleted(string comboKey)
+        private void RefundDelivered(ExperimentOrder order)
         {
-            var match = orders.FirstOrDefault(o => o.ComboKey == comboKey && !o.repeat);
-            if (match != null) orders.Remove(match);
+            if (order == null || order.DeliveredTotal == 0 || Map == null) return;
+            foreach (var kv in order.delivered)
+            {
+                int remaining = kv.Value;
+                while (remaining > 0)
+                {
+                    Thing back = ThingMaker.MakeThing(kv.Key);
+                    back.stackCount = Mathf.Min(remaining, kv.Key.stackLimit);
+                    remaining -= back.stackCount;
+                    GenPlace.TryPlaceThing(back, InteractionCell.IsValid ? InteractionCell : Position, Map, ThingPlaceMode.Near);
+                }
+            }
+            order.ResetDelivered();
+        }
+
+        // Called when an experiment completes: repeat orders reset for the next round, one-shots leave the queue.
+        public void NotifyOrderCompleted(ExperimentOrder order)
+        {
+            if (order == null) return;
+            if (order.repeat) order.ResetDelivered();
+            else orders.Remove(order);
         }
 
         public override IEnumerable<Gizmo> GetGizmos()
@@ -150,6 +174,10 @@ namespace MedicalExperimentation
             {
                 if (!s.NullOrEmpty()) s += "\n";
                 s += "ME_QueuedExperiments".Translate(orders.Count);
+                // Show delivery progress so deposited reagents don't read as vanished.
+                var active = orders.FirstOrDefault(o => o.DeliveredTotal > 0 && !o.IsComplete);
+                if (active != null)
+                    s += "\n" + "ME_ReagentsDelivered".Translate(active.DeliveredTotal, active.RequiredTotal);
             }
             return s;
         }
@@ -159,7 +187,12 @@ namespace MedicalExperimentation
             base.ExposeData();
             Scribe_Collections.Look(ref orders, "ME_orders", LookMode.Deep);
             Scribe_Values.Look(ref autoExperiment, "ME_autoExperiment", false);
+            Scribe_Values.Look(ref nextOrderId, "ME_nextOrderId", 0);
             if (Scribe.mode == LoadSaveMode.PostLoadInit && orders == null) orders = new List<ExperimentOrder>();
+            // Back-fill ids for orders saved before ids existed.
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+                foreach (var o in orders)
+                    if (o.id < 0) o.id = nextOrderId++;
         }
     }
 }

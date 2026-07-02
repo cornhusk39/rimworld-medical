@@ -41,24 +41,28 @@ namespace MedicalExperimentation
             {
                 var queueThings = new List<LocalTargetInfo>();
                 var queueCounts = new List<int>();
-                if (TryFindReagents(pawn, order, queueThings, queueCounts))
+                // Only the order's REMAINING reagents are fetched: progress delivered by earlier
+                // (possibly interrupted) jobs persists on the order itself.
+                if (order.IsComplete || TryFindRemainingReagents(pawn, order, queueThings, queueCounts))
                 {
                     Job job = JobMaker.MakeJob(ME_JobDefOf.ME_RunExperiment, bench);
                     job.targetQueueB = queueThings;
                     job.countQueue = queueCounts;
+                    job.count = order.id; // which order this job serves (stable across queue edits)
                     return job;
                 }
             }
             return null;
         }
 
-        // Finds, for each reagent, enough reachable/reservable stacks to satisfy the count. All-or-nothing.
-        private bool TryFindReagents(Pawn pawn, ExperimentOrder order, List<LocalTargetInfo> things, List<int> counts)
+        // Finds, for each reagent still MISSING from the order, enough reachable/reservable stacks.
+        // All-or-nothing over the remainder.
+        private bool TryFindRemainingReagents(Pawn pawn, ExperimentOrder order, List<LocalTargetInfo> things, List<int> counts)
         {
             foreach (var rc in order.reagents)
             {
                 if (rc.thingDef == null) return false;
-                int need = rc.count;
+                int need = order.RemainingOf(rc.thingDef);
                 foreach (Thing thing in pawn.Map.listerThings.ThingsOfDef(rc.thingDef))
                 {
                     if (need <= 0) break;
