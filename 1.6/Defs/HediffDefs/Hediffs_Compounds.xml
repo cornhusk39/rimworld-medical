@@ -85,6 +85,9 @@
         <disappearsAfterTicks>30000</disappearsAfterTicks>
         <showRemainingTime>true</showRemainingTime>
       </li>
+      <li Class="MedicalExperimentation.HediffCompProperties_OnAddEffects">
+        <stopBleeding>true</stopBleeding>
+      </li>
     </comps>
     <stages>
       <li>

@@ -881,6 +881,25 @@ namespace MedicalExperimentation
                 }
                 sb.Append(" ffGate=").Append(ffGate); ok &= ffGate;
 
+                // Coagulant Serum stops active bleeding: a heavily-bleeding pawn should have its total bleed
+                // rate drop to ~0 after a dose (matches the compound's "slows bleeding" description).
+                Pawn pBleed = NewColonist();
+                var torso = pBleed.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def.defName == "Torso");
+                var arm = pBleed.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def.defName == "Arm");
+                foreach (var part in new[] { torso, arm })
+                {
+                    if (part == null) continue;
+                    var cut = (Hediff_Injury)HediffMaker.MakeHediff(HediffDefOf.Cut, pBleed, part);
+                    cut.Severity = 12f;
+                    pBleed.health.AddHediff(cut, part);
+                }
+                float bleedBefore = pBleed.health.hediffSet.BleedRateTotal;
+                IngestionOutcomeDoer_Experimental.ApplyEffect(pBleed, HediffDef.Named("ME_Hediff_CoagulantSerum"), -1f);
+                float bleedAfter = pBleed.health.hediffSet.BleedRateTotal;
+                bool coagStops = bleedBefore > 0.05f && bleedAfter < bleedBefore * 0.1f;
+                if (!coagStops) sb.Append(" [coag before=").Append(bleedBefore.ToString("0.000")).Append(" after=").Append(bleedAfter.ToString("0.000")).Append("]");
+                sb.Append(" coagStops=").Append(coagStops); ok &= coagStops;
+
                 // Drug variants apply their scaled effect (unstable go-juice = strong high).
                 Pawn pVar = NewColonist();
                 var uj = ThingDef.Named("ME_GoJuice_Unstable");

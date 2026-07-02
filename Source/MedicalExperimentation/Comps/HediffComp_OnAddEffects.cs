@@ -14,6 +14,7 @@ namespace MedicalExperimentation
         public float mentalBreakChance;       // Berserker Draught
         public HediffDef permanentHediff;     // lasting downside (e.g. neural scar)
         public bool killPawn;                 // lethal experimental drug
+        public bool stopBleeding;             // Coagulant Serum: clot all currently-bleeding wounds
 
         public HediffCompProperties_OnAddEffects() { compClass = typeof(HediffComp_OnAddEffects); }
     }
@@ -56,6 +57,19 @@ namespace MedicalExperimentation
             {
                 pawn.mindState.mentalStateHandler.TryStartMentalState(
                     MentalStateDefOf.Berserk, "ME_BerserkerDraught".Translate(), forced: true);
+            }
+
+            if (Props.stopBleeding && pawn.health != null)
+            {
+                // Clot every currently-bleeding wound: a perfect "tend" zeroes an injury's bleed rate. This
+                // stops the ongoing blood loss at its source (existing BloodLoss then recovers on its own),
+                // which is what a coagulant should do - matching the compound's "slows bleeding" description.
+                foreach (var inj in pawn.health.hediffSet.hediffs.OfType<Hediff_Injury>()
+                    .Where(h => h.Bleeding).ToList())
+                {
+                    if (inj.TryGetComp<HediffComp_TendDuration>() != null)
+                        inj.Tended(1f, 1f, 0);
+                }
             }
 
             if (Props.killPawn && !pawn.Dead)

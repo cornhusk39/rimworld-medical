@@ -54,7 +54,7 @@
   <ThingDef ParentName="ME_CompoundBase">
     <defName>ME_Compound_CoagulantSerum</defName>
     <label>coagulant serum</label>
-    <description>A clotting and immune primer. Slows bleeding and bolsters the body's defenses for a time.</description>
+    <description>A clotting and immune primer. Clots open wounds to halt bleeding on the spot, and bolsters the body's defenses for a time.</description>
     <graphicData>
       <texPath>Things/Item/Compounds/CoagulantSerum</texPath>
       <graphicClass>Graphic_Single</graphicClass>
