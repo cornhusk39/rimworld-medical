@@ -3,7 +3,7 @@
 
   <!-- Single Drug Lab recipe for Metamorphosis (no DLC required). -->
   <RecipeDef>
-    <defName>ME_Make_Precipice_Vanilla</defName>
+    <defName>ME_Make_Metamorphosis_Vanilla</defName>
     <label>synthesize metamorphosis</label>
     <description>Synthesize Metamorphosis from glitterworld medicine and advanced components.</description>
     <jobString>Synthesizing metamorphosis.</jobString>
@@ -12,9 +12,9 @@
     <effectWorking>Cook</effectWorking>
     <soundWorking>Recipe_Drug</soundWorking>
     <workAmount>12000</workAmount>
-    <researchPrerequisite>ME_CraftPrecipice</researchPrerequisite>
+    <researchPrerequisite>ME_CraftMetamorphosis</researchPrerequisite>
     <recipeUsers><li>DrugLab</li></recipeUsers>
-    <products><ME_Compound_Precipice>1</ME_Compound_Precipice></products>
+    <products><ME_Compound_Metamorphosis>1</ME_Compound_Metamorphosis></products>
     <ingredients>
       <li><filter><thingDefs><li>Luciferium</li></thingDefs></filter><count>1</count></li>
       <li><filter><thingDefs><li>ComponentSpacer</li></thingDefs></filter><count>2</count></li>

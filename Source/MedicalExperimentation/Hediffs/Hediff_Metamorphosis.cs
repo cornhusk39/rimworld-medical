@@ -4,14 +4,14 @@ using Verse;
 
 namespace MedicalExperimentation
 {
-    // Precipice: a multi-day regenerative coma. The patient is incapacitated and fragile while the
+    // Metamorphosis: a multi-day regenerative coma. The patient is incapacitated and fragile while the
     // compound rebuilds the body, regrowing missing parts and clearing scars and old wounds. It does NOT
-    // cure disease. When it finishes, the patient is left with a weeks-long Precipice Hangover.
+    // cure disease. When it finishes, the patient is left with a weeks-long Metamorphosis Hangover.
     //
     // Fragility is modeled as a deep coma (vital capacities capped low via the hediff stages) rather than
     // by setting every organ to 1 HP - literally 1-HP-ing the brain/heart would just guarantee death, which
     // contradicts the non-lethal intent. Easy to make literal later if desired.
-    public class Hediff_Precipice : HediffWithComps
+    public class Hediff_Metamorphosis : HediffWithComps
     {
         private const int Duration = 240000;   // ~4 days
         private const int HealInterval = 20000; // heal one thing roughly twice a day
@@ -62,12 +62,12 @@ namespace MedicalExperimentation
         private void Complete()
         {
             completed = true;
-            var hangover = DefDatabase<HediffDef>.GetNamedSilentFail("ME_Hediff_PrecipiceHangover");
+            var hangover = DefDatabase<HediffDef>.GetNamedSilentFail("ME_Hediff_MetamorphosisHangover");
             if (hangover != null && !pawn.health.hediffSet.HasHediff(hangover))
                 pawn.health.AddHediff(hangover);
             pawn.health.RemoveHediff(this);
             if (PawnUtility.ShouldSendNotificationAbout(pawn))
-                Messages.Message("ME_PrecipiceComplete".Translate(pawn.LabelShort), pawn, MessageTypeDefOf.PositiveEvent, false);
+                Messages.Message("ME_MetamorphosisComplete".Translate(pawn.LabelShort), pawn, MessageTypeDefOf.PositiveEvent, false);
         }
     }
 }

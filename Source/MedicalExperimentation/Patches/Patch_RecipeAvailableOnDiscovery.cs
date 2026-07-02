@@ -29,7 +29,7 @@ namespace MedicalExperimentation
             gatedRecipes = new HashSet<string>();
             foreach (RecipeDef r in DefDatabase<RecipeDef>.AllDefs)
             {
-                // Recipes with their own research prerequisite (e.g. Precipice's ME_CraftPrecipice) are
+                // Recipes with their own research prerequisite (e.g. Metamorphosis's ME_CraftMetamorphosis) are
                 // governed by that research - discovering the compound auto-finishes it, and researching it
                 // the long way also unlocks it. Don't double-gate those on discovery too, or finishing the
                 // research alone would never surface the recipe (a reported bug).

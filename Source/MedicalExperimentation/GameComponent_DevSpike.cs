@@ -210,10 +210,10 @@ namespace MedicalExperimentation
                 }
 
                 // Unlock the mod's research EXCEPT Metamorphosis synthesis - it's left locked so you can test
-                // both unlock paths: finish ME_CraftPrecipice (research path) OR experiment
+                // both unlock paths: finish ME_CraftMetamorphosis (research path) OR experiment
                 // luciferium + glitterworld medicine + ambrosia and administer the result (compound path).
                 foreach (var rp in DefDatabase<ResearchProjectDef>.AllDefs)
-                    if (rp.defName.StartsWith("ME_") && rp.defName != "ME_CraftPrecipice" && !rp.IsFinished)
+                    if (rp.defName.StartsWith("ME_") && rp.defName != "ME_CraftMetamorphosis" && !rp.IsFinished)
                         Find.ResearchManager.FinishProject(rp);
 
                 benchRef = SpawnPowered("ME_ExperimentationBench", c);
@@ -229,9 +229,9 @@ namespace MedicalExperimentation
                     foe.stances?.stunner?.StunFor(2000000, null, false, false); // stand still so the unit vents on it
                 }
 
-                // Pre-discover a representative set so Drug Lab bills, Precipice synthesis, and the armed
+                // Pre-discover a representative set so Drug Lab bills, Metamorphosis synthesis, and the armed
                 // dispersal unit are immediately visible. The rest stay unknown so the discovery loop is testable.
-                // Note: Metamorphosis (ME_Compound_Precipice) is deliberately NOT pre-discovered so its Drug
+                // Note: Metamorphosis (ME_Compound_Metamorphosis) is deliberately NOT pre-discovered so its Drug
                 // Lab bill starts hidden - discover it or finish its research to make it appear.
                 string[] preDisc = { "ME_Compound_AdrenalCatalyst", "ME_Compound_TissueRegenerant",
                     "ME_Compound_NerveConductionGel", "ME_Compound_SynapticAccelerant",
@@ -262,12 +262,12 @@ namespace MedicalExperimentation
                 string[] samples = { "AdrenalCatalyst", "CoagulantSerum", "ImmunoPrimer", "NeuralDefragmenter",
                     "SomnolentDraught", "BattleStimX", "BerserkerDraught", "Stoneskin", "HepatotoxinB",
                     "SoporificMist", "TissueRegenerant", "NerveConductionGel", "SynapticAccelerant",
-                    "Precipice", "SickDrug", "LethalDrug", "InertDrug" };
+                    "Metamorphosis", "SickDrug", "LethalDrug", "InertDrug" };
                 foreach (var s in samples) SpawnStack(map, c, "ME_Compound_" + s, 4);
 
                 // A batch of UNKNOWN compounds (all identical-looking) with mixed hidden results, so the
                 // administer-to-identify loop can be tested. A good one, a dud, and a lethal one.
-                string[] unknownRecipes = { "ME_Exp_AdrenalCatalyst", "ME_Exp_ImmunoPrimer", "ME_Exp_Precipice",
+                string[] unknownRecipes = { "ME_Exp_AdrenalCatalyst", "ME_Exp_ImmunoPrimer", "ME_Exp_Metamorphosis",
                     "ME_Exp_Dummy_Sick_001", "ME_Exp_Dummy_Kill_001", "ME_Exp_Dummy_Inert_001" };
                 foreach (var r in unknownRecipes)
                     for (int i = 0; i < 2; i++)
@@ -305,7 +305,7 @@ namespace MedicalExperimentation
                     if (pris.needs?.food != null) pris.needs.food.CurLevel = pris.needs.food.MaxLevel;
                 }
 
-                // A maimed test subject (missing leg + permanent scars) for Precipice + the surgeries.
+                // A maimed test subject (missing leg + permanent scars) for Metamorphosis + the surgeries.
                 MakeTestSubject(map, c);
 
                 Find.TickManager.CurTimeSpeed = TimeSpeed.Paused;
@@ -348,7 +348,7 @@ namespace MedicalExperimentation
             try
             {
                 // Content defs present
-                string[] things = { "ME_GoJuice_Stable", "ME_GoJuice_Perfect", "ME_ChemicalDispersal", "ME_Compound_Precipice" };
+                string[] things = { "ME_GoJuice_Stable", "ME_GoJuice_Perfect", "ME_ChemicalDispersal", "ME_Compound_Metamorphosis" };
                 bool defsOk = things.All(n => DefDatabase<ThingDef>.GetNamedSilentFail(n) != null);
                 sb.Append(" contentDefs=").Append(defsOk); ok &= defsOk;
 
@@ -394,28 +394,28 @@ namespace MedicalExperimentation
                 sb.Append(" adverse=").Append(adverse); ok &= adverse;
                 MedExpMod.Settings.incompatibilityChance = savedChance;
 
-                // Precipice must NOT kill a pawn with a MISSING LUNG (reported bug: the -0.90 Consciousness
-                // offset dropped an already-reduced Consciousness to <=0 = "died to precipice regeneration").
+                // Metamorphosis must NOT kill a pawn with a MISSING LUNG (reported bug: the -0.90 Consciousness
+                // offset dropped an already-reduced Consciousness to <=0 = "died to metamorphosis regeneration").
                 Pawn p3 = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
                 GenSpawn.Spawn(p3, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
                 var lungDef = DefDatabase<BodyPartDef>.GetNamedSilentFail("Lung");
                 var lung = p3.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def == lungDef);
                 if (lung != null) p3.health.AddHediff(HediffDef.Named("MissingBodyPart"), lung);
-                var prec = p3.health.AddHediff(HediffDef.Named("ME_Hediff_Precipice"));
+                var prec = p3.health.AddHediff(HediffDef.Named("ME_Hediff_Metamorphosis"));
                 for (int i = 0; i < 5; i++) prec.Tick();
-                bool precipiceSafe = prec != null && !p3.Dead; // applied, ticked, and the missing-lung pawn survived
-                sb.Append(" precipice=").Append(precipiceSafe); ok &= precipiceSafe;
+                bool metamorphosisSafe = prec != null && !p3.Dead; // applied, ticked, and the missing-lung pawn survived
+                sb.Append(" metamorphosis=").Append(metamorphosisSafe); ok &= metamorphosisSafe;
 
                 // "No need" confirmation predicate: a pawn with nothing to heal prompts; one with a missing
                 // part does not.
                 Pawn p4 = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
                 GenSpawn.Spawn(p4, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
                 foreach (var h in p4.health.hediffSet.hediffs.ToList()) p4.health.RemoveHediff(h);
-                bool cleanNoNeed = PrecipiceUtility.HasNothingToHeal(p4);
+                bool cleanNoNeed = MetamorphosisUtility.HasNothingToHeal(p4);
                 var p4leg = p4.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def == DefDatabase<BodyPartDef>.GetNamedSilentFail("Leg"));
                 if (p4leg != null) p4.health.AddHediff(HediffDef.Named("MissingBodyPart"), p4leg);
-                bool maimedHasNeed = !PrecipiceUtility.HasNothingToHeal(p4);
-                sb.Append(" precipiceNeed=").Append(cleanNoNeed && maimedHasNeed); ok &= cleanNoNeed && maimedHasNeed;
+                bool maimedHasNeed = !MetamorphosisUtility.HasNothingToHeal(p4);
+                sb.Append(" metamorphosisNeed=").Append(cleanNoNeed && maimedHasNeed); ok &= cleanNoNeed && maimedHasNeed;
 
                 // Dispersal unit spawns + its gas/sound emit path runs without throwing
                 var disp = GenSpawn.Spawn(ThingMaker.MakeThing(ThingDef.Named("ME_ChemicalDispersal")),
@@ -444,18 +444,18 @@ namespace MedicalExperimentation
                 sb.Append(" variantGate=").Append(varBefore && varAfter); ok &= varBefore && varAfter;
 
                 // Metamorphosis COMPOUND path: discovering it must AUTO-COMPLETE its research
-                // (ME_CraftPrecipice), which unlocks the Drug Lab recipe. Start with neither the research done
+                // (ME_CraftMetamorphosis), which unlocks the Drug Lab recipe. Start with neither the research done
                 // nor the recipe available, administer the Metamorphosis unknown, then require BOTH true.
-                var precRecipe = DefDatabase<RecipeDef>.GetNamedSilentFail("ME_Make_Precipice_Vanilla");
-                var craftPrec = DefDatabase<ResearchProjectDef>.GetNamed("ME_CraftPrecipice");
+                var precRecipe = DefDatabase<RecipeDef>.GetNamedSilentFail("ME_Make_Metamorphosis_Vanilla");
+                var craftPrec = DefDatabase<ResearchProjectDef>.GetNamed("ME_CraftMetamorphosis");
                 bool precBefore = precRecipe != null && !precRecipe.AvailableNow && !craftPrec.IsFinished;
                 MedExpMod.Settings.incompatibilityChance = 0f;
                 Pawn mp = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
                 GenSpawn.Spawn(mp, CellFinder.RandomClosewalkCellNear(map.Center, map, 6), map);
-                AdministerUnknown(mp, "ME_Exp_Precipice");
+                AdministerUnknown(mp, "ME_Exp_Metamorphosis");
                 MedExpMod.Settings.incompatibilityChance = savedChance;
                 bool precAfter = craftPrec.IsFinished && precRecipe != null && precRecipe.AvailableNow; // research auto-done + recipe live
-                sb.Append(" precipiceGate=").Append(precBefore && precAfter); ok &= precBefore && precAfter;
+                sb.Append(" metamorphosisGate=").Append(precBefore && precAfter); ok &= precBefore && precAfter;
 
                 // A human trial marks the combo done even when incompatible (BattleStimX dosed incompatibly above).
                 var bsRecipe = ExperimentResolver.RecipeForProduct(ThingDef.Named("ME_Compound_BattleStimX"));

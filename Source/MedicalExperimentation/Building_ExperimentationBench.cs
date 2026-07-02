@@ -77,7 +77,7 @@ namespace MedicalExperimentation
                 yield return new Command_Action
                 {
                     defaultLabel = "Dev: unlock all experimental recipes",
-                    defaultDesc = "Discovers every experimental compound and finishes the mod's research, so all Drug Lab recipes (including Precipice) become available.",
+                    defaultDesc = "Discovers every experimental compound and finishes the mod's research, so all Drug Lab recipes (including Metamorphosis) become available.",
                     action = UnlockAllForDev
                 };
             }

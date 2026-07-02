@@ -43,7 +43,7 @@
   </ResearchProjectDef>
 
   <ResearchProjectDef>
-    <defName>ME_CraftPrecipice</defName>
+    <defName>ME_CraftMetamorphosis</defName>
     <label>metamorphosis synthesis</label>
     <description>How to synthesize Metamorphosis reliably. Discovered by testing Metamorphosis, or researched the long way.</description>
     <baseCost>5000</baseCost>

@@ -10,7 +10,7 @@ A RimWorld 1.6 mod that turns your medical bay into a research lab. Vanilla frie
 - **Incompatibility**: every patient has a small permanent chance (default 2%) of reacting badly to any given compound, decided once and remembered forever.
 - **Prisoner testing**: mark a prisoner with the "experiment on" toggle in the prisoner tab and wardens will administer unidentified compounds automatically, or right-click a prisoner to prioritize experimenting on them.
 - **Drug refinement**: turn go-juice, wake-up, yayo, flake, and smokeleaf into Stable (safer, milder), Unstable (stronger, riskier), or Perfect (stronger and safe) grades.
-- **Precipice**: a discovered archotech-grade regenerator that rebuilds the body over several days. Regrows lost parts and clears scars, but does not cure disease, and leaves a long hangover.
+- **Metamorphosis**: a discovered archotech-grade regenerator that rebuilds the body over several days. Regrows lost parts and clears scars, but does not cure disease, and leaves a long hangover.
 - **Chemical dispersal unit**: a powered security device that vents a discovered toxic compound at nearby enemies.
 - **Results ledger**: the bench has a tab showing what you have discovered, what is left to find, and which combinations failed.
 

@@ -169,7 +169,7 @@
 
   <!-- Metamorphosis hangover (weeks) -->
   <HediffDef>
-    <defName>ME_Hediff_PrecipiceHangover</defName>
+    <defName>ME_Hediff_MetamorphosisHangover</defName>
     <hediffClass>HediffWithComps</hediffClass>
     <label>metamorphosis hangover</label>
     <description>The body is exhausted after a full regeneration. It will pass in time.</description>
@@ -191,8 +191,8 @@
 
   <!-- Metamorphosis active regenerative coma -->
   <HediffDef>
-    <defName>ME_Hediff_Precipice</defName>
-    <hediffClass>MedicalExperimentation.Hediff_Precipice</hediffClass>
+    <defName>ME_Hediff_Metamorphosis</defName>
+    <hediffClass>MedicalExperimentation.Hediff_Metamorphosis</hediffClass>
     <label>metamorphosis regeneration</label>
     <description>A deep regenerative coma. The body is rebuilding itself, regrowing what was lost and clearing old scars. It does not cure disease.</description>
     <isBad>false</isBad>

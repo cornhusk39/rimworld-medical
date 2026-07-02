@@ -147,11 +147,11 @@
   </MedicalExperimentation.ExperimentRecipeDef>
 
   <MedicalExperimentation.ExperimentRecipeDef>
-    <defName>ME_Exp_Precipice</defName>
-    <product>ME_Compound_Precipice</product>
+    <defName>ME_Exp_Metamorphosis</defName>
+    <product>ME_Compound_Metamorphosis</product>
     <productCount>2</productCount>
     <effectSummary>a full-body regenerator</effectSummary>
-    <unlocksResearch>ME_CraftPrecipice</unlocksResearch>
+    <unlocksResearch>ME_CraftMetamorphosis</unlocksResearch>
     <reagents>
       <li><thingDef>Luciferium</thingDef><count>1</count></li>
       <li><thingDef>MedicineUltratech</thingDef><count>1</count></li>
