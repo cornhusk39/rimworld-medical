@@ -14,6 +14,10 @@ namespace MedicalExperimentation
         private Dictionary<string, float> hypotheses = new Dictionary<string, float>();
         // every combo the colony has tried -> the product defName it made ("" means it produced nothing)
         private Dictionary<string, string> comboResults = new Dictionary<string, string>();
+        // every combo that has been crafted at the bench, whether or not its result was administered yet.
+        // Kept separate from comboResults so auto-experiment/random-queue don't re-craft an already-made combo
+        // (the result is only recorded on administration, so comboResults alone would let it repeat).
+        private HashSet<string> attempted = new HashSet<string>();
 
         public GameComponent_PharmaLedger(Game game) { }
 
@@ -47,9 +51,19 @@ namespace MedicalExperimentation
         {
             if (comboKey.NullOrEmpty()) return;
             comboResults[comboKey] = product?.defName ?? "";
+            attempted.Add(comboKey);
         }
 
         public bool ComboTried(string comboKey) => comboResults.ContainsKey(comboKey);
+
+        // Mark a combo as crafted (an unknown compound was produced). Does NOT reveal its result.
+        public void MarkAttempted(string comboKey)
+        {
+            if (!comboKey.NullOrEmpty()) attempted.Add(comboKey);
+        }
+
+        // True once a combo has been crafted (or its result recorded). Used to stop the bench re-making it.
+        public bool Attempted(string comboKey) => attempted.Contains(comboKey);
 
         // Returns the product ThingDef a tried combo made; null if untried OR if it was a dud (use ComboTried/ComboWasDud to tell apart).
         public ThingDef ComboResult(string comboKey)
@@ -71,11 +85,15 @@ namespace MedicalExperimentation
             Scribe_Collections.Look(ref discovered, "discovered", LookMode.Value);
             Scribe_Collections.Look(ref hypotheses, "hypotheses", LookMode.Value, LookMode.Value);
             Scribe_Collections.Look(ref comboResults, "comboResults", LookMode.Value, LookMode.Value);
+            Scribe_Collections.Look(ref attempted, "attempted", LookMode.Value);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (discovered == null) discovered = new HashSet<string>();
                 if (hypotheses == null) hypotheses = new Dictionary<string, float>();
                 if (comboResults == null) comboResults = new Dictionary<string, string>();
+                if (attempted == null) attempted = new HashSet<string>();
+                // Back-fill for saves from before this field existed: anything already recorded was attempted.
+                foreach (var k in comboResults.Keys) attempted.Add(k);
             }
         }
     }

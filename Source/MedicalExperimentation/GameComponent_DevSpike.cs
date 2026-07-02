@@ -457,6 +457,19 @@ namespace MedicalExperimentation
                 bool precAfter = craftPrec.IsFinished && precRecipe != null && precRecipe.AvailableNow; // research auto-done + recipe live
                 sb.Append(" metamorphosisGate=").Append(precBefore && precAfter); ok &= precBefore && precAfter;
 
+                // Auto-experiment must not re-craft an already-CRAFTED combo (reported: pawns repeat experiments).
+                // Marking a combo attempted (as crafting does) removes it from the random-experiment pool without
+                // recording/leaking its result.
+                var advRecipe = DefDatabase<ExperimentRecipeDef>.GetNamed("ME_Exp_AdrenalCatalyst");
+                string advKey = advRecipe.ComboKey;
+                bool advUnattempted = !ledger.Attempted(advKey);
+                ledger.MarkAttempted(advKey);
+                bool attemptedNotLeaked = ledger.Attempted(advKey) && !ledger.ComboTried(advKey);
+                bool excludedFromPool = !DefDatabase<ExperimentRecipeDef>.AllDefs
+                    .Where(r => !ledger.Attempted(r.ComboKey)).Any(r => r.ComboKey == advKey);
+                sb.Append(" autoNoRepeat=").Append(advUnattempted && attemptedNotLeaked && excludedFromPool);
+                ok &= advUnattempted && attemptedNotLeaked && excludedFromPool;
+
                 // A human trial marks the combo done even when incompatible (BattleStimX dosed incompatibly above).
                 var bsRecipe = ExperimentResolver.RecipeForProduct(ThingDef.Named("ME_Compound_BattleStimX"));
                 bool trialMarks = ledger != null && bsRecipe != null && ledger.ComboTried(bsRecipe.ComboKey)

@@ -11,6 +11,7 @@
   <ME_AutoExperiment>Auto-experiment</ME_AutoExperiment>
   <ME_AutoExperimentDesc>While enabled, automatically queue a new untried experiment whenever the bench is idle and the reagents are available. Stops on its own when nothing new can be made.</ME_AutoExperimentDesc>
   <ME_ComboWasDud>Tried before: produced nothing. Running it again will waste these reagents.</ME_ComboWasDud>
+  <ME_ComboAttempted>Already made: you have a batch of this compound, still unidentified. Administer it before making more.</ME_ComboAttempted>
   <ME_ComboMade>Tried before: this combination made {0}.</ME_ComboMade>
   <ME_QueuedExperiments>Queued experiments: {0}</ME_QueuedExperiments>
 

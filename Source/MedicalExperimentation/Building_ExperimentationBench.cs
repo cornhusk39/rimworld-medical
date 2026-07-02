@@ -110,8 +110,10 @@ namespace MedicalExperimentation
         private bool TryQueueRandomExperiment(bool quiet)
         {
             var ledger = GameComponent_PharmaLedger.Instance;
+            // Skip combos already CRAFTED (attempted), not just administered - otherwise the bench re-makes
+            // combos whose unknown compound is still sitting untested, spamming duplicates.
             var candidates = DefDatabase<ExperimentRecipeDef>.AllDefs
-                .Where(r => ledger == null || !ledger.ComboTried(r.ComboKey))
+                .Where(r => ledger == null || !ledger.Attempted(r.ComboKey))
                 .Where(ReagentsAvailable)
                 .ToList();
 

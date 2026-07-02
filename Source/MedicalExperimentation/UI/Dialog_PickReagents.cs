@@ -117,7 +117,9 @@ namespace MedicalExperimentation
             var ledger = GameComponent_PharmaLedger.Instance;
             if (ledger == null) return null;
             string key = ExperimentRecipeDef.MakeKey(chosen);
-            if (!ledger.ComboTried(key)) return null;
+            // Crafted but not yet administered: warn without revealing the result.
+            if (!ledger.ComboTried(key))
+                return ledger.Attempted(key) ? "ME_ComboAttempted".Translate().ToString() : null;
             if (ledger.ComboWasDud(key)) return "ME_ComboWasDud".Translate();
             ThingDef prod = ledger.ComboResult(key);
             if (prod == null) return null;

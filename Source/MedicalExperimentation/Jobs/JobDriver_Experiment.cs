@@ -92,12 +92,14 @@ namespace MedicalExperimentation
             if (recipe != null && recipe.product != null)
             {
                 // A defined combo yields a single generic "unidentified compound", secretly tagged with the
-                // result and the exact combo. Nothing is recorded in the ledger here: what the combo makes is
-                // only learned by administering it (that would otherwise leak at craft time).
+                // result and the exact combo. The RESULT isn't recorded here (that's only learned by
+                // administering it, or it would leak at craft time) - but we mark the combo ATTEMPTED so the
+                // bench won't auto-experiment or random-queue the same combo again.
                 var unk = (Thing_UnknownCompound)ThingMaker.MakeThing(ThingDef.Named("ME_UnknownCompound"));
                 unk.resultDefName = recipe.product.defName;
                 unk.comboKey = key;
                 GenPlace.TryPlaceThing(unk, dropCell, map, ThingPlaceMode.Near);
+                ledger?.MarkAttempted(key);
                 Messages.Message("ME_ExperimentSuccess".Translate(), new TargetInfo(dropCell, map), MessageTypeDefOf.PositiveEvent, false);
             }
             else
