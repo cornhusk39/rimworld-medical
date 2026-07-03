@@ -886,9 +886,24 @@ namespace MedicalExperimentation
                 // player hit by interrupting after the last reagent was deposited).
                 {
                     var benchDef = ThingDef.Named("ME_ExperimentationBench");
+                    // Clear the footprint first: a fixed offset from map center can land in rocks, making the
+                    // bench unreachable so the goto legitimately fails and the check flakes (same class of
+                    // terrain luck as the test prison).
+                    IntVec3 benchSpot = map.Center + new IntVec3(-8, 0, -8);
+                    for (int dx = -3; dx <= 3; dx++)
+                        for (int dz = -3; dz <= 3; dz++)
+                        {
+                            IntVec3 cell = benchSpot + new IntVec3(dx, 0, dz);
+                            if (!cell.InBounds(map)) continue;
+                            foreach (var t in cell.GetThingList(map).ToList())
+                                if (t.def.category == ThingCategory.Building || t.def.mineable) t.Destroy();
+                            if (!cell.GetTerrain(map).affordances.Contains(TerrainAffordanceDefOf.Heavy))
+                                map.terrainGrid.SetTerrain(cell, TerrainDefOf.PavedTile);
+                            if (map.roofGrid.RoofAt(cell)?.isThickRoof == true)
+                                map.roofGrid.SetRoof(cell, null);
+                        }
                     var rbench = (Building_ExperimentationBench)GenSpawn.Spawn(
-                        ThingMaker.MakeThing(benchDef, GenStuff.DefaultStuffFor(benchDef)),
-                        map.Center + new IntVec3(-14, 0, -14), map);
+                        ThingMaker.MakeThing(benchDef, GenStuff.DefaultStuffFor(benchDef)), benchSpot, map);
                     rbench.SetFaction(Faction.OfPlayer);
                     var rpow = rbench.GetComp<CompPowerTrader>();
                     if (rpow != null) rpow.PowerOn = true;
