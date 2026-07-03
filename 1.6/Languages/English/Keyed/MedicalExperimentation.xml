@@ -15,6 +15,9 @@
   <ME_ComboMade>Tried before: this combination made {0}.</ME_ComboMade>
   <ME_QueuedExperiments>Queued experiments: {0}</ME_QueuedExperiments>
   <ME_ReagentsDelivered>Reagents delivered: {0} / {1}</ME_ReagentsDelivered>
+  <ME_CancelExperiment>Cancel experiment</ME_CancelExperiment>
+  <ME_CancelExperimentDesc>Cancel a queued experiment. Any reagents already delivered to it are returned.</ME_CancelExperimentDesc>
+  <ME_CancelAll>Cancel all</ME_CancelAll>
 
   <!-- Picker dialog -->
   <ME_PickHint>Choose exactly three reagents. Repeats are allowed.</ME_PickHint>
@@ -38,6 +41,7 @@
   <ME_Discovered>Compound identified: {0}. {1}</ME_Discovered>
   <ME_SurgeryUnlocked>New operation unlocked: {0}.</ME_SurgeryUnlocked>
   <ME_AdverseReactionMsg>{0} reacted badly to {1}. Their body is incompatible with it.</ME_AdverseReactionMsg>
+  <ME_NoEffectMsg>{0} shows no reaction to the {1}. It appears to do nothing at all.</ME_NoEffectMsg>
   <ME_ExperimentSuccess>The experiment produced a new compound.</ME_ExperimentSuccess>
   <ME_ExperimentFail>The experiment failed. Salvaged {0} of 3 reagents.</ME_ExperimentFail>
 

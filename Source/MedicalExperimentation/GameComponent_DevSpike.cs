@@ -911,8 +911,36 @@ namespace MedicalExperimentation
                         resumeGoto = far.CurJobDef == ME_JobDefOf.ME_RunExperiment;
                         far.jobs.EndCurrentJob(JobCondition.InterruptForced, false);
                     }
-                    rbench.RemoveOrder(rOrder); // also exercises the refund path
                     sb.Append(" resumeGoto=").Append(resumeGoto); ok &= resumeGoto;
+
+                    // Cancelling refunds delivered reagents as real spawned items.
+                    int herbBefore = map.listerThings.ThingsOfDef(ThingDef.Named("MedicineHerbal")).Sum(t => t.stackCount);
+                    int neutBefore = map.listerThings.ThingsOfDef(ThingDef.Named("Neutroamine")).Sum(t => t.stackCount);
+                    rbench.RemoveOrder(rOrder);
+                    int herbAfter = map.listerThings.ThingsOfDef(ThingDef.Named("MedicineHerbal")).Sum(t => t.stackCount);
+                    int neutAfter = map.listerThings.ThingsOfDef(ThingDef.Named("Neutroamine")).Sum(t => t.stackCount);
+                    bool cancelRefund = herbAfter - herbBefore == 2 && neutAfter - neutBefore == 1 && !rbench.HasOrders;
+                    sb.Append(" cancelRefund=").Append(cancelRefund); ok &= cancelRefund;
+                }
+
+                // Salvage odds actually scale with Medicine level (the live roll, not just the distribution).
+                {
+                    int n = 4000; float lowSum = 0f, highSum = 0f;
+                    for (int i = 0; i < n; i++) { lowSum += ExperimentResolver.RollSalvage(1f); highSum += ExperimentResolver.RollSalvage(20f); }
+                    float lowMean = lowSum / n, highMean = highSum / n; // expected ~0.95 and ~2.6
+                    bool salvageScales = lowMean < 1.3f && highMean > 2.3f && highMean > lowMean + 1.0f;
+                    if (!salvageScales) sb.Append(" [salv low=").Append(lowMean.ToString("0.00")).Append(" high=").Append(highMean.ToString("0.00")).Append("]");
+                    sb.Append(" salvageScales=").Append(salvageScales); ok &= salvageScales;
+                }
+
+                // An inert compound applies no hediff (and fires the no-effect message rather than nothing).
+                {
+                    Pawn pInert = NewColonist();
+                    int hediffsBefore = pInert.health.hediffSet.hediffs.Count;
+                    AdministerUnknown(pInert, "ME_Exp_Dummy_Inert_001");
+                    bool inertOk = pInert.health.hediffSet.hediffs.Count == hediffsBefore
+                        && ledger.IsDiscovered(ThingDef.Named("ME_Compound_InertDrug"));
+                    sb.Append(" inertNoEffect=").Append(inertOk); ok &= inertOk;
                 }
 
                 // Coagulant Serum stops active bleeding: a heavily-bleeding pawn should have its total bleed

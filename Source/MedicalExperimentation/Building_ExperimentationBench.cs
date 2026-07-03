@@ -96,6 +96,17 @@ namespace MedicalExperimentation
                 toggleAction = () => autoExperiment = !autoExperiment
             };
 
+            if (HasOrders)
+            {
+                yield return new Command_Action
+                {
+                    defaultLabel = "ME_CancelExperiment".Translate(),
+                    defaultDesc = "ME_CancelExperimentDesc".Translate(),
+                    icon = ContentFinder<Texture2D>.Get("UI/Designators/Cancel", false) ?? BaseContent.BadTex,
+                    action = OpenCancelMenu
+                };
+            }
+
             if (Prefs.DevMode)
             {
                 yield return new Command_Action
@@ -105,6 +116,27 @@ namespace MedicalExperimentation
                     action = UnlockAllForDev
                 };
             }
+        }
+
+        // Cancel one queued experiment (or all). Cancelling refunds any reagents already delivered to that
+        // order, so no materials are ever lost to a change of mind.
+        private void OpenCancelMenu()
+        {
+            var options = new List<FloatMenuOption>();
+            foreach (var order in orders.ToList())
+            {
+                var o = order;
+                string label = o.Label;
+                if (o.DeliveredTotal > 0)
+                    label += " (" + "ME_ReagentsDelivered".Translate(o.DeliveredTotal, o.RequiredTotal) + ")";
+                options.Add(new FloatMenuOption(label, () => RemoveOrder(o)));
+            }
+            if (orders.Count > 1)
+                options.Add(new FloatMenuOption("ME_CancelAll".Translate(), () =>
+                {
+                    foreach (var o in orders.ToList()) RemoveOrder(o);
+                }));
+            Find.WindowStack.Add(new FloatMenu(options));
         }
 
         // Dev-only: identify every compound and finish the mod's research so all crafting recipes appear.

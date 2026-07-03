@@ -46,7 +46,13 @@ namespace MedicalExperimentation
                 return; // no benefit, no identification from a botched test
             }
 
-            if (effect != null) ApplyEffect(pawn, effect, severity);
+            if (effect != null)
+                ApplyEffect(pawn, effect, severity);
+            else
+                // An inert compound should not fail silently - the player needs to know the dose "took"
+                // and simply did nothing, or the test reads like a bug.
+                Messages.Message("ME_NoEffectMsg".Translate(pawn.LabelShort, compound.label),
+                    pawn, MessageTypeDefOf.NeutralEvent, false);
 
             if (ledger != null && ledger.Discover(compound))
             {

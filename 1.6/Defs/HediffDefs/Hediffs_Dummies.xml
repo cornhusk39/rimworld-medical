@@ -18,13 +18,14 @@
       <li>
         <label>mild</label>
         <painOffset>0.15</painOffset>
+        <vomitMtbDays>0.4</vomitMtbDays>
         <capMods><li><capacity>Consciousness</capacity><offset>-0.15</offset></li></capMods>
       </li>
       <li>
         <minSeverity>0.5</minSeverity>
         <label>severe</label>
         <painOffset>0.35</painOffset>
-        <vomitMtbDays>0.15</vomitMtbDays>
+        <vomitMtbDays>0.1</vomitMtbDays>
         <capMods>
           <li><capacity>Consciousness</capacity><offset>-0.30</offset></li>
           <li><capacity>Moving</capacity><offset>-0.25</offset></li>

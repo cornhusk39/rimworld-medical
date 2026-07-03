@@ -48,7 +48,7 @@ namespace MedicalExperimentation
                 Rect row = new Rect(0f, y, view.width, rowH);
                 if (Mouse.IsOver(row)) Widgets.DrawHighlight(row);
                 Widgets.Label(new Rect(4f, y + 3f, view.width * 0.45f, rowH), p.LabelCap);
-                Widgets.Label(new Rect(view.width * 0.45f, y + 3f, view.width * 0.55f, rowH), ComboLabel(r));
+                DrawComboIcons(view.width * 0.45f, y, RecipeReagentDefs(r));
                 y += rowH;
             }
 
@@ -72,8 +72,8 @@ namespace MedicalExperimentation
                     Rect row = new Rect(0f, y, view.width, rowH);
                     if (Mouse.IsOver(row)) Widgets.DrawHighlight(row);
                     bool dud = kv.Value.NullOrEmpty();
+                    DrawComboIcons(4f, y, KeyToDefs(kv.Key));
                     GUI.color = dud ? new Color(0.75f, 0.55f, 0.55f) : new Color(0.8f, 0.85f, 0.8f);
-                    Widgets.Label(new Rect(4f, y + 3f, view.width * 0.55f, rowH), KeyToLabel(kv.Key));
                     Widgets.Label(new Rect(view.width * 0.55f, y + 3f, view.width * 0.45f, rowH), ResultLabel(kv.Value));
                     GUI.color = Color.white;
                     y += rowH;
@@ -93,10 +93,38 @@ namespace MedicalExperimentation
             return y + 26f;
         }
 
-        private static string ComboLabel(ExperimentRecipeDef r)
+        // Draws a combo as its reagent item icons (one per instance, so "2x herbal" shows two icons),
+        // each with a name tooltip. Reads far quicker than a text list.
+        private static void DrawComboIcons(float x, float y, IEnumerable<ThingDef> defs)
         {
-            return string.Join(" + ", r.reagents.Where(x => x.thingDef != null)
-                .Select(x => x.count > 1 ? x.count + "x " + x.thingDef.label : x.thingDef.label));
+            const float iconSize = 24f;
+            const float pad = 2f;
+            foreach (var def in defs)
+            {
+                Rect r = new Rect(x, y + 1f, iconSize, iconSize);
+                if (def != null)
+                {
+                    Widgets.ThingIcon(r, def);
+                    if (Mouse.IsOver(r)) TooltipHandler.TipRegion(r, def.LabelCap);
+                }
+                else
+                {
+                    Widgets.Label(r, "?");
+                }
+                x += iconSize + pad;
+            }
+        }
+
+        private static IEnumerable<ThingDef> RecipeReagentDefs(ExperimentRecipeDef r)
+        {
+            foreach (var rc in r.reagents.Where(rc => rc.thingDef != null))
+                for (int i = 0; i < rc.count; i++)
+                    yield return rc.thingDef;
+        }
+
+        private static IEnumerable<ThingDef> KeyToDefs(string key)
+        {
+            return key.Split('|').Select(DefDatabase<ThingDef>.GetNamedSilentFail);
         }
 
         private string ResultLabel(string productDefName)
@@ -109,17 +137,5 @@ namespace MedicalExperimentation
             return "ME_UndiscoveredCompound".Translate();
         }
 
-        private static string KeyToLabel(string key)
-        {
-            var parts = key.Split('|');
-            var grouped = parts.GroupBy(p => p)
-                .Select(g =>
-                {
-                    var def = DefDatabase<ThingDef>.GetNamedSilentFail(g.Key);
-                    string lab = def?.label ?? g.Key;
-                    return g.Count() > 1 ? g.Count() + "x " + lab : lab;
-                });
-            return string.Join(" + ", grouped);
-        }
     }
 }
