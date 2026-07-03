@@ -60,8 +60,14 @@ namespace MedicalExperimentation
             };
             doWork.FailOnCannotTouch(TargetIndex.A, PathEndMode.InteractionCell);
 
+            // A resumed job for an already-fully-delivered order has an EMPTY haul queue. It must still WALK
+            // to the bench before working: jumping straight to doWork from wherever the pawn stands trips
+            // doWork's FailOnCannotTouch instantly, and the work giver then re-issues the job every tick
+            // ("started 10 jobs in one tick", pawn frozen). So the empty-queue path routes through a goto.
+            Toil gotoBench = Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.InteractionCell);
+
             // Haul each still-missing reagent to the bench, then work.
-            yield return Toils_Jump.JumpIf(doWork, () => job.GetTargetQueue(TargetIndex.B).NullOrEmpty());
+            yield return Toils_Jump.JumpIf(gotoBench, () => job.GetTargetQueue(TargetIndex.B).NullOrEmpty());
 
             Toil extract = Toils_JobTransforms.ExtractNextTargetFromQueue(TargetIndex.B);
             yield return extract;
@@ -87,6 +93,10 @@ namespace MedicalExperimentation
             };
             yield return deposit;
             yield return Toils_Jump.JumpIf(extract, () => !job.GetTargetQueue(TargetIndex.B).NullOrEmpty());
+
+            // Completes instantly on the normal haul path (the pawn is already at the bench after the last
+            // deposit) and walks the pawn over on the empty-queue resume path.
+            yield return gotoBench;
 
             // Never craft with a partial set: if the order still isn't fully delivered (some haul failed
             // along the way), end and let a fresh job fetch the remainder.

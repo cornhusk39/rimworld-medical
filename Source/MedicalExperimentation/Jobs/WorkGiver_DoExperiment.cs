@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -56,14 +57,15 @@ namespace MedicalExperimentation
         }
 
         // Finds, for each reagent still MISSING from the order, enough reachable/reservable stacks.
-        // All-or-nothing over the remainder.
+        // All-or-nothing over the remainder. Grouped per def: RemainingOf returns the def-wide remainder,
+        // so iterating duplicate-def entries directly would fetch that remainder once PER ENTRY.
         private bool TryFindRemainingReagents(Pawn pawn, ExperimentOrder order, List<LocalTargetInfo> things, List<int> counts)
         {
-            foreach (var rc in order.reagents)
+            if (order.reagents.Any(rc => rc.thingDef == null)) return false;
+            foreach (var group in order.reagents.GroupBy(rc => rc.thingDef))
             {
-                if (rc.thingDef == null) return false;
-                int need = order.RemainingOf(rc.thingDef);
-                foreach (Thing thing in pawn.Map.listerThings.ThingsOfDef(rc.thingDef))
+                int need = order.RemainingOf(group.Key);
+                foreach (Thing thing in pawn.Map.listerThings.ThingsOfDef(group.Key))
                 {
                     if (need <= 0) break;
                     if (thing.IsForbidden(pawn)) continue;

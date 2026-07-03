@@ -174,8 +174,9 @@ namespace MedicalExperimentation
             {
                 if (!s.NullOrEmpty()) s += "\n";
                 s += "ME_QueuedExperiments".Translate(orders.Count);
-                // Show delivery progress so deposited reagents don't read as vanished.
-                var active = orders.FirstOrDefault(o => o.DeliveredTotal > 0 && !o.IsComplete);
+                // Show delivery progress so deposited reagents don't read as vanished - INCLUDING fully
+                // delivered orders awaiting the crafting step (that's exactly when items "look gone").
+                var active = orders.FirstOrDefault(o => o.DeliveredTotal > 0);
                 if (active != null)
                     s += "\n" + "ME_ReagentsDelivered".Translate(active.DeliveredTotal, active.RequiredTotal);
             }

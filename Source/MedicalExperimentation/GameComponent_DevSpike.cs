@@ -881,6 +881,40 @@ namespace MedicalExperimentation
                 }
                 sb.Append(" ffGate=").Append(ffGate); ok &= ffGate;
 
+                // Resuming a FULLY-DELIVERED order from far away must walk the pawn to the bench, not die on
+                // doWork's FailOnCannotTouch in the same call (the "started 10 jobs in one tick" freeze a
+                // player hit by interrupting after the last reagent was deposited).
+                {
+                    var benchDef = ThingDef.Named("ME_ExperimentationBench");
+                    var rbench = (Building_ExperimentationBench)GenSpawn.Spawn(
+                        ThingMaker.MakeThing(benchDef, GenStuff.DefaultStuffFor(benchDef)),
+                        map.Center + new IntVec3(-14, 0, -14), map);
+                    rbench.SetFaction(Faction.OfPlayer);
+                    var rpow = rbench.GetComp<CompPowerTrader>();
+                    if (rpow != null) rpow.PowerOn = true;
+                    var rOrder = new ExperimentOrder(new List<ReagentCount>
+                    {
+                        new ReagentCount(ThingDef.Named("MedicineHerbal"), 2),
+                        new ReagentCount(ThingDef.Named("Neutroamine"), 1),
+                    }, false);
+                    rbench.AddOrder(rOrder);
+                    rOrder.Deliver(ThingDef.Named("MedicineHerbal"), 2);
+                    rOrder.Deliver(ThingDef.Named("Neutroamine"), 1);
+                    Pawn far = NewColonist(); // spawns near map center, well away from the bench
+                    var dwg = (WorkGiver_DoExperiment)DefDatabase<WorkGiverDef>.GetNamed("ME_DoExperiment").Worker;
+                    Job rjob = dwg.JobOnThing(far, rbench, false);
+                    bool resumeGoto = rjob != null;
+                    if (resumeGoto)
+                    {
+                        far.jobs.StartJob(rjob, JobCondition.InterruptForced);
+                        // With the fix the job survives StartJob (pawn is walking); the bug ended it instantly.
+                        resumeGoto = far.CurJobDef == ME_JobDefOf.ME_RunExperiment;
+                        far.jobs.EndCurrentJob(JobCondition.InterruptForced, false);
+                    }
+                    rbench.RemoveOrder(rOrder); // also exercises the refund path
+                    sb.Append(" resumeGoto=").Append(resumeGoto); ok &= resumeGoto;
+                }
+
                 // Coagulant Serum stops active bleeding: a heavily-bleeding pawn should have its total bleed
                 // rate drop to ~0 after a dose (matches the compound's "slows bleeding" description).
                 Pawn pBleed = NewColonist();
