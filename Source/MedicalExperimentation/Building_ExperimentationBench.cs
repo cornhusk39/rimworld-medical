@@ -42,6 +42,17 @@ namespace MedicalExperimentation
             orders.Remove(order);
         }
 
+        // Deconstructing, moving (minify), or destroying the bench must not swallow reagents already
+        // delivered to in-progress orders - drop them at the bench first, the way vanilla work tables
+        // scatter their held ingredients. DeSpawn fires while the building is still on the map.
+        public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
+        {
+            if (Spawned && Map != null)
+                foreach (var order in orders)
+                    RefundDelivered(order);
+            base.DeSpawn(mode);
+        }
+
         private void RefundDelivered(ExperimentOrder order)
         {
             if (order == null || order.DeliveredTotal == 0 || Map == null) return;
