@@ -24,7 +24,7 @@ namespace MedicalExperimentation
         public override void TickInterval(int delta)
         {
             base.TickInterval(delta);
-            if (completed || pawn == null) return;
+            if (completed || pawn == null || pawn.Dead) return;
 
             int before = System.Math.Max(0, ageTicks - delta);
             int crossings = (ageTicks / HealInterval) - (before / HealInterval);

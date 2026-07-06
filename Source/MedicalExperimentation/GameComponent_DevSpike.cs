@@ -17,6 +17,7 @@ namespace MedicalExperimentation
         private static readonly bool Active = GenCommandLine.CommandLineArgPassed("mespike");
         private static readonly bool SandboxActive = GenCommandLine.CommandLineArgPassed("mesandbox");
         private static readonly bool MatrixActive = GenCommandLine.CommandLineArgPassed("medrugmatrix");
+        private static readonly bool EdgeActive = GenCommandLine.CommandLineArgPassed("meedge");
         private bool matrixDone;
         private bool sandboxDone;
         private Building benchRef;
@@ -59,16 +60,17 @@ namespace MedicalExperimentation
 
         public override void GameComponentUpdate()
         {
-            if (!Active && !SandboxActive && !MatrixActive) return;
+            if (!Active && !SandboxActive && !MatrixActive && !EdgeActive) return;
             Map map = Find.CurrentMap;
             if (map == null) return;
 
-            if (MatrixActive)
+            if (MatrixActive || EdgeActive)
             {
                 if (matrixDone) return;
                 frames++;
                 if (frames < 120) return;
-                RunDrugMatrix(map);
+                if (MatrixActive) RunDrugMatrix(map);
+                if (EdgeActive) RunEdgeCases(map);
                 matrixDone = true;
                 if (GenCommandLine.CommandLineArgPassed("mequit"))
                     LongEventHandler.QueueLongEvent(() => Root.Shutdown(), "Shutdown", false, null);
@@ -657,6 +659,214 @@ namespace MedicalExperimentation
             Log.Error($"[MEDrug] MATRIX compounds={compounds.Count} conditions={conditions.Count} deaths={deaths} unexpected={unexpected}");
             foreach (var l in lines) Log.Error("[MEDrug] " + l);
             Log.Error("[MEDrug] DONE");
+        }
+
+        // Realistic-scenario edge cases a player would actually hit. Each logs PASS/FAIL/INFO and never throws.
+        private void RunEdgeCases(Map map)
+        {
+            int fails = 0;
+            var lines = new List<string>();
+            var ledger = GameComponent_PharmaLedger.Instance;
+            float savedIncompat = MedExpMod.Settings.incompatibilityChance;
+            MedExpMod.Settings.incompatibilityChance = 0f; // test intended effects, not the random adverse roll
+
+            void Check(string name, System.Func<string> body)
+            {
+                try { string r = body(); lines.Add(r.StartsWith("FAIL") ? r : name + ": " + r); if (r.StartsWith("FAIL")) fails++; }
+                catch (Exception e) { lines.Add("FAIL " + name + ": EXCEPTION " + e.GetType().Name + " " + e.Message); fails++; }
+            }
+
+            var metaDef = HediffDef.Named("ME_Hediff_Metamorphosis");
+            void RunMetaCycle(Pawn p)
+            {
+                var h = p.health.AddHediff(metaDef);
+                for (int i = 0; i < 1100 && p.health.hediffSet.HasHediff(metaDef) && !p.Dead; i++)
+                    h.TickInterval(250);
+            }
+            BodyPartRecord Leg(Pawn p) => p.health.hediffSet.GetNotMissingParts().FirstOrDefault(pp => pp.def.defName == "Leg");
+
+            // 1) Metamorphosis must NOT rip out an installed BIONIC limb (it's an added part, not a missing
+            //    part or a scar). Losing an expensive bionic to a heal drug would be a rage-quit bug.
+            Check("metaBionicSafe", () =>
+            {
+                var bionic = DefDatabase<HediffDef>.GetNamedSilentFail("BionicLeg");
+                Pawn p = MakePawn(map); var leg = Leg(p);
+                if (bionic == null || leg == null) return "INFO skipped (no BionicLeg def)";
+                p.health.AddHediff(bionic, leg);
+                RunMetaCycle(p);
+                bool keptBionic = p.health.hediffSet.hediffs.Any(h => h.def == bionic);
+                return (keptBionic && !p.Dead) ? "PASS bionic kept, alive"
+                    : "FAIL metaBionicSafe: bionicKept=" + keptBionic + " dead=" + p.Dead;
+            });
+
+            // 2) Same for an archotech limb.
+            Check("metaArchotechSafe", () =>
+            {
+                var arch = DefDatabase<HediffDef>.GetNamedSilentFail("ArchotechLeg");
+                Pawn p = MakePawn(map); var leg = Leg(p);
+                if (arch == null || leg == null) return "INFO skipped (no ArchotechLeg def)";
+                p.health.AddHediff(arch, leg);
+                RunMetaCycle(p);
+                bool kept = p.health.hediffSet.hediffs.Any(h => h.def == arch);
+                return (kept && !p.Dead) ? "PASS archotech kept, alive"
+                    : "FAIL metaArchotechSafe: kept=" + kept + " dead=" + p.Dead;
+            });
+
+            // 3) A plainly MISSING leg (no prosthetic) SHOULD regrow.
+            Check("metaRegrowMissing", () =>
+            {
+                Pawn p = MakePawn(map); var leg = Leg(p);
+                if (leg == null) return "INFO skipped";
+                p.health.AddHediff(HediffDef.Named("MissingBodyPart"), leg);
+                RunMetaCycle(p);
+                bool restored = Leg(p) != null && !p.health.hediffSet.hediffs.OfType<Hediff_MissingPart>().Any();
+                return (restored && !p.Dead) ? "PASS leg regrown" : "FAIL metaRegrowMissing: restored=" + restored + " dead=" + p.Dead;
+            });
+
+            // 4) A peg-legged pawn: informational - report whether the peg survives or a natural leg regrows.
+            Check("metaPegLeg", () =>
+            {
+                var peg = DefDatabase<HediffDef>.GetNamedSilentFail("PegLeg");
+                Pawn p = MakePawn(map); var leg = Leg(p);
+                if (peg == null || leg == null) return "INFO skipped";
+                p.health.AddHediff(peg, leg);
+                RunMetaCycle(p);
+                bool hasPeg = p.health.hediffSet.hediffs.Any(h => h.def == peg);
+                if (p.Dead) return "FAIL metaPegLeg: pawn died";
+                return "INFO alive, pegKept=" + hasPeg;
+            });
+
+            // 5) A pregnant pawn survives the coma and STAYS pregnant.
+            Check("metaPregnant", () =>
+            {
+                var preg = DefDatabase<HediffDef>.GetNamedSilentFail("PregnantHuman");
+                Pawn p = MakePawn(map);
+                if (preg == null) return "INFO skipped (no Biotech pregnancy)";
+                AddSev(p, preg, 0.5f);
+                RunMetaCycle(p);
+                bool stillPregnant = p.health.hediffSet.HasHediff(preg);
+                return (!p.Dead && stillPregnant) ? "PASS alive + still pregnant"
+                    : "FAIL metaPregnant: dead=" + p.Dead + " stillPregnant=" + stillPregnant;
+            });
+
+            // 6) A pawn KILLED partway through the coma must not throw (raid during regeneration).
+            Check("metaKillMidComa", () =>
+            {
+                Pawn p = MakePawn(map);
+                var h = p.health.AddHediff(metaDef);
+                for (int i = 0; i < 400; i++) h.TickInterval(250); // ~halfway
+                p.Kill(null);
+                for (int i = 0; i < 20 && !p.Destroyed; i++) { if (p.health?.hediffSet?.HasHediff(metaDef) == true) h.TickInterval(250); }
+                return "PASS no exception on death mid-coma";
+            });
+
+            // 7) Re-dosing Metamorphosis on a pawn already in the coma must not spawn a second coma.
+            Check("metaDoubleDose", () =>
+            {
+                Pawn p = MakePawn(map);
+                IngestionOutcomeDoer_Experimental.ApplyEffect(p, metaDef, -1f);
+                IngestionOutcomeDoer_Experimental.ApplyEffect(p, metaDef, -1f);
+                int comas = p.health.hediffSet.hediffs.Count(h => h.def == metaDef);
+                return comas == 1 ? "PASS single coma" : "FAIL metaDoubleDose: comaCount=" + comas;
+            });
+
+            // 8) Double-dosing a stimulant stacks severity to the cap, one hediff, no death.
+            Check("stimDoubleDose", () =>
+            {
+                var stim = HediffDef.Named("ME_Hediff_BattleStim");
+                Pawn p = MakePawn(map);
+                IngestionOutcomeDoer_Experimental.ApplyEffect(p, stim, -1f);
+                IngestionOutcomeDoer_Experimental.ApplyEffect(p, stim, -1f);
+                int n = p.health.hediffSet.hediffs.Count(h => h.def == stim);
+                float sev = p.health.hediffSet.GetFirstHediffOfDef(stim)?.Severity ?? 0f;
+                return (n == 1 && sev <= stim.maxSeverity + 0.001f && !p.Dead)
+                    ? "PASS one hediff, sev capped" : "FAIL stimDoubleDose: n=" + n + " sev=" + sev + " dead=" + p.Dead;
+            });
+
+            // 9) Coagulant Serum clots MANY simultaneous wounds (a raid victim covered in cuts).
+            Check("coagMultiWound", () =>
+            {
+                Pawn p = MakePawn(map);
+                foreach (var part in p.health.hediffSet.GetNotMissingParts()
+                    .Where(pp => pp.depth == BodyPartDepth.Outside && pp.def.defName != "Head" && pp.def.defName != "Neck").Take(5).ToList())
+                {
+                    var cut = (Hediff_Injury)HediffMaker.MakeHediff(HediffDefOf.Cut, p, part);
+                    cut.Severity = 8f; p.health.AddHediff(cut, part);
+                }
+                float before = p.health.hediffSet.BleedRateTotal;
+                IngestionOutcomeDoer_Experimental.ApplyEffect(p, HediffDef.Named("ME_Hediff_CoagulantSerum"), -1f);
+                float after = p.health.hediffSet.BleedRateTotal;
+                return (before > 0.1f && after < before * 0.1f)
+                    ? "PASS bleed " + before.ToString("0.00") + "->" + after.ToString("0.00")
+                    : "FAIL coagMultiWound: before=" + before.ToString("0.00") + " after=" + after.ToString("0.00");
+            });
+
+            // 10) Neural Defragmenter on a pawn with NO bad memory: still applies the scar, no crash.
+            Check("defragNoMemory", () =>
+            {
+                Pawn p = MakePawn(map);
+                p.needs?.mood?.thoughts?.memories?.Memories.Clear();
+                AdministerUnknown(p, "ME_Exp_NeuralDefragmenter");
+                bool scarred = p.health.hediffSet.HasHediff(HediffDef.Named("ME_Hediff_NeuralScar"));
+                return scarred ? "PASS scar applied, no crash" : "FAIL defragNoMemory: no scar applied";
+            });
+
+            // 11) Berserker Draught on an already-berserk pawn (double mental state) must not throw.
+            Check("berserkerDoubleMental", () =>
+            {
+                Pawn p = MakePawn(map);
+                p.mindState?.mentalStateHandler?.TryStartMentalState(MentalStateDefOf.Berserk, null, true);
+                IngestionOutcomeDoer_Experimental.ApplyEffect(p, HediffDef.Named("ME_Hediff_Berserker"), -1f);
+                return "PASS no exception";
+            });
+
+            // 12) An adverse reaction forced onto an extreme-blood-loss pawn must not kill: its consciousness
+            //     offset stacks on an already-low pawn (same failure class as the old Precipice death).
+            Check("adverseNoKill", () =>
+            {
+                Pawn p = MakePawn(map);
+                AddSev(p, HediffDefOf.BloodLoss, 0.85f);
+                if (p.Dead) return "INFO setup killed pawn";
+                MedExpMod.Settings.incompatibilityChance = 1f; // force incompatible -> adverse reaction
+                IngestionOutcomeDoer_Experimental.Resolve(p, ThingDef.Named("ME_Compound_BattleStimX"),
+                    null, HediffDef.Named("ME_Hediff_BattleStim"), -1f, 0.5f);
+                MedExpMod.Settings.incompatibilityChance = 0f;
+                bool adverse = p.health.hediffSet.HasHediff(HediffDef.Named("ME_AdverseReaction"));
+                return (!p.Dead && adverse) ? "PASS adverse applied, alive"
+                    : "FAIL adverseNoKill: dead=" + p.Dead + " adverse=" + adverse;
+            });
+
+            // 13) A recovering addict takes the "Perfect" (chemical-less) variant: no crash, no worse addiction.
+            Check("perfectAddictSafe", () =>
+            {
+                var addDef = DefDatabase<HediffDef>.GetNamedSilentFail("GoJuiceAddiction");
+                var perfect = DefDatabase<ThingDef>.GetNamedSilentFail("ME_GoJuice_Perfect");
+                Pawn p = MakePawn(map);
+                if (addDef == null || perfect == null) return "INFO skipped";
+                var add = p.health.AddHediff(addDef); float sevBefore = add.Severity;
+                Thing t = ThingMaker.MakeThing(perfect); t.stackCount = 1; t.Ingested(p, 0f);
+                float sevAfter = p.health.hediffSet.GetFirstHediffOfDef(addDef)?.Severity ?? -1f;
+                return (!p.Dead && sevAfter <= sevBefore + 0.001f) ? "PASS addiction not worsened, no crash"
+                    : "FAIL perfectAddictSafe: before=" + sevBefore.ToString("0.00") + " after=" + sevAfter.ToString("0.00") + " dead=" + p.Dead;
+            });
+
+            // 14) Bingeing the UNSTABLE variant should build overdose risk without throwing.
+            Check("unstableOverdose", () =>
+            {
+                var unstable = DefDatabase<ThingDef>.GetNamedSilentFail("ME_GoJuice_Unstable");
+                var od = DefDatabase<HediffDef>.GetNamedSilentFail("DrugOverdose");
+                Pawn p = MakePawn(map);
+                if (unstable == null) return "INFO skipped";
+                for (int i = 0; i < 25 && !p.Dead; i++) { Thing t = ThingMaker.MakeThing(unstable); t.stackCount = 1; t.Ingested(p, 0f); }
+                bool hasOD = od != null && p.health.hediffSet.HasHediff(od);
+                // Not asserting death; just that the drug pipeline handles a binge (overdose present is the norm).
+                return "INFO overdosePresent=" + hasOD + " dead=" + p.Dead;
+            });
+
+            MedExpMod.Settings.incompatibilityChance = savedIncompat;
+            Log.Error($"[MEEdge] EDGE cases={lines.Count} fails={fails}");
+            foreach (var l in lines) Log.Error("[MEEdge] " + l);
+            Log.Error("[MEEdge] DONE");
         }
 
         private Pawn MakePawn(Map map)
